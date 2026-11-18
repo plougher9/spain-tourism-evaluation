@@ -95,16 +95,18 @@ def render_financial_section(travel, services, current, start_year, end_year):
         return
     year = common[-1]
     vals = financial_bridge(current[year], services[year], travel[year])
-    remove = st.button(
-        "Restore travel contribution" if st.session_state.get("remove_travel_bridge", False)
-        else "Remove travel contribution",
-        key="toggle_travel_bridge",
-        help="Accounting illustration: subtracts observed net travel balance; not a forecast.",
-    )
-    if remove:
+    def flip_travel_bridge():
         st.session_state["remove_travel_bridge"] = not st.session_state.get(
             "remove_travel_bridge", False
         )
+
+    st.button(
+        "Restore travel contribution" if st.session_state.get("remove_travel_bridge", False)
+        else "Remove travel contribution",
+        key="toggle_travel_bridge",
+        on_click=flip_travel_bridge,
+        help="Accounting illustration: subtracts observed net travel balance; not a forecast.",
+    )
     removed = st.session_state.get("remove_travel_bridge", False)
     vals = financial_bridge(current[year], services[year], travel[year], removed)
     st.caption(f"Eurostat BPM6 · {year} annual values · € billions · "
