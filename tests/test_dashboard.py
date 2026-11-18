@@ -130,6 +130,46 @@ class NarrativesTest(unittest.TestCase):
         labels = [metric.label for metric in app.metric]
         self.assertIn("2025 nominal / visitor", labels)
 
+    def test_every_main_chart_has_labeled_axes(self):
+        from unittest.mock import patch
+        import plotly.graph_objects as go
+        from story_sections import plot_chart
+        from analysis_sections import plot_line
+
+        evidence = []
+        def capture(fig, **kwargs):
+            axes = fig.axes[0]
+            evidence.append((axes.get_xlabel(), axes.get_ylabel()))
+
+        with patch("analysis_sections.st.pyplot", side_effect=capture):
+            plot_line([2019, 2020],
+                      [("Indexed receipts", {2019: 100, 2020: 80}, "#416F94")],
+                      "Index (2019 = 100)", "visitor-yield")
+            plot_line([2019, 2020],
+                      [("Travel surplus", {2019: 46, 2020: 9}, "#16848C")],
+                      "Annual balance (€ billion)", "external-finance")
+
+        for key in ("tourism-index", "travel-surplus-shock",
+                    "tourism-gdp-share", "gdp_growth-context",
+                    "current_account-context"):
+            x = ["2019-01-01", "2020-01-01"] if key.endswith("-context") else [2019, 2020]
+            y = [100.0, 80.0]
+            fig = go.Figure(go.Scatter(x=x, y=y,
+                                      line={"color": "#416F94"}))
+            with patch("story_sections.st.pyplot", side_effect=capture):
+                plot_chart(fig, key)
+
+        self.assertEqual(len(evidence), 7)
+        for horizontal, vertical in evidence:
+            self.assertTrue(horizontal.strip(), "Missing horizontal-axis label")
+            self.assertTrue(vertical.strip(), "Missing vertical-axis label")
+            self.assertIn("year", horizontal.lower())
+
+    def test_dashboard_research_question_reframed(self):
+        source = (ROOT / "app.py").read_text(encoding="utf-8")
+        self.assertIn("creating greater economic value and financial resilience", source)
+        self.assertNotIn("growing reliance on international tourism", source)
+
     def test_streamlit_page_renders(self):
         from streamlit.testing.v1 import AppTest
         app = AppTest.from_file(str(ROOT / "app.py")).run(timeout=55)
