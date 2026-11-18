@@ -129,7 +129,7 @@ def graph(key):
                                      hovertemplate='%{x|%Y-%m}: %{y:,.2f}<extra></extra>'))
             fig.update_layout(height=240,margin=dict(l=2,r=8,t=5,b=8),
                               paper_bgcolor='rgba(0,0,0,0)',plot_bgcolor='rgba(0,0,0,0)',
-                              xaxis=dict(title='Calendar year',showgrid=False,range=[f'{start_year}-01-01',f'{end_year}-12-31']),
+                              xaxis=dict(title=f"Observation date ({spec['freq'].lower()})",showgrid=False,range=[f'{start_year}-01-01',f'{end_year}-12-31']),
                               yaxis=dict(gridcolor='#e9eef2',title=spec['unit']),showlegend=False)
             st.plotly_chart(fig,use_container_width=True,config={'displayModeBar':False})
             latest=window.iloc[-1]
