@@ -19,10 +19,10 @@ class NarrativesTest(unittest.TestCase):
         spending = annual_totals(self.series["spending"])
         self.assertEqual(len(self.series["arrivals"]["observations"]), 132)
         self.assertNotIn(2015, arrivals)  # only September–December reported
-        self.assertNotIn(2026, arrivals)  # latest snapshot ends in August
+        self.assertNotIn(2026, arrivals)  # latest snapshot ends in September
         self.assertIn(2019, arrivals)
         self.assertIn(2025, spending)
-        self.assertAlmostEqual(arrivals[2019], 83.45, delta=0.1)
+        self.assertAlmostEqual(arrivals[2019], 83.509151, delta=0.01)
 
     def test_shock_benchmarks(self):
         arrivals = annual_totals(self.series["arrivals"])
@@ -31,13 +31,30 @@ class NarrativesTest(unittest.TestCase):
         self.assertAlmostEqual(travel[2020], 8.631, places=3)
         self.assertAlmostEqual(travel[2025], 70.46, places=2)
 
+    def test_ine_monthly_period_matches_spain_calendar_month(self):
+        from datetime import datetime, timezone
+        from zoneinfo import ZoneInfo
+        import json
+        from sources import ine_series
+        # Source dates at midnight CEST can fall in the previous UTC month.
+        midnight_spain = datetime(2026, 9, 1, tzinfo=ZoneInfo("Europe/Madrid"))
+        utc_stamp = midnight_spain.astimezone(timezone.utc)
+        self.assertEqual(utc_stamp.strftime("%Y-%m"), "2026-08")
+        self.assertEqual(datetime.fromtimestamp(
+            utc_stamp.timestamp(), tz=ZoneInfo("Europe/Madrid")
+        ).strftime("%Y-%m"), "2026-09")
+        for metric in ("arrivals", "spending"):
+            self.assertEqual(
+                self.series[metric]["observations"][-1]["period"], "2026-09"
+            )
+
     def test_2022_energy_shock_context_uses_real_observations(self):
         spending = annual_totals(self.series["spending"])
         travel = annual_values(self.series["travel_balance"])
         self.assertIn(2021, spending)
         self.assertIn(2022, spending)
         self.assertGreater(spending[2022], spending[2021])
-        self.assertAlmostEqual(spending[2022], 89.31535, places=3)
+        self.assertAlmostEqual(spending[2022], 87.13819, places=3)
         self.assertAlmostEqual(travel[2022], 48.089, places=3)
         self.assertGreater(travel[2022], travel[2021])
 
@@ -82,9 +99,9 @@ class NarrativesTest(unittest.TestCase):
         hicp = annual_values(analysis["series"]["hicp"])
         nominal = nominal_spending_per_visitor(s, a)
         real = real_spending_per_visitor(s, a, hicp)
-        self.assertAlmostEqual(nominal[2019], 1102.5, delta=0.5)
-        self.assertAlmostEqual(nominal[2025], 1397.9, delta=0.5)
-        self.assertAlmostEqual(real[2025], 1150.8, delta=0.5)
+        self.assertAlmostEqual(nominal[2019], 1100.62, delta=0.5)
+        self.assertAlmostEqual(nominal[2025], 1391.92, delta=0.5)
+        self.assertAlmostEqual(real[2025], 1145.85, delta=0.5)
         self.assertGreater(real[2025], nominal[2019])
         self.assertLess(real[2025], nominal[2025])
         travel = annual_values(self.series["travel_balance"])
@@ -112,8 +129,8 @@ class NarrativesTest(unittest.TestCase):
         real_changes = change_from_baseline(real)
         self.assertAlmostEqual(nominal_changes[2019], 0.0, places=6)
         self.assertAlmostEqual(real_changes[2019], 0.0, places=6)
-        self.assertAlmostEqual(nominal_changes[2025], 26.8, delta=.2)
-        self.assertAlmostEqual(real_changes[2025], 4.4, delta=.2)
+        self.assertAlmostEqual(nominal_changes[2025], 26.5, delta=.2)
+        self.assertAlmostEqual(real_changes[2025], 4.1, delta=.2)
         self.assertAlmostEqual(
             100 * (real[2025] / real[2019] - 1),
             real_changes[2025], places=8
@@ -218,9 +235,9 @@ class NarrativesTest(unittest.TestCase):
         )
         self.assertEqual(inflation["Year"].tolist(), [str(y) for y in years])
         self.assertAlmostEqual(inflation.loc[inflation["Year"] == "2019", "Inflation"].iloc[0], 0.0)
-        self.assertAlmostEqual(inflation.loc[inflation["Year"] == "2025", "Nominal"].iloc[0], 26.8, delta=.2)
+        self.assertAlmostEqual(inflation.loc[inflation["Year"] == "2025", "Nominal"].iloc[0], 26.5, delta=.2)
         self.assertAlmostEqual(inflation.loc[inflation["Year"] == "2025", "Inflation"].iloc[0], 21.5, delta=.2)
-        self.assertAlmostEqual(inflation.loc[inflation["Year"] == "2025", "Adjusted"].iloc[0], 4.4, delta=.2)
+        self.assertAlmostEqual(inflation.loc[inflation["Year"] == "2025", "Adjusted"].iloc[0], 4.1, delta=.2)
 
     def test_part_three_b_hover_chart_and_toggle_controls(self):
         from streamlit.testing.v1 import AppTest
