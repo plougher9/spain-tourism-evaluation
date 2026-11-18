@@ -47,9 +47,11 @@ def plot_line(years, series_items, ylabel, key, percent=False):
     ax.set_axisbelow(True)
     ax.spines[["left", "top", "right"]].set_visible(False)
     ax.set_ylabel(ylabel, color=INK)
+    ax.set_xlabel("Calendar year (annual observations)", color=INK, labelpad=9)
     ax.tick_params(colors=INK, labelsize=9, length=0)
     ax.legend(frameon=False, loc="upper left", fontsize=9)
     ax.set_xticks(years)
+    ax.margins(x=0.035)
     fig.tight_layout()
     st.pyplot(fig, use_container_width=True)
     plt.close(fig)
@@ -118,6 +120,18 @@ def render_analysis(series, analysis_data, start_year, end_year):
             "[Eurostat annual HICP]"
             "(https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_aind/default/table)"
         )
+        if 2019 in nominal and latest in nominal and latest in real:
+            nominal_growth = 100 * (nominal[latest] / nominal[2019] - 1)
+            adjusted_growth = 100 * (real[latest] / real[2019] - 1)
+            st.markdown(
+                f"**Reading the chart:** Compared with 2019, nominal spending "
+                f"per visitor is **{nominal_growth:+.1f}%** in {latest}, but "
+                f"only **{adjusted_growth:+.1f}%** after adjusting for "
+                f"Spanish consumer inflation. Most of the nominal increase "
+                f"is associated with higher prices under this proxy, "
+                f"rather than a comparable increase in purchasing-power-adjusted "
+                f"spending per visitor."
+            )
         if not real_index:
             st.info("Official HICP observations are unavailable for the selected years.")
     else:
@@ -152,6 +166,15 @@ def render_analysis(series, analysis_data, start_year, end_year):
                 st.metric(f"{y} total current account", f"€{current[y]:,.1f}B")
             with col3:
                 st.metric(f"{y} excluding net travel", f"€{residual[y]:,.1f}B")
+            st.markdown(
+                f"**Reading the chart:** Net travel services contributed "
+                f"€{travel[y]:,.1f}B in {y} versus a total current-account "
+                f"balance of €{current[y]:,.1f}B. Removing the reported travel "
+                f"balance arithmetically leaves **€{residual[y]:,.1f}B** from "
+                f"all other current-account components combined. This shows "
+                f"how important travel is to the observed external balance, "
+                f"without estimating what would happen if tourism disappeared."
+            )
             if y in services and services[y] > 0:
                 share = 100 * travel[y] / services[y]
                 st.caption(
