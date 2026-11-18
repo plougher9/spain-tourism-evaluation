@@ -194,7 +194,7 @@
       ],
       "source": "Eurostat · namq_10_gdp",
       "source_url": "https://ec.europa.eu/eurostat/databrowser/view/namq_10_gdp/default/table",
-      "refreshed_utc": "2026-11-18T04:16:09+00:00",
+      "refreshed_utc": "2026-11-18T04:19:24+00:00",
       "latest_observation": "2026-Q3"
     },
     "travel_balance": {
@@ -246,7 +246,7 @@
       ],
       "source": "Eurostat · bop_its6_det",
       "source_url": "https://ec.europa.eu/eurostat/databrowser/view/bop_its6_det/default/table",
-      "refreshed_utc": "2026-11-18T04:16:09+00:00",
+      "refreshed_utc": "2026-11-18T04:19:24+00:00",
       "latest_observation": "2025"
     },
     "current_account": {
@@ -438,17 +438,17 @@
       ],
       "source": "Eurostat · tipsbp41",
       "source_url": "https://ec.europa.eu/eurostat/databrowser/view/tipsbp41/default/table",
-      "refreshed_utc": "2026-11-18T04:16:09+00:00",
+      "refreshed_utc": "2026-11-18T04:19:24+00:00",
       "latest_observation": "2026-Q2"
     }
   },
   "errors": {
-    "arrivals": "500 Server Error: Internal Server Error for url: https://servicios.ine.es/wstempus/jsCache/ES/DATOS_SERIE/286?nult=180",
-    "spending": "500 Server Error: Internal Server Error for url: https://servicios.ine.es/wstempus/jsCache/ES/DATOS_SERIE/585?nult=180",
-    "tourism_gdp": "INE tourism_gdp: unexpected historical data format"
+    "arrivals": "INE arrivals: expected one series; found 0. Table candidates: [(None, 'Total. Total Nacional. Dato base. '), (None, 'Total. Total Nacional. Tasa de variación anual. '), (None, 'Total. Total Nacional. Acumulado en lo que va de año. '), (None, 'Total. Total Nacional. Tasa de variación acumulada. '), (None, 'Turista. Total Nacional. Dato base. '), (None, 'Turista. Total Nacional. Tasa de variación anual. '), (None, 'Turista. Total Nacional. Acumulado en lo que va de año. '), (None, 'Turista. Total Nacional. Tasa de variación acumulada. '), (None, 'Excursionista. Total Nacional. Dato base. '), (None, 'Excursionista. Total Nacional. Tasa de variación anual. '), (None, 'Excursionista. Total Nacional. Acumulado en lo que va de año. '), (None, 'Excursionista. Total Nacional. Tasa de variación acumulada. ')]",
+    "spending": "INE spending: expected one series; found 0. Table candidates: [(None, 'Total. Turista. Gasto total. Total Nacional. Dato base. '), (None, 'Total. Turista. Gasto total. Total Nacional. Tasa de variación anual. '), (None, 'Total. Turista. Gasto total. Total Nacional. Acumulado en lo que va de año. '), (None, 'Total. Turista. Gasto total. Total Nacional. Tasa de variación acumulada. '), (None, 'Total. Turista. Gasto medio por persona. Total Nacional. Dato base. '), (None, 'Total. Turista. Gasto medio por persona. Total Nacional. Tasa de variación anual. '), (None, 'Total. Turista. Gasto medio por persona. Total Nacional. Acumulado en lo que va de año. '), (None, 'Total. Turista. Gasto medio por persona. Total Nacional. Tasa de variación acumulada. '), (None, 'Total. Turista. Gasto medio diario por persona. Total Nacional. Dato base. '), (None, 'Total. Turista. Gasto medio diario por persona. Total Nacional. Tasa de variación anual. '), (None, 'Total. Turista. Gasto medio diario por persona. Total Nacional. Acumulado en lo que va de año. '), (None, 'Total. Turista. Gasto medio diario por persona. Total Nacional. Tasa de variación acumulada. '), (None, 'Total. Turista. Duración media de los viajes. Total Nacional. Dato base. '), (None, 'Total. Turista. Duración media de los viajes. Total Nacional. Tasa de variación anual. '), (None, 'Total. Turista. Duración media de los viajes. Total Nacional. Acumulado en lo que va de año. '), (None, 'Total. Turista. Duración media de los viajes. Total Nacional. Tasa de variación acumulada. '), (None, 'Sin paquete turístico. Turista. Gasto total. Total Nacional. Dato base. '), (None, 'Sin paquete turístico. Turista. Gasto total. Total Nacional. Tasa de variación anual. '), (None, 'Sin paquete turístico. Turista. Gasto total. Total Nacional. Acumulado en lo que va de año. '), (None, 'Sin paquete turístico. Turista. Gasto total. Total Nacional. Tasa de variación acumulada. '), (None, 'Sin paquete turístico. Turista. Gasto medio por persona. Total Nacional. Dato base. '), (None, 'Sin paquete turístico. Turista. Gasto medio por persona. Total Nacional. Tasa de variación anual. '), (None, 'Sin paquete turístico. Turista. Gasto medio por persona. Total Nacional. Acumulado en lo que va de año. '), (None, 'Sin paquete turístico. Turista. Gasto medio por persona. Total Nacional. Tasa de variación acumulada. '), (None, 'Sin paquete turístico. Turista. Gasto medio diario por persona. Total Nacional. Dato base. ')]",
+    "tourism_gdp": "INE tourism_gdp: expected one series; found 6. Table candidates: [(None, 'Gasto Turístico Interior, Precios corrientes: Millones de euros'), (None, 'Gasto Turístico Interior, Precios corrientes: Porcentaje sobre el PIB'), (None, 'Gasto Turístico Interior, Precios constantes: Índices de volumen encadenados'), (None, 'Consumo Turístico Interior, Precios corrientes: Millones de euros'), (None, 'Consumo Turístico Interior, Precios corrientes: Porcentaje sobre el PIB'), (None, 'Consumo Turístico Interior, Precios constantes: Índices de volumen encadenados'), (None, 'Valor Añadido Bruto de las industrias turísticas (VABIT), Precios corrientes: Millones de euros'), (None, 'Valor Añadido Bruto de las industrias turísticas (VABIT), Precios corrientes: Porcentaje sobre el PIB'), (None, 'Valor Añadido Bruto de las industrias turísticas (VABIT), Precios constantes: Índices de volumen encadenados'), (None, 'Valor Añadido Bruto  directo turístico (VABDT), Precios corrientes: Millones de euros'), (None, 'Valor Añadido Bruto  directo turístico (VABDT), Precios corrientes: Porcentaje sobre el PIB'), (None, 'Valor Añadido Bruto  directo turístico (VABDT), Precios constantes: Índices de volumen encadenados'), (None, 'Producto Interior Bruto directo turístico (PIBDT), Precios corrientes: Millones de euros'), (None, 'Producto Interior Bruto directo turístico (PIBDT), Precios corrientes: Porcentaje sobre el PIB'), (None, 'Producto Interior Bruto directo turístico (PIBDT), Precios constantes: Índices de volumen encadenados'), (None, 'Producto interior bruto turístico, Precios corrientes: Millones de euros'), (None, 'Producto interior bruto turístico, Precios corrientes: Porcentaje sobre el PIB'), (None, 'Producto interior bruto turístico, Precios constantes: Índices de volumen encadenados')]"
   },
-  "last_attempt_utc": "2026-11-18T04:16:09+00:00",
-  "last_partial_refresh_utc": "2026-11-18T04:16:09+00:00",
+  "last_attempt_utc": "2026-11-18T04:19:24+00:00",
+  "last_partial_refresh_utc": "2026-11-18T04:19:24+00:00",
   "updated_this_run": [
     "gdp_growth",
     "travel_balance",
