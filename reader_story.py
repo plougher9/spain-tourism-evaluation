@@ -207,9 +207,9 @@ def draw_inflation_chart(data, view):
     Only Part 3B is client-interactive. Other story charts remain server-side.
     """
     series_names = {
-        "Nominal": "Nominal spending per visitor",
-        "Inflation": "Cumulative Spanish consumer inflation",
-        "Adjusted": "HICP-adjusted spending per visitor",
+        "Nominal": "Nominal per visitor",
+        "Inflation": "Spain inflation (HICP)",
+        "Adjusted": "HICP-adjusted per visitor",
     }
     visible = {
         "Compare all": list(series_names),
@@ -224,9 +224,9 @@ def draw_inflation_chart(data, view):
     # Restrained Spanish palette: navy for nominal, warm gold for prices,
     # and Spanish red for inflation-adjusted visitor value.
     palette = {
-        "Nominal spending per visitor": BLUE,
-        "Cumulative Spanish consumer inflation": "#C99826",
-        "HICP-adjusted spending per visitor": "#AA151B",
+        "Nominal per visitor": BLUE,
+        "Spain inflation (HICP)": "#C99826",
+        "HICP-adjusted per visitor": "#AA151B",
     }
     year_values = data["Year"].tolist()
     base = alt.Chart(chart_data).encode(
@@ -242,8 +242,8 @@ def draw_inflation_chart(data, view):
             scale=alt.Scale(domain=list(palette), range=list(palette.values())),
             legend=alt.Legend(
                 title=None, orient="bottom", direction="horizontal",
-                columns=1, labelFontSize=12, labelLimit=460,
-                symbolSize=130, offset=16,
+                columns=3, labelFontSize=12, labelLimit=230,
+                symbolSize=130, offset=14,
             ),
         ),
     )
@@ -277,7 +277,7 @@ def draw_inflation_chart(data, view):
         opacity=alt.condition(nearest, alt.value(.75), alt.value(0)),
     ).transform_filter(nearest)
     chart = alt.layer(baseline, lines, targets, highlight).properties(
-        height=325
+        height=410
     ).configure_view(strokeWidth=0).configure_axis(
         labelColor=INK, titleColor=INK, gridColor=GRID
     )
@@ -471,7 +471,7 @@ def plot_shock_history(travel, years):
         ax.annotate(
             "COVID-19\ntravel restrictions",
             xy=(2020, travel[2020]),
-            xytext=(2020 + .55, max(values)*.60),
+            xytext=(2020 + .22, max(values)*1.13),
             textcoords="data", fontsize=9, color=RED, weight="bold",
             arrowprops=dict(arrowstyle="->", color=RED, lw=1.4),
             ha="left",
@@ -480,7 +480,7 @@ def plot_shock_history(travel, years):
         ax.annotate(
             "2022 energy-price shock\nTourism recovery",
             xy=(2022, travel[2022]),
-            xytext=(2022 + .5, max(values)*1.20),
+            xytext=(2022 + .5, max(values)*1.30),
             fontsize=9, color="#98671D", weight="bold",
             arrowprops=dict(arrowstyle="->", color=GOLD, lw=1.4),
             ha="left",
@@ -496,7 +496,7 @@ def plot_shock_history(travel, years):
     ax.set_xlabel("Calendar year (annual observations)", color=INK, labelpad=9)
     ax.set_xticks(years)
     ax.set_xlim(years[0] - .65, years[-1] + 1.2)
-    ax.set_ylim(0, max(values)*1.50)
+    ax.set_ylim(0, max(values)*1.55)
     ax.grid(axis="y", color=GRID, linewidth=.8)
     ax.set_axisbelow(True)
     ax.spines[["top", "right", "left"]].set_visible(False)
