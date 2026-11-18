@@ -188,7 +188,7 @@ class NarrativesTest(unittest.TestCase):
         from unittest.mock import patch
         import json
         from reader_story import render_yield_section
-        from analysis_sections import change_from_baseline
+        from analysis_sections import (change_from_baseline, nominal_spending_per_visitor, real_spending_per_visitor)
         from story_sections import annual_totals, annual_values
         spending = annual_totals(self.series["spending"])
         arrivals = annual_totals(self.series["arrivals"])
