@@ -116,6 +116,20 @@ class NarrativesTest(unittest.TestCase):
         self.assertEqual(selected[-1], 2025)
         self.assertEqual([y for y in common if 2026 <= y <= 2026], [])
 
+    def test_slider_changes_hypothesis_headline_cards(self):
+        from streamlit.testing.v1 import AppTest
+        app = AppTest.from_file(str(ROOT / "app.py")).run(timeout=55)
+        self.assertFalse(app.exception)
+        app.slider[0].set_value((2015, 2022)).run(timeout=55)
+        self.assertFalse(app.exception)
+        labels = [metric.label for metric in app.metric]
+        self.assertIn("2022 nominal / visitor", labels)
+        self.assertNotIn("2025 nominal / visitor", labels)
+        app.slider[0].set_value((2019, 2026)).run(timeout=55)
+        self.assertFalse(app.exception)
+        labels = [metric.label for metric in app.metric]
+        self.assertIn("2025 nominal / visitor", labels)
+
     def test_streamlit_page_renders(self):
         from streamlit.testing.v1 import AppTest
         app = AppTest.from_file(str(ROOT / "app.py")).run(timeout=55)
