@@ -194,7 +194,7 @@
       ],
       "source": "Eurostat · namq_10_gdp",
       "source_url": "https://ec.europa.eu/eurostat/databrowser/view/namq_10_gdp/default/table",
-      "refreshed_utc": "2026-11-18T03:37:55+00:00",
+      "refreshed_utc": "2026-11-18T04:08:42+00:00",
       "latest_observation": "2026-Q3"
     }
   },
@@ -205,8 +205,8 @@
     "travel_balance": "bop_its6_det: ambiguous series dimensions: [('partner', 0)]; refine filters",
     "current_account": "tipsbp41: ambiguous series dimensions: [('partner', 0)]; refine filters"
   },
-  "last_attempt_utc": "2026-11-18T03:37:55+00:00",
-  "last_partial_refresh_utc": "2026-11-18T03:37:55+00:00",
+  "last_attempt_utc": "2026-11-18T04:08:42+00:00",
+  "last_partial_refresh_utc": "2026-11-18T04:08:42+00:00",
   "updated_this_run": [
     "gdp_growth"
   ]
