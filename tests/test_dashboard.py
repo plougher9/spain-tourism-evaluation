@@ -145,19 +145,44 @@ class NarrativesTest(unittest.TestCase):
         self.assertEqual(selected[-1], 2025)
         self.assertEqual([y for y in common if 2026 <= y <= 2026], [])
 
-    def test_slider_changes_hypothesis_headline_cards(self):
+    def test_financial_bridge_arithmetic_and_toggle(self):
+        from reader_story import financial_bridge
+        observed = financial_bridge(54.829, 113.48, 70.46, False)
+        removed = financial_bridge(54.829, 113.48, 70.46, True)
+        self.assertAlmostEqual(observed["other_services"], 43.02, places=2)
+        self.assertAlmostEqual(observed["goods_and_income"], -58.651, places=3)
+        self.assertAlmostEqual(observed["total"], 54.829, places=3)
+        self.assertAlmostEqual(removed["total"], -15.631, places=3)
+        self.assertAlmostEqual(removed["travel"], 0.0)
+        self.assertAlmostEqual(
+            removed["other_services"], observed["other_services"]
+        )
+
+    def test_slider_changes_narrative_year_and_financial_toggle(self):
         from streamlit.testing.v1 import AppTest
         app = AppTest.from_file(str(ROOT / "app.py")).run(timeout=55)
         self.assertFalse(app.exception)
+        self.assertTrue(any("01 · How important" in m.value
+                            for m in app.markdown))
         app.sidebar.slider[0].set_value((2015, 2022)).run(timeout=55)
         self.assertFalse(app.exception)
-        labels = [metric.label for metric in app.metric]
-        self.assertIn("2022 nominal / visitor", labels)
-        self.assertNotIn("2025 nominal / visitor", labels)
+        self.assertTrue(any("2022 annual values" in c.value
+                            for c in app.caption))
+        self.assertTrue(any("2022" in m.value and "annual travel surplus" in m.value
+                            for m in app.markdown) or
+                        any("2022" in m.value and "net travel" in m.value
+                            for m in app.markdown))
         app.sidebar.slider[0].set_value((2019, 2026)).run(timeout=55)
         self.assertFalse(app.exception)
-        labels = [metric.label for metric in app.metric]
-        self.assertIn("2025 nominal / visitor", labels)
+        self.assertTrue(any("2025 annual values" in c.value
+                            for c in app.caption))
+        toggle = next(button for button in app.button
+                      if button.label == "Remove travel contribution")
+        toggle.click().run(timeout=55)
+        self.assertFalse(app.exception)
+        self.assertTrue(any("€-15.6B" in m.value for m in app.markdown))
+        self.assertTrue(any(button.label == "Restore travel contribution"
+                            for button in app.button))
 
     def test_every_main_chart_has_labeled_axes(self):
         from unittest.mock import patch
