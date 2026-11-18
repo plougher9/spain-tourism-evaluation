@@ -582,9 +582,14 @@ def render_visitor_concentration(release, start_year, end_year):
     with left:
         st.metric(f"{latest} top-three visitor-market share",
                   f"{annual[latest]['top_three_pct']:.1f}%")
-        if 2019 in annual:
-            delta = annual[latest]["top_three_pct"] - annual[2019]["top_three_pct"]
-            st.caption(f"{delta:+.1f} percentage points vs 2019 (fixed reference)")
+        baseline = visible[0]
+        if baseline != latest:
+            delta = (annual[latest]["top_three_pct"]
+                     - annual[baseline]["top_three_pct"])
+            st.caption(f"{delta:+.1f} percentage points vs {baseline} "
+                       "(first year in selected range)")
+        else:
+            st.caption("Select more than one year to compare concentration.")
         st.metric(f"{latest} UK visitor share", f"{annual[latest]['uk_pct']:.1f}%")
         st.caption("The UK market is sensitive in principle to pound/euro purchasing power.")
     with right:
