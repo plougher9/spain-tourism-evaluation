@@ -292,11 +292,11 @@ def render_story(series, specs, start_year, end_year, rolling_balance=None):
             "caused tourism revenues to collapse. In 2022, higher imported "
             "energy prices damaged Spain's terms of trade, while tourism "
             "and other services recovered. Strong services exports helped "
-            "cushion the shock, but did **not** fully offset the higher "
-            "energy-import bill. This is an observed association, not a "
+            "cushion the pressure from rising energy-import costs. "
+            "This is an observed association, not a "
             "causal estimate of tourism's contribution to the current account. "
-            "[IMF 2023 External Sector Report]"
-            "(https://www.imf.org/-/media/files/publications/esr/2023/english/ch3.pdf)"
+            "[IMF 2022 Article IV report (published January 2023)]"
+            "(https://www.imf.org/en/publications/cr/issues/2023/01/19/spain-2022-article-iv-consultation-press-release-staff-report-and-statement-by-the-528338)"
         )
         st.caption(
             "The energy shock is contextual: this dashboard's six core "
