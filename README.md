@@ -18,6 +18,12 @@ The sidebar's inclusive calendar-year range filters the charts; the historic 202
 
 The additional `.github/workflows/validate-dashboard.yml` workflow validates Python syntax, derived-year calculations, and a Streamlit page render on changes to dashboard code. This check is **separate** from the scheduled official-data refresh.
 
+## 2022 energy-price shock and tourism resilience
+
+The narrative adds a separately labeled **2022 energy-price shock / tourism resilience** exhibit, contrasting full-year INE EGATUR nominal tourism spending and Eurostat travel-services surplus in 2021 and 2022. The indexed spending/visitor chart and the annual travel-balance chart also identify 2022. These observations are calculated dynamically from the six existing official series, and no energy-import data or extra indicator has been invented.
+
+Historical context is based on the [IMF 2022 Article IV report, published in January 2023](https://www.imf.org/en/publications/cr/issues/2023/01/19/spain-2022-article-iv-consultation-press-release-staff-report-and-statement-by-the-528338), which describes tourism and services recovery alongside higher energy import costs. **Interpretation limitation:** the charts alone do not measure Spain's energy import bill, isolate causal effects, or prove exactly how much of the energy shock tourism offset. This comparison illustrates a different transmission channel from the 2020 pandemic shock.
+
 ## Latest published tourism balance (separate from annual history)
 
 A separately labeled **Banco de España release snapshot** shows a rolling 12-month tourism surplus of **€74.9 billion** for the 12 months ending **August 2026**, compared with **€71.1 billion** for the 12 months ending August 2025. The same release reports the rolling tourism surplus at **4.3% of GDP**. Original release: [Banco de España, published October 30, 2026](https://www.bde.es/wbe/es/noticias-eventos/actualidad-banco-espana/balanza-de-pagos-mensual-agosto-2026.html).
