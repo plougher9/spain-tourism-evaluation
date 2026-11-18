@@ -152,7 +152,8 @@ class NarrativesTest(unittest.TestCase):
         for key in ("tourism-index", "travel-surplus-shock",
                     "tourism-gdp-share", "gdp_growth-context",
                     "current_account-context"):
-            x = ["2019-01-01", "2020-01-01"] if key.endswith("-context") else [2019, 2020]
+            from datetime import datetime
+            x = [datetime(2019, 1, 1), datetime(2020, 1, 1)] if key.endswith("-context") else [2019, 2020]
             y = [100.0, 80.0]
             fig = go.Figure(go.Scatter(x=x, y=y,
                                       line={"color": "#416F94"}))
