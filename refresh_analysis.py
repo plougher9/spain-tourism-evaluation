@@ -19,14 +19,14 @@ CONFIG = {
         "scale": 1.0,
         "source": "Eurostat HICP, all-items, annual average index",
         "url": URL + "prc_hicp_aind/default/table",
-        "unit": "annual index, 2015=100 in archived series",
+        "unit": "annual HICP index (rebasing does not affect 2019-ratio deflation)",
     },
     "current_account_eur": {
         "dataset": "bop_c6_a",
         "filters": {
             "geo": "ES", "freq": "A", "currency": "MIO_EUR",
             "bop_item": "CA", "stk_flow": "BAL",
-            "partner": "WRL_REST", "sect": "S1", "sectpart": "S1",
+            "partner": "WRL_REST", "sector10": "S1", "sectpart": "S1",
         },
         "scale": 0.001,
         "source": "Eurostat BPM6 annual current-account balance",
