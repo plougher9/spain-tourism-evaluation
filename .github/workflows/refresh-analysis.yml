@@ -1,0 +1,39 @@
+name: Refresh supplementary finance analysis
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'refresh_analysis.py'
+      - '.github/workflows/refresh-analysis.yml'
+  schedule:
+    - cron: '45 9 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh-analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      - name: Install requirements
+        run: pip install -r requirements.txt
+      - name: Retrieve official supplementary indicators
+        id: refresh
+        run: python refresh_analysis.py
+        continue-on-error: true
+      - name: Commit valid observations and errors
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/analysis.json
+          git diff --cached --quiet || (git commit -m 'Refresh official inflation and external-accounts indicators' && git push)
+      - name: Report source failures
+        if: steps.refresh.outcome == 'failure'
+        run: exit 1
