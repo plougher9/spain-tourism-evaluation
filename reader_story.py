@@ -814,19 +814,90 @@ def render_reader_story(series, analysis_data, start_year, end_year, rolling_bal
     render_shock_section(travel, current, goods, start_year, end_year, visitor_concentration)
 
     st.markdown("### Overall analysis · What can we conclude?")
+    if 2025 in current and 2025 in travel:
+        st.markdown(
+            f"**Financial strength:** In 2025 Spain recorded a "
+            f"€{travel[2025]:.1f}B net travel-services surplus against a "
+            f"€{current[2025]:.1f}B current-account surplus. Tourism therefore "
+            "made a substantial positive accounting contribution to the "
+            "external balance—but the remove-travel illustration is **not** "
+            "a forecast of an economy without tourism."
+        )
+    else:
+        st.markdown(
+            "**Financial strength:** Net travel-services earnings contribute "
+            "positively to Spain's external accounts; the effect of removing "
+            "them is an accounting illustration, not an economic forecast."
+        )
+
+    nominal = nominal_spending_per_visitor(spending, arrivals)
+    adjusted = real_spending_per_visitor(spending, arrivals, hicp)
+    if all(y in nominal and y in adjusted for y in (2019, 2025)):
+        nominal_pct = 100 * (nominal[2025] / nominal[2019] - 1)
+        adjusted_pct = 100 * (adjusted[2025] / adjusted[2019] - 1)
+        st.markdown(
+            f"**Quality of growth:** Spending per visitor rose "
+            f"{nominal_pct:.1f}% in nominal terms from 2019 to 2025, "
+            f"but only {adjusted_pct:.1f}% using the Spain-wide HICP "
+            "purchasing-power proxy. Higher receipts do not automatically "
+            "mean proportionately higher real economic value."
+        )
     st.markdown(
-        "**Financial strength:** The net travel surplus makes a large positive "
-        "accounting contribution to Spain's current account. "
-        "**Economic value:** Nominal spending per visitor has grown considerably "
-        "faster than a Spain-wide inflation-adjusted proxy. "
-        "**Dependence:** The reported tourism share of GDP does not establish "
-        "a continuously increasing share, and statistical revisions limit "
-        "exact long-term comparisons. "
-        "**Risk:** COVID demonstrates sensitivity to travel restrictions; "
-        "the 2022 rebound during an energy shock illustrates resilience "
-        "under a different stress. Visitor-market diversification may "
-        "reduce concentration exposure, although the UK market still "
-        "creates potential pound/euro-related tourism-demand risk. "
-        "These findings are descriptive, not causal."
+        "**Dependence and shocks:** The available tourism-GDP series does "
+        "not establish a continuously rising share, especially across INE "
+        "methodological revisions. COVID-19 demonstrated vulnerability to "
+        "travel restrictions; recovery during the 2022 energy-price shock "
+        "demonstrated a different response. Neither comparison isolates "
+        "tourism's causal impact on the wider economy."
+    )
+
+    concentration = {}
+    if isinstance(visitor_concentration, dict):
+        for o in visitor_concentration.get("observations", []):
+            try:
+                concentration[int(o["year"])] = {
+                    "top_three_pct": float(o["top_three_pct"]),
+                    "uk_pct": float(o["uk_pct"]),
+                }
+            except (TypeError, ValueError, KeyError):
+                continue
+    window = [y for y in sorted(concentration)
+              if start_year <= y <= end_year]
+    if window:
+        first, latest = window[0], window[-1]
+        difference = (concentration[latest]["top_three_pct"]
+                      - concentration[first]["top_three_pct"])
+        change_text = (
+            f"declined {abs(difference):.1f} percentage points"
+            if difference < 0 else
+            f"rose {difference:.1f} percentage points"
+            if difference > 0 else "was unchanged"
+        )
+        st.markdown(
+            f"**Structural exposure:** The share of arrivals from Spain's "
+            f"three largest visitor countries {change_text} between "
+            f"{first} and {latest} "
+            f"({concentration[first]['top_three_pct']:.1f}% to "
+            f"{concentration[latest]['top_three_pct']:.1f}%). "
+            "Lower concentration may support resilience, but the UK remains "
+            f"a major source market ({concentration[latest]['uk_pct']:.1f}% "
+            f"of arrivals in {latest}), leaving potential pound/euro "
+            "purchasing-power exposure. These are arrival shares, **not** "
+            "spending shares or evidence of an established exchange-rate effect."
+        )
+    else:
+        st.markdown(
+            "**Structural exposure:** Source-market concentration can reveal "
+            "potential vulnerability, but no complete annual country-of-origin "
+            "observations are available in the selected range."
+        )
+    st.caption(
+        "**Bottom line:** Tourism strengthens Spain's external finances while "
+        "remaining sensitive to shocks. Geographic diversification is an "
+        "encouraging resilience signal, not proof that aggregate vulnerability "
+        "has disappeared. All conclusions are descriptive; the 2019–2025 "
+        "spending comparison and 2025 balance-of-payments benchmark are "
+        "explicit historical references, while source-market concentration "
+        "responds to the selected year range."
     )
     render_exploration(travel, current, goods, rolling_balance, start_year, end_year)
