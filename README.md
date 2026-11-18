@@ -18,6 +18,12 @@ The sidebar's inclusive calendar-year range filters the charts; the historic 202
 
 The additional `.github/workflows/validate-dashboard.yml` workflow validates Python syntax, derived-year calculations, and a Streamlit page render on changes to dashboard code. This check is **separate** from the scheduled official-data refresh.
 
+## Latest published tourism balance (separate from annual history)
+
+A separately labeled **Banco de España release snapshot** shows a rolling 12-month tourism surplus of **€74.9 billion** for the 12 months ending **August 2026**, compared with **€71.1 billion** for the 12 months ending August 2025. The same release reports the rolling tourism surplus at **4.3% of GDP**. Original release: [Banco de España, published October 30, 2026](https://www.bde.es/wbe/es/noticias-eventos/actualidad-banco-espana/balanza-de-pagos-mensual-agosto-2026.html).
+
+The published values and citation are stored in `data/bde_travel_rolling12.json` and displayed in the international-finance section. **This release snapshot is not automatically updated** by the scheduled six-series data workflow. It is not 2026 annual data and must not be spliced into the 2015–2025 annual Eurostat travel balance. The reported **4.3% is a tourism balance relative to GDP**, not tourism's contribution to GDP (last INE Satellite Account year: 2024). Review and update this snapshot when a newer Banco de España release is independently verified.
+
 ## Six indicators
 
 | Series | Frequency | Original source |
