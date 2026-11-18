@@ -179,7 +179,14 @@ def render_original_sources():
     with b: graph('current_account')
 
 
-render_story(series, SPECS, start_year, end_year)
+rolling_balance_path = ROOT / 'data' / 'bde_travel_rolling12.json'
+rolling_balance = None
+if rolling_balance_path.exists():
+    try:
+        rolling_balance = json.loads(rolling_balance_path.read_text(encoding='utf-8'))
+    except (OSError, ValueError) as error:
+        st.warning(f'Unable to read Banco de España release snapshot: {error}')
+render_story(series, SPECS, start_year, end_year, rolling_balance=rolling_balance)
 
 with st.expander('Original six source charts and headline readings', expanded=False):
     st.caption('Source-level evidence, filtered to the selected inclusive calendar years.')
