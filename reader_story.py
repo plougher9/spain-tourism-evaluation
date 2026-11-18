@@ -40,7 +40,7 @@ def draw_financial_bridge(values, year, remove_travel):
     parts = [travel, other, other_accounts]
     labels = ["Travel services" if not remove_travel else "Travel removed",
               "Other services", "Goods + income\n& transfers",
-              "Total current\naccount"]
+              "Accounting\nremainder" if remove_travel else "Total current\naccount"]
     colors = [TEAL if not remove_travel else "#B9C7CF",
               BLUE, GOLD, TEAL if final >= 0 else RED]
     fig, ax = plt.subplots(figsize=(10.2, 4.2), dpi=105)
