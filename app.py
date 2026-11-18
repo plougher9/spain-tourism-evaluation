@@ -203,32 +203,31 @@ if analysis_path.exists():
 
 render_reader_story(series, analysis_data, start_year, end_year, rolling_balance=rolling_balance)
 
-with st.expander('Original six source charts and headline readings', expanded=False):
-    st.caption('Source-level evidence, filtered to the selected inclusive calendar years.')
-    if st.checkbox('Load all six detailed source charts', value=False,
-                   help='Load these additional charts only when needed to keep the main dashboard fast.'):
-        render_original_sources()
-
-st.markdown('<div class="section">Data dictionary & independent validation</div>',unsafe_allow_html=True)
-rows=[]
-for key,spec in SPECS.items():
-    entry=series.get(key,{})
-    obs=entry.get('observations',[])
-    lastobs=obs[-1] if obs else {}
-    rows.append({'Indicator':spec['title'],'Units':spec['unit'],'Frequency':spec['freq'],
-                 'Publisher':spec['source'],'Latest period':lastobs.get('period','Unavailable'),
-                 'Latest value':lastobs.get('value'),'Last series update (UTC)':entry.get('refreshed_utc','—'),
-                 'Status':'Available' if obs else 'Source unavailable'})
-table=pd.DataFrame(rows)
-st.dataframe(table,hide_index=True,use_container_width=True)
-
-with st.expander('How to independently verify one observation per series'):
-    st.markdown('Use the **Data dictionary** table above to read the period and latest value. Open each publisher link below, filter to the exact period, unit, and geography, and record the observed published value in `data/verification.csv`. Confirm all six against official data before treating refresh as verified.')
-    for key,spec in SPECS.items():
+with st.expander('Data dictionary & independent validation', expanded=False):
+    st.caption('Six official source series remain the foundation for all four chapters. This table is for inspecting and independently checking the published data.')
+    rows = []
+    for key, spec in SPECS.items():
+        entry = series.get(key, {})
+        obs = entry.get('observations', [])
+        lastobs = obs[-1] if obs else {}
+        rows.append({
+            'Indicator': spec['title'],
+            'Units': spec['unit'],
+            'Frequency': spec['freq'],
+            'Publisher': spec['source'],
+            'Latest period': lastobs.get('period', 'Unavailable'),
+            'Latest value': lastobs.get('value'),
+            'Last series update (UTC)': entry.get('refreshed_utc', '—'),
+            'Status': 'Available' if obs else 'Source unavailable',
+        })
+    st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True)
+    st.markdown('**How to independently verify a source observation**')
+    st.caption('Compare the latest observation, unit, geography and period in the table above with the original publisher. Record verified values in data/verification.csv.')
+    for key, spec in SPECS.items():
         st.markdown(f'- [{spec["title"]}: {spec["source"]}]({spec["url"]})')
-    ver_path=ROOT/'data'/'verification.csv'
+    ver_path = ROOT / 'data' / 'verification.csv'
     if ver_path.exists():
-        st.dataframe(pd.read_csv(ver_path),hide_index=True,use_container_width=True)
+        st.dataframe(pd.read_csv(ver_path), hide_index=True, use_container_width=True)
 
 if show_raw:
     all_obs=[]
