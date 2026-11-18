@@ -190,7 +190,9 @@ render_story(series, SPECS, start_year, end_year, rolling_balance=rolling_balanc
 
 with st.expander('Original six source charts and headline readings', expanded=False):
     st.caption('Source-level evidence, filtered to the selected inclusive calendar years.')
-    render_original_sources()
+    if st.checkbox('Load all six detailed source charts', value=False,
+                   help='Load these additional charts only when needed to keep the main dashboard fast.'):
+        render_original_sources()
 
 st.markdown('<div class="section">Data dictionary & independent validation</div>',unsafe_allow_html=True)
 rows=[]
