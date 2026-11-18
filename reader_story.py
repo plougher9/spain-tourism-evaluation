@@ -463,7 +463,7 @@ def plot_shock_history(travel, years):
     ax.axhline(0, color="#728894", linewidth=1)
     if 2020 in years:
         ax.annotate(
-            "COVID-19\\ntravel restrictions",
+            "COVID-19\ntravel restrictions",
             xy=(2020, travel[2020]),
             xytext=(2020 + .55, max(values)*.60),
             textcoords="data", fontsize=9, color=RED, weight="bold",
@@ -472,7 +472,7 @@ def plot_shock_history(travel, years):
         )
     if 2022 in years:
         ax.annotate(
-            "2022 energy-price shock\\nTourism recovery",
+            "2022 energy-price shock\nTourism recovery",
             xy=(2022, travel[2022]),
             xytext=(2022 + .5, max(values)*1.20),
             fontsize=9, color="#98671D", weight="bold",
@@ -581,7 +581,14 @@ def render_shock_section(travel, current, goods, start_year, end_year):
     )
 
     st.markdown(
-        "**B · Did strong tourism earnings protect Spain's overall external balance?**"
+        "**B · Did tourism recovery fully offset pressure elsewhere?**"
+    )
+    st.markdown(
+        "This chart compares the **travel-services surplus**, the **goods "
+        "trade balance**, and the **total current account** in four benchmark "
+        "years. It asks whether the recovery in tourism earnings was enough "
+        "to protect Spain's wider external balance. The three series are "
+        "related but should **not be added together**."
     )
     benchmark_years = [
         y for y in (2019, 2020, 2022, 2025)
@@ -605,13 +612,17 @@ def render_shock_section(travel, current, goods, start_year, end_year):
                 f"in 2019. Its BPM6 goods balance stood at "
                 f"€{goods[2022]:+.1f}B in 2022. Tourism's positive external "
                 "contribution therefore coexisted with considerable pressure "
-                "in other accounts."
+                "in other accounts. **Takeaway:** a tourism recovery can "
+                "help the external accounts without fully overcoming goods "
+                "trade and other balance-of-payments pressures."
             )
         elif 2022 in benchmark_years:
             st.markdown(
                 f"In 2022, travel services contributed €{travel[2022]:.1f}B "
                 f"but Spain's current-account surplus was €{current[2022]:.1f}B. "
-                f"The goods balance was €{goods[2022]:+.1f}B."
+                f"The goods balance was €{goods[2022]:+.1f}B. "
+                "**Takeaway:** tourism's recovery helped, but other parts of "
+                "the external accounts remained under pressure."
             )
     elif not goods:
         st.info(
