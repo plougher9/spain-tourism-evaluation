@@ -12,16 +12,19 @@ from reader_story import render_reader_story
 st.set_page_config(page_title='Spain | Tourism Value, Resilience & Risk',page_icon='🇪🇸',layout='wide')
 ROOT=Path(__file__).resolve().parent
 st.markdown('''<style>
-.stApp{background:#f5f7f8;color:#163142}.block-container{max-width:1400px;padding-top:1.5rem}
-.hero{background:linear-gradient(110deg,#112d40,#23566b);padding:27px 34px;border-radius:16px;color:white;margin:4px 0 18px}
+.stApp{background:#FAF7F2;color:#163142}.block-container{max-width:1400px;padding-top:1.5rem}
+.hero{background:linear-gradient(110deg,#163142 0%,#273E4C 76%,#752A2D 100%);padding:27px 34px;border-radius:16px;color:white;margin:4px 0 18px;border-bottom:4px solid #C99826}
 .hero h1{font-size:2rem;color:white;margin:4px 0}.hero small{color:#c9e3e7;letter-spacing:.11em;font-weight:700}
 .hero p{color:#e3f0f2;margin-bottom:0;max-width:950px}.panel{background:white;border:1px solid #e1e9ea;border-radius:13px;padding:14px 18px;margin:4px 0}
 .muted{color:#5f7180;font-size:.84rem}.metric-val{font-size:2rem;color:#14364a;font-weight:800}.eyebrow{letter-spacing:.12em;color:#577786;font-size:.74rem;font-weight:800}
 .section{font-size:1.1rem;font-weight:800;color:#15374a;padding-top:14px}
-.story-chapter{font-size:1.19rem;font-weight:800;color:#15374a;margin:22px 0 7px;padding:12px 0 6px;border-top:1px solid #d7e2e6}
-.narrative-lead{background:#eaf3f3;border-left:4px solid #16848c;border-radius:9px;padding:18px 21px;margin:8px 0 20px;color:#183c4c;line-height:1.65}
+.story-chapter{font-size:1.19rem;font-weight:800;color:#15374a;margin:22px 0 7px;padding:12px 0 6px;border-top:1px solid #E1D8C9}
+.narrative-lead{background:#F7F0E7;border-left:4px solid #AA151B;border-radius:9px;padding:18px 21px;margin:8px 0 20px;color:#183c4c;line-height:1.65}
 .narrative-conclusion{background:#f0f4f6;border-radius:12px;padding:18px 22px;margin:16px 0 25px;line-height:1.65;color:#183c4c}
-div[data-testid="stMetric"]{background:white;border:1px solid #e3e9ed;padding:16px;border-radius:12px}
+div[data-testid="stMetric"]{background:white;border:1px solid #E7E0D6;border-top:2px solid #C99826;padding:16px;border-radius:12px}
+section[data-testid="stSidebar"]{background:#F6F1EA}
+section[data-testid="stSidebar"] div[data-testid="stExpander"]{border-color:#E7E0D6}
+div.stButton>button[kind="primary"]{background:#AA151B;border-color:#AA151B}
 </style>''',unsafe_allow_html=True)
 st.markdown('''<div class="hero"><small>COUNTRY INTELLIGENCE / INTERNATIONAL FINANCE</small>
 <h1>Spain · Tourism Value, Resilience & Risk</h1><p>How does international tourism strengthen Spain's economy, and where does it leave the country vulnerable to external shocks?</p></div>''',unsafe_allow_html=True)
@@ -54,30 +57,34 @@ def observations_in_years(observations, start_year, end_year):
     ]
 
 with st.sidebar:
-    st.markdown('## Data & controls')
-    st.write('**Latest full-source refresh**')
-    st.write(last or 'Not yet completed')
-    st.caption('Timestamps are UTC. The date of the statistical observation appears on each chart separately.')
-    st.write('**Source completeness**')
-    st.progress(len(series)/len(SPECS),text=f'{len(series)} of {len(SPECS)} source series available')
-    show_raw=st.checkbox('Show full source observations',value=False)
+    st.markdown('## Explore the data')
     selected_years = st.slider(
         'Calendar years shown',
         min_value=earliest_year,
         max_value=latest_year,
         value=(default_start_year, latest_year),
         step=1,
-        help='Filters charts and selected-year metrics throughout the dashboard. Fixed historical comparisons are explicitly labeled.'
+        help='Filters charts and selected-year metrics. Fixed historical comparisons are explicitly labeled.'
     )
     start_year, end_year = selected_years
-    st.caption(f'Showing observations from {start_year} through {end_year}. '
-               'Series with no observations in this range will be clearly marked.')
-    st.info('Scheduled refresh: GitHub Actions every Monday. A page reload reads the latest committed snapshot; it does not contact sources directly.')
-    if st.button('Reload saved snapshot'):
-        st.rerun()
-    st.divider()
-    st.markdown('**Methods**')
-    st.caption('No interpolation, synthetic history, mixing of frequencies, or automatic conversion of nominal spending into real growth. All figures are descriptive, not causal estimates.')
+    st.caption(f'Viewing {start_year}–{end_year} · available series may have shorter coverage.')
+    st.caption(f'Last refreshed (UTC): {last or "Not yet completed"}')
+
+    with st.expander('Data sources & refresh status'):
+        st.progress(len(series) / len(SPECS),
+                    text=f'{len(series)} of {len(SPECS)} official series available')
+        st.caption('Scheduled data refresh: Mondays through GitHub Actions. '
+                   'Reloading the page uses the saved snapshot rather than contacting sources.')
+        if st.button('Reload saved snapshot'):
+            st.rerun()
+        if failures:
+            st.warning(f'{len(failures)} source issue(s) logged below the dashboard.')
+
+    with st.expander('Technical appendix & methods'):
+        show_raw = st.checkbox('Show full source observations', value=False)
+        st.caption('Monthly, quarterly, and annual series are not mixed. '
+                   'Nominal spending is not treated as real growth. '
+                   'Observational figures do not establish causation.')
 
 if failures:
     with st.expander(f'⚠️ {len(failures)} data-source issue(s) from last retrieval — inspect before submission',expanded=not complete):
