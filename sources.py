@@ -139,7 +139,7 @@ def _ine_series_id(metric):
 
 def ine_series(metric):
     """Fetch specific INE table data; integer metadata IDs are not series codes."""
-    table_ids = {'arrivals': 10821, 'spending': 10841, 'tourism_gdp': 33613}
+    table_ids = {'arrivals': 10821, 'spending': 10841, 'tourism_gdp': 72969}
     raw = http_json(API_INE + f'DATOS_TABLA/{table_ids[metric]}', {'nult': 180})
     if not isinstance(raw, list):
         raise SourceError(f'INE {metric}: table response is not a list')
