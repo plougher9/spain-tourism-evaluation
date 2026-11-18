@@ -1,0 +1,81 @@
+{
+  "source_name": "INE FRONTUR, country of residence, monthly base arrivals",
+  "source_url": "https://www.ine.es/jaxiT3/files/t/csv_bdsc/10822.csv",
+  "frequency": "annual",
+  "measure": "share of international visitor arrivals, percent",
+  "source_market_definition": "United Kingdom, France and Germany; top-three individual markets for observed years",
+  "coverage_note": "Complete calendar years only. No 2026 annual observation yet.",
+  "method_note": "Top-three individual-country share divided by total arrivals. UK share provides potential pound/euro exposure, not an estimated FX effect.",
+  "observations": [
+    {
+      "year": 2016,
+      "top_three_pct": 53.2996,
+      "uk_pct": 23.4686,
+      "france_pct": 14.9486,
+      "germany_pct": 14.8824
+    },
+    {
+      "year": 2017,
+      "top_three_pct": 51.2669,
+      "uk_pct": 22.9719,
+      "france_pct": 13.7626,
+      "germany_pct": 14.5323
+    },
+    {
+      "year": 2018,
+      "top_three_pct": 49.7923,
+      "uk_pct": 22.3697,
+      "france_pct": 13.6379,
+      "germany_pct": 13.7848
+    },
+    {
+      "year": 2019,
+      "top_three_pct": 48.2796,
+      "uk_pct": 21.5695,
+      "france_pct": 13.3487,
+      "germany_pct": 13.3614
+    },
+    {
+      "year": 2020,
+      "top_three_pct": 49.8037,
+      "uk_pct": 16.6386,
+      "france_pct": 20.5341,
+      "germany_pct": 12.631
+    },
+    {
+      "year": 2021,
+      "top_three_pct": 49.1783,
+      "uk_pct": 13.799,
+      "france_pct": 18.6739,
+      "germany_pct": 16.7055
+    },
+    {
+      "year": 2022,
+      "top_three_pct": 48.8235,
+      "uk_pct": 21.1025,
+      "france_pct": 14.0889,
+      "germany_pct": 13.632
+    },
+    {
+      "year": 2023,
+      "top_three_pct": 46.9891,
+      "uk_pct": 20.2683,
+      "france_pct": 13.8175,
+      "germany_pct": 12.9033
+    },
+    {
+      "year": 2024,
+      "top_three_pct": 46.1227,
+      "uk_pct": 19.6058,
+      "france_pct": 13.7832,
+      "germany_pct": 12.7337
+    },
+    {
+      "year": 2025,
+      "top_three_pct": 45.3523,
+      "uk_pct": 19.7145,
+      "france_pct": 13.189,
+      "germany_pct": 12.4487
+    }
+  ]
+}
