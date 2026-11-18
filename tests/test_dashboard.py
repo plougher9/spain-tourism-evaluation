@@ -67,6 +67,33 @@ class NarrativesTest(unittest.TestCase):
         self.assertTrue(callable(plot_chart))
         self.assertTrue(matplotlib.__version__)
 
+    def test_inflation_adjusted_visitor_yield_and_external_balances(self):
+        import json
+        from analysis_sections import (
+            annual_totals, annual_values, nominal_spending_per_visitor,
+            real_spending_per_visitor,
+        )
+        analysis = json.loads(
+            (ROOT / "data" / "analysis.json").read_text(encoding="utf-8")
+        )
+        self.assertFalse(analysis["errors"])
+        a = annual_totals(self.series["arrivals"])
+        s = annual_totals(self.series["spending"])
+        hicp = annual_values(analysis["series"]["hicp"])
+        nominal = nominal_spending_per_visitor(s, a)
+        real = real_spending_per_visitor(s, a, hicp)
+        self.assertAlmostEqual(nominal[2019], 1102.5, delta=0.5)
+        self.assertAlmostEqual(nominal[2025], 1397.9, delta=0.5)
+        self.assertAlmostEqual(real[2025], 1150.8, delta=0.5)
+        self.assertGreater(real[2025], nominal[2019])
+        self.assertLess(real[2025], nominal[2025])
+        travel = annual_values(self.series["travel_balance"])
+        ca = annual_values(analysis["series"]["current_account_eur"])
+        services = annual_values(analysis["series"]["services_balance_eur"])
+        self.assertAlmostEqual(ca[2025] - travel[2025], -15.631, places=2)
+        self.assertAlmostEqual(travel[2025] / services[2025] * 100,
+                               62.09, delta=0.1)
+
     def test_streamlit_page_renders(self):
         from streamlit.testing.v1 import AppTest
         app = AppTest.from_file(str(ROOT / "app.py")).run(timeout=55)
