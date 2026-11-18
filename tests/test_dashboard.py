@@ -61,6 +61,12 @@ class NarrativesTest(unittest.TestCase):
             self.series["travel_balance"]["observations"][-1]["period"], "2025"
         )
 
+    def test_static_chart_renderer_is_available(self):
+        import matplotlib
+        from story_sections import plot_chart
+        self.assertTrue(callable(plot_chart))
+        self.assertTrue(matplotlib.__version__)
+
     def test_streamlit_page_renders(self):
         from streamlit.testing.v1 import AppTest
         app = AppTest.from_file(str(ROOT / "app.py")).run(timeout=55)
