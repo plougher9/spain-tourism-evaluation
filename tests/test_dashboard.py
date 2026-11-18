@@ -184,6 +184,35 @@ class NarrativesTest(unittest.TestCase):
         self.assertGreater(captured[0][0][3][1], 0)
         self.assertLess(captured[1][0][3][1], 0)
 
+    def test_part_three_arrivals_spending_and_real_yield_are_comparable(self):
+        from unittest.mock import patch
+        import json
+        from reader_story import render_yield_section
+        from analysis_sections import change_from_baseline
+        from story_sections import annual_totals, annual_values
+        spending = annual_totals(self.series["spending"])
+        arrivals = annual_totals(self.series["arrivals"])
+        analysis = json.loads(
+            (ROOT / "data" / "analysis.json").read_text(encoding="utf-8")
+        )
+        hicp = annual_values(analysis["series"]["hicp"])
+        captured = []
+        def capture(years, series_items, ylabel, key, percent=False):
+            captured.append((years, series_items, ylabel, key, percent))
+        with patch("reader_story.plot_line", side_effect=capture):
+            render_yield_section(spending, arrivals, hicp, 2019, 2025)
+        self.assertEqual(len(captured), 2)
+        years, series_items, ylabel, key, percent = captured[0]
+        self.assertEqual(key, "arrivals-versus-spending")
+        self.assertFalse(percent)
+        self.assertAlmostEqual(series_items[0][1][2019], 100.0)
+        self.assertAlmostEqual(series_items[1][1][2019], 100.0)
+        self.assertGreater(series_items[1][1][2025], series_items[0][1][2025])
+        self.assertIn("2019 = 100", ylabel)
+        self.assertEqual(captured[1][3], "visitor-yield")
+        self.assertTrue(captured[1][4])
+        self.assertEqual(captured[1][0], years)
+
     def test_tourism_gdp_has_room_at_2019(self):
         from unittest.mock import patch
         from analysis_sections import plot_line
