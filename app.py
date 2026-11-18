@@ -10,7 +10,7 @@ from sources import SPECS, load_snapshot
 from story_sections import render_story
 from analysis_sections import render_analysis
 
-st.set_page_config(page_title='Spain | Tourism & External Exposure',page_icon='🇪🇸',layout='wide')
+st.set_page_config(page_title='Spain | Tourism Value, Resilience & Risk',page_icon='🇪🇸',layout='wide')
 ROOT=Path(__file__).resolve().parent
 st.markdown('''<style>
 .stApp{background:#f5f7f8;color:#163142}.block-container{max-width:1400px;padding-top:1.5rem}
@@ -25,7 +25,7 @@ st.markdown('''<style>
 div[data-testid="stMetric"]{background:white;border:1px solid #e3e9ed;padding:16px;border-radius:12px}
 </style>''',unsafe_allow_html=True)
 st.markdown('''<div class="hero"><small>COUNTRY INTELLIGENCE / INTERNATIONAL FINANCE</small>
-<h1>Spain · Tourism & External Exposure</h1><p>Is Spain's growing reliance on international tourism strengthening its economy or increasing vulnerability to external shocks?</p></div>''',unsafe_allow_html=True)
+<h1>Spain · Tourism Value, Resilience & Risk</h1><p>Is Spain's tourism expansion creating greater economic value and financial resilience, or increasing its vulnerability to external shocks?</p></div>''',unsafe_allow_html=True)
 
 snapshot=load_snapshot(ROOT/'data')
 series=snapshot.get('series',{})
@@ -68,7 +68,7 @@ with st.sidebar:
         max_value=latest_year,
         value=(default_start_year, latest_year),
         step=1,
-        help='Applied to all six charts and the three summary metrics. Years are inclusive.'
+        help='Filters charts and selected-year metrics throughout the dashboard. Fixed historical comparisons are explicitly labeled.'
     )
     start_year, end_year = selected_years
     st.caption(f'Showing observations from {start_year} through {end_year}. '
@@ -129,7 +129,7 @@ def graph(key):
                                      hovertemplate='%{x|%Y-%m}: %{y:,.2f}<extra></extra>'))
             fig.update_layout(height=240,margin=dict(l=2,r=8,t=5,b=8),
                               paper_bgcolor='rgba(0,0,0,0)',plot_bgcolor='rgba(0,0,0,0)',
-                              xaxis=dict(showgrid=False,range=[f'{start_year}-01-01',f'{end_year}-12-31']),
+                              xaxis=dict(title='Calendar year',showgrid=False,range=[f'{start_year}-01-01',f'{end_year}-12-31']),
                               yaxis=dict(gridcolor='#e9eef2',title=spec['unit']),showlegend=False)
             st.plotly_chart(fig,use_container_width=True,config={'displayModeBar':False})
             latest=window.iloc[-1]
