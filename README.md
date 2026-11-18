@@ -2,6 +2,18 @@
 
 **Research question:** Is Spain's growing reliance on international tourism strengthening its economy or increasing vulnerability to external shocks?
 
+## Analytical findings: quality of growth and external financial role
+
+The dashboard now tests two hypotheses **before** the original shock narrative:
+
+**1. Is Spain obtaining more value per visitor after inflation?** Annual INE EGATUR tourist expenditure in euros is divided by annual INE FRONTUR visitor arrivals to calculate *nominal spending per international visitor*. Annual [Eurostat all-items HICP](https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_aind/default/table) is used to derive a **consumer-price-adjusted proxy expressed in 2019 euros**: nominal spending per visitor × HICP(2019)/HICP(year). It uses only complete 12-month arrival/spending years. This proxy is **not an official tourism-services price deflator**, not tourism value added, and may not track tourists' actual purchase basket. It is a useful inflation sensitivity, not a precise real-tourism measure.
+
+**2. Does net travel meaningfully support Spain's external position?** The original annual Eurostat travel-services balance (`bop_its6_det`, SD, BAL, € billion) is compared with the [Eurostat annual balance-of-payments current account](https://ec.europa.eu/eurostat/databrowser/view/bop_c6_a/default/table), converted from million euros to € billion and restricted to the same years. The dashboard also reads Eurostat total international services balance. Travel as a share of total *net services balance* is shown when that balance is positive. The chart's **current account excluding net travel** means current account minus net travel balance. It is an *accounting remainder*, **not** a hypothetical economy without tourism and not a causal estimate. This remainder includes goods, other services, primary and secondary income.
+
+The supplemental Eurostat observations are stored in `data/analysis.json` and updated by the independent `.github/workflows/refresh-analysis.yml` workflow on Mondays and on manual dispatch. The original six-source refresh is unchanged. If a supplemental source fails, existing valid observations are retained and an explicit error is saved; missing figures are not guessed. The new visitor-yield chart is rendered server-side to prevent browser-side chart freezes.
+
+Using the November 18, 2026 snapshot, the 2019–2025 nominal spending-per-visitor increase is roughly **26.8%**, but only **4.4%** using Spain's consumer-price proxy. In 2025 the travel surplus (€70.46 billion) is about **62.1%** of the total services surplus (€113.48 billion); total current-account balance is €54.829 billion, giving an arithmetic remainder of **−€15.631 billion**. These findings should be refreshed and rechecked against the latest publisher values before submission.
+
 ## Dashboard narrative and interaction
 
 The main page now leads with an evidence-based interpretation organized into five exhibits:
