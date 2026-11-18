@@ -30,7 +30,7 @@ The dashboard now tests two hypotheses **before** the original shock narrative:
 
 The supplemental Eurostat observations are stored in `data/analysis.json` and updated by the independent `.github/workflows/refresh-analysis.yml` workflow on Mondays and on manual dispatch. The original six-source refresh is unchanged. If a supplemental source fails, existing valid observations are retained and an explicit error is saved; missing figures are not guessed. The spending-per-visitor comparison uses an interactive Altair chart; other main exhibits use server-side Matplotlib rendering. Chapter 3's visible history respects the selected inclusive years, while growth is explicitly measured against the fixed 2019 baseline. Part 4 concentration changes compare the selected first and last available observations.
 
-Using the November 18, 2026 snapshot, the 2019–2025 nominal spending-per-visitor increase is roughly **26.8%**, but only **4.4%** using Spain's consumer-price proxy. In 2025 the travel surplus (€70.46 billion) is about **62.1%** of the total services surplus (€113.48 billion); total current-account balance is €54.829 billion, giving an arithmetic remainder of **−€15.631 billion**. These findings should be refreshed and rechecked against the latest publisher values before submission.
+Using the November 18, 2026 snapshot, the 2019–2025 nominal spending-per-visitor increase is roughly **26.5%**, but only **4.1%** using Spain's consumer-price proxy. In 2025 the travel surplus (€70.46 billion) is about **62.1%** of the total services surplus (€113.48 billion); total current-account balance is €54.829 billion, giving an arithmetic remainder of **−€15.631 billion**. These findings should be refreshed and rechecked against the latest publisher values before submission.
 
 ## Dashboard narrative and interaction
 
@@ -44,7 +44,7 @@ The full-data dictionary, official links and source-check guidance are collapsed
 
 **Financial contribution:** The 2025 €70.46 billion net travel-services surplus exceeds the €54.83 billion current-account surplus. Subtracting travel produces an accounting remainder, not a no-tourism forecast.
 
-**Purchasing-power quality:** From 2019 to 2025, nominal spending per visitor increased about 26.8%, versus approximately 4.4% adjusted by Spain-wide HICP. HICP is a general consumer-price proxy, not a tourism price deflator or a measure of tourism GDP/value added.
+**Purchasing-power quality:** From 2019 to 2025, nominal spending per visitor increased about 26.5%, versus approximately 4.1% adjusted by Spain-wide HICP. HICP is a general consumer-price proxy, not a tourism price deflator or a measure of tourism GDP/value added.
 
 **Dependence and shocks:** Tourism-GDP estimates do not establish continuously growing reliance, especially across revisions. The COVID collapse shows vulnerability to a direct travel shock; the recovery in 2022 alongside energy-price pressures shows a different historical response, not proof of causal offset.
 
@@ -88,6 +88,10 @@ streamlit run app.py
 ```
 
 **Live data:** The dashboard retrieves six official datasets. Spain's tourism share of GDP combines the current INE Tourism Satellite Account table (2021 onward) with published historical observations for 2015–2020 from INE official SDG series [DCE89](https://www.ine.es/consul/serie.do?L=0&d=true&s=DCE89). Historical observations are documented official figures (not synthetic); scheduled refreshes retain them. Check current workflow logs and independently verify one published observation per dataset before submission. A failed refresh exits nonzero, records the failure and retains older valid series rather than fabricating data.
+
+## INE monthly reference-period correction (November 18, 2026)
+
+The INE Tempus monthly observations are timestamped at **midnight in mainland Spain**. Interpreting these timestamps in UTC instead of `Europe/Madrid` can incorrectly label a September observation as August. `sources.py` now uses Spain's local calendar month, and the official-data refresh reloaded the saved series. September 2026 FRONTUR reports **10,139,650 international arrivals** and EGATUR reports approximately **€14.488 billion in nominal tourist spending**, independently confirmed by the corresponding INE September releases. Correcting all affected month labels also corrects the calendar-year spending and arrivals aggregates and therefore Part 3 derived growth rates. The 2019–2025 changes are now approximately **26.5% nominal** and **4.1% HICP-adjusted** spending per visitor. The separately sourced rolling August 2026 Banco de España financial release is not affected.
 
 ## GitHub Actions automation
 
