@@ -34,6 +34,15 @@ def nominal_spending_per_visitor(spending, arrivals):
             if arrivals[y] > 0}
 
 
+def change_from_baseline(values, base_year=2019):
+    """Percentage change from a fixed baseline, even if baseline is off-chart."""
+    base = values.get(base_year)
+    if base is None or base <= 0:
+        return {}
+    return {year: 100.0 * (value / base - 1.0)
+            for year, value in values.items()}
+
+
 def plot_line(years, series_items, ylabel, key, percent=False):
     """Small server-side image; never loads Plotly JavaScript in the browser."""
     fig, ax = plt.subplots(figsize=(10.2, 3.4), dpi=105)
@@ -43,6 +52,23 @@ def plot_line(years, series_items, ylabel, key, percent=False):
         ax.plot(years, [values.get(y, float("nan")) for y in years],
                 color=color, linewidth=2.5, marker="o", markersize=4.3,
                 label=label)
+    if percent:
+        from matplotlib.ticker import FuncFormatter
+        ax.axhline(0, color="#687A86", linewidth=1.3, linestyle="--")
+        ax.yaxis.set_major_formatter(FuncFormatter(lambda value, position: f"{value:+.0f}%"))
+        # Show exact endpoint figures, so quoted growth is visible on the plot.
+        last_year = years[-1]
+        for i, (label, values, color) in enumerate(series_items):
+            if last_year in values:
+                point = values[last_year]
+                ax.annotate(
+                    f"{point:+.1f}%",
+                    xy=(last_year, point),
+                    xytext=(8, 10 if i == 0 else -14),
+                    textcoords="offset points",
+                    color=color, weight="bold", fontsize=10
+                )
+        ax.margins(y=0.19)
     ax.grid(axis="y", color=GRID)
     ax.set_axisbelow(True)
     ax.spines[["left", "top", "right"]].set_visible(False)
@@ -98,22 +124,23 @@ def render_analysis(series, analysis_data, start_year, end_year):
     )
     st.caption(
         f"Showing available annual observations for {start_year}–{end_year}. "
-        "Spending-per-visitor indices retain 2019 = 100 as the fixed "
-        "reference, even when that baseline falls outside the visible range."
+        "Hypothesis 1 shows percentage changes relative to the fixed "
+        "2019 baseline (0%), even when 2019 falls outside the visible range."
     )
 
     st.markdown("#### Hypothesis 1 · Is tourism earning more per visitor after inflation?")
     years = [y for y in sorted(nominal) if start_year <= y <= end_year]
     if years and 2019 in nominal:
         latest = years[-1]
-        nominal_index = {y: 100 * nominal[y] / nominal[2019] for y in years}
+        nominal_growth_series = change_from_baseline(nominal)
+        nominal_visible = {y: nominal_growth_series[y] for y in years}
         cols = st.columns(3)
         with cols[0]:
             st.metric("2019 baseline, nominal / visitor", f"€{nominal[2019]:,.0f}")
             st.caption("Fixed reference, independent of date selection")
         with cols[1]:
             st.metric(f"{latest} nominal / visitor", f"€{nominal[latest]:,.0f}",
-                      f"{nominal_index[latest]-100:+.1f}% vs 2019")
+                      f"{nominal_visible[latest]:+.1f}% vs 2019")
         with cols[2]:
             if latest in real and 2019 in real:
                 change = 100 * real[latest] / real[2019] - 100
@@ -122,16 +149,20 @@ def render_analysis(series, analysis_data, start_year, end_year):
                           f"{change:+.1f}% vs 2019")
             else:
                 st.metric(f"{latest} HICP-adjusted proxy", "Unavailable")
-        real_index = {
-            y: 100 * real[y] / real[2019]
-            for y in years if y in real and 2019 in real
+        real_growth_series = change_from_baseline(real)
+        real_visible = {
+            y: real_growth_series[y] for y in years
+            if y in real_growth_series
         }
-        plot_items = [("Nominal spend per visitor", nominal_index, BLUE)]
-        if real_index:
+        plot_items = [("Nominal spending per visitor", nominal_visible, BLUE)]
+        if real_visible:
             plot_items.append(
-                ("HICP-adjusted spend per visitor", real_index, TEAL)
+                ("Inflation-adjusted spending per visitor", real_visible, TEAL)
             )
-        plot_line(years, plot_items, "Index (2019 = 100)", "visitor-yield")
+        plot_line(
+            years, plot_items, "Change vs 2019 (%)", "visitor-yield",
+            percent=True
+        )
         st.caption(
             f"Full-year annual visitor averages available for "
             f"{min(nominal)}–{max(nominal)}. "
@@ -147,6 +178,39 @@ def render_analysis(series, analysis_data, start_year, end_year):
             "[Eurostat annual HICP]"
             "(https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_aind/default/table)"
         )
+        if latest in real and 2019 in real and latest in hicp and 2019 in hicp:
+            with st.expander(f"Show the math behind the {latest} percentages"):
+                st.markdown(
+                    f"**1. Spending per visitor** (annual spending ÷ arrivals): "
+                    f"2019 = €{spending[2019]:.2f}B ÷ {arrivals[2019]:.2f}M "
+                    f"= **€{nominal[2019]:,.2f} per visitor**. "
+                    f"{latest} = €{spending[latest]:.2f}B ÷ "
+                    f"{arrivals[latest]:.2f}M = "
+                    f"**€{nominal[latest]:,.2f} per visitor**."
+                )
+                st.markdown(
+                    f"**2. Nominal growth vs 2019:** "
+                    f"(€{nominal[latest]:,.2f} ÷ €{nominal[2019]:,.2f} − 1) "
+                    f"× 100 = **{nominal_visible[latest]:+.1f}%**."
+                )
+                st.markdown(
+                    f"**3. Consumer-price adjustment:** Spain's annual "
+                    f"all-items HICP is {hicp[2019]:.2f} in 2019 and "
+                    f"{hicp[latest]:.2f} in {latest}. "
+                    f"€{nominal[latest]:,.2f} × "
+                    f"({hicp[2019]:.2f} ÷ {hicp[latest]:.2f}) = "
+                    f"**€{real[latest]:,.2f} in 2019 euros**."
+                )
+                st.markdown(
+                    f"**4. Inflation-adjusted growth vs 2019:** "
+                    f"(€{real[latest]:,.2f} ÷ €{real[2019]:,.2f} − 1) "
+                    f"× 100 = **{real_visible[latest]:+.1f}%**."
+                )
+                st.caption(
+                    "Arithmetic uses unrounded data; displayed intermediate "
+                    "amounts are rounded. General consumer inflation is a "
+                    "proxy, not a tourism-specific price deflator."
+                )
         if 2019 in nominal and latest in nominal and latest in real:
             nominal_growth = 100 * (nominal[latest] / nominal[2019] - 1)
             adjusted_growth = 100 * (real[latest] / real[2019] - 1)
@@ -159,7 +223,7 @@ def render_analysis(series, analysis_data, start_year, end_year):
                 f"rather than a comparable increase in purchasing-power-adjusted "
                 f"spending per visitor."
             )
-        if not real_index:
+        if not real_visible:
             st.info("Official HICP observations are unavailable for the selected years.")
     else:
         st.info(
