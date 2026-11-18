@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   analyze:
@@ -24,6 +24,16 @@ jobs:
         run: pip install pandas requests
       - name: Analyze official INE tourism market shares and peak-season concentration
         run: python analysis_experiments/concentration_seasonality_test.py
+      - name: Commit source-derived concentration data for dashboard
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/visitor_concentration.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Refresh INE visitor-country concentration'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
       - name: Upload independent analysis
         if: always()
         uses: actions/upload-artifact@v4
