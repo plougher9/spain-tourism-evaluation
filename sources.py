@@ -21,7 +21,7 @@ TIMEOUT = 35
 SPECS = {
  'arrivals': dict(title='International tourist arrivals', unit='million visitors', freq='Monthly', source='INE · FRONTUR', url='https://www.ine.es/dyngs/INEbase/en/operacion.htm?c=Estadistica_C&cid=1254736176996&idp=1254735576863', why='Measures demand from non-resident visitors.'),
  'spending': dict(title='International tourist spending', unit='€ billion, nominal', freq='Monthly', source='INE · EGATUR', url='https://www.ine.es/dyngs/INEbase/en/operacion.htm?c=Estadistica_C&cid=1254736177002&idp=1254735576863', why='Measures nominal revenue from foreign travelers.'),
- 'tourism_gdp': dict(title='Tourism share of GDP', unit='% of GDP', freq='Annual', source='INE · Tourism Satellite Account', url='https://www.ine.es/dynt3/inebase/es/index.htm?capsel=12165&padre=12162', why='Measures how much of Spanish value added is tourism-related.'),
+ 'tourism_gdp': dict(title='Tourism share of GDP', unit='% of GDP', freq='Annual', source='INE · Tourism Satellite Account', url='https://www.ine.es/consul/serie.do?L=1&d=true&s=DCE89', why='Measures how much of Spanish value added is tourism-related.'),
  'gdp_growth': dict(title='Real GDP growth', unit='%, year over year', freq='Quarterly', source='Eurostat · namq_10_gdp', url='https://ec.europa.eu/eurostat/databrowser/view/namq_10_gdp/default/table', why='Provides the economy-wide growth benchmark.'),
  'travel_balance': dict(title='Travel-services trade balance', unit='€ billion', freq='Annual', source='Eurostat · bop_its6_det', url='https://ec.europa.eu/eurostat/databrowser/view/bop_its6_det/default/table', why='Measures travel receipts from non-residents minus residents’ travel spending abroad.'),
  'current_account': dict(title='Current account balance', unit='% of GDP', freq='Quarterly', source='Eurostat · tipsbp41', url='https://ec.europa.eu/eurostat/databrowser/view/tipsbp41/default/table', why='Shows Spain’s overall international current-account position.'),
@@ -30,6 +30,21 @@ SPECS = {
 # Specify verified INE series IDs here after running `python refresh.py --discover`.
 # When unspecified, the refresh process attempts strict, unambiguous auto discovery.
 INE_SERIES_IDS = {'arrivals': '286', 'spending': '585', 'tourism_gdp': 'DCE89'}
+
+# Published historical observations from INE SDG 8.9.1.2, official series DCE89.
+# https://www.ine.es/consul/serie.do?L=1&d=true&s=DCE89
+# These are real published values, not model-generated estimates.
+# INE states: 2015 uses Base 2010; 2016–2020 use Statistical Revision 2019;
+# 2021 onwards use Statistical Revision 2024. Comparison across the breaks
+# requires caution. The current Tourism Satellite Account table covers 2021+.
+INE_TOURISM_GDP_HISTORY = {
+    '2015': 11.1,
+    '2016': 11.3,
+    '2017': 12.1,
+    '2018': 12.2,
+    '2019': 12.6,
+    '2020': 6.0,
+}
 
 class SourceError(RuntimeError):
     pass
@@ -195,6 +210,18 @@ def ine_series(metric):
             f'observation count={len(observations)}, sample={sample!r}'
         )
     df = pd.DataFrame(items).drop_duplicates('period').sort_values('period')
+    if metric == 'tourism_gdp':
+        # The modern INE table has only 2021+; supplement its verified history
+        # from INE's consolidated DCE89 series. Live table takes precedence if
+        # INE later expands its historical coverage.
+        history = pd.DataFrame(
+            [{'period': year, 'value': value}
+             for year, value in INE_TOURISM_GDP_HISTORY.items()]
+        )
+        df = (pd.concat([history, df], ignore_index=True)
+              .drop_duplicates('period', keep='last')
+              .sort_values('period')
+              .reset_index(drop=True))
     if metric == 'arrivals':
         df['value'] /= 1_000_000
     elif metric == 'spending':
