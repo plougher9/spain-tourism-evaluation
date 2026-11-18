@@ -7,6 +7,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import streamlit as st
 from sources import SPECS, load_snapshot
+from story_sections import render_story
 
 st.set_page_config(page_title='Spain | Tourism & External Exposure',page_icon='🇪🇸',layout='wide')
 ROOT=Path(__file__).resolve().parent
@@ -16,7 +17,11 @@ st.markdown('''<style>
 .hero h1{font-size:2rem;color:white;margin:4px 0}.hero small{color:#c9e3e7;letter-spacing:.11em;font-weight:700}
 .hero p{color:#e3f0f2;margin-bottom:0;max-width:950px}.panel{background:white;border:1px solid #e1e9ea;border-radius:13px;padding:14px 18px;margin:4px 0}
 .muted{color:#5f7180;font-size:.84rem}.metric-val{font-size:2rem;color:#14364a;font-weight:800}.eyebrow{letter-spacing:.12em;color:#577786;font-size:.74rem;font-weight:800}
-.section{font-size:1.1rem;font-weight:800;color:#15374a;padding-top:14px}div[data-testid="stMetric"]{background:white;border:1px solid #e3e9ed;padding:16px;border-radius:12px}
+.section{font-size:1.1rem;font-weight:800;color:#15374a;padding-top:14px}
+.story-chapter{font-size:1.19rem;font-weight:800;color:#15374a;margin:22px 0 7px;padding:12px 0 6px;border-top:1px solid #d7e2e6}
+.narrative-lead{background:#eaf3f3;border-left:4px solid #16848c;border-radius:9px;padding:18px 21px;margin:8px 0 20px;color:#183c4c;line-height:1.65}
+.narrative-conclusion{background:#f0f4f6;border-radius:12px;padding:18px 22px;margin:16px 0 25px;line-height:1.65;color:#183c4c}
+div[data-testid="stMetric"]{background:white;border:1px solid #e3e9ed;padding:16px;border-radius:12px}
 </style>''',unsafe_allow_html=True)
 st.markdown('''<div class="hero"><small>COUNTRY INTELLIGENCE / INTERNATIONAL FINANCE</small>
 <h1>Spain · Tourism & External Exposure</h1><p>Is Spain's growing reliance on international tourism strengthening its economy or increasing vulnerability to external shocks?</p></div>''',unsafe_allow_html=True)
@@ -81,23 +86,6 @@ if not series:
     st.error('No verified historical series has been retrieved yet. Run `python refresh.py` and commit `data/snapshot.json`. The dashboard intentionally does not fabricate series.')
     st.info('Use `python refresh.py --discover` to inspect INE table IDs, then set exact INE series IDs in `sources.py`. Eurostat requests use explicit dimension filters.')
 
-present_cols=st.columns(3)
-for i,key in enumerate(('arrivals','spending','tourism_gdp')):
-    spec=SPECS[key]; row=series.get(key,{}); data=row.get('observations',[])
-    visible=observations_in_years(data,start_year,end_year)
-    latest=visible[-1] if visible else None
-    with present_cols[i]:
-        if latest:
-            st.metric(spec['title'],f'{latest["value"]:,.2f}',help=spec['unit'])
-            st.caption(f'{spec["unit"]} · {latest["period"]} · {spec["source"]} · selected range')
-        elif data:
-            st.metric(spec['title'],'No data in range')
-            st.caption(f'Available through {data[-1]["period"]} · {spec["source"]}')
-        else:
-            st.metric(spec['title'],'No verified data')
-            st.caption(f'{spec["unit"]} · {spec["source"]}')
-
-
 def parse_date(period):
     p=str(period)
     try:
@@ -157,18 +145,45 @@ def graph(key):
             st.write(spec['why'])
             st.caption(f'Last source retrieval: {entry.get("refreshed_utc","none")}')
 
-st.markdown('<div class="section">01 / Tourism demand</div>',unsafe_allow_html=True)
-a,b=st.columns(2)
-with a: graph('arrivals')
-with b: graph('spending')
-st.markdown('<div class="section">02 / Domestic economic reliance</div>',unsafe_allow_html=True)
-a,b=st.columns(2)
-with a: graph('tourism_gdp')
-with b: graph('gdp_growth')
-st.markdown('<div class="section">03 / External financial position</div>',unsafe_allow_html=True)
-a,b=st.columns(2)
-with a: graph('travel_balance')
-with b: graph('current_account')
+
+def render_original_sources():
+    present_cols=st.columns(3)
+    for i,key in enumerate(('arrivals','spending','tourism_gdp')):
+        spec=SPECS[key]; row=series.get(key,{}); data=row.get('observations',[])
+        visible=observations_in_years(data,start_year,end_year)
+        latest=visible[-1] if visible else None
+        with present_cols[i]:
+            if latest:
+                st.metric(spec['title'],f'{latest["value"]:,.2f}',help=spec['unit'])
+                st.caption(f'{spec["unit"]} · {latest["period"]} · {spec["source"]} · selected range')
+            elif data:
+                st.metric(spec['title'],'No data in range')
+                st.caption(f'Available through {data[-1]["period"]} · {spec["source"]}')
+            else:
+                st.metric(spec['title'],'No verified data')
+                st.caption(f'{spec["unit"]} · {spec["source"]}')
+
+
+
+    st.markdown('<div class="section">01 / Tourism demand</div>',unsafe_allow_html=True)
+    a,b=st.columns(2)
+    with a: graph('arrivals')
+    with b: graph('spending')
+    st.markdown('<div class="section">02 / Domestic economic reliance</div>',unsafe_allow_html=True)
+    a,b=st.columns(2)
+    with a: graph('tourism_gdp')
+    with b: graph('gdp_growth')
+    st.markdown('<div class="section">03 / External financial position</div>',unsafe_allow_html=True)
+    a,b=st.columns(2)
+    with a: graph('travel_balance')
+    with b: graph('current_account')
+
+
+render_story(series, SPECS, start_year, end_year)
+
+with st.expander('Original six source charts and headline readings', expanded=False):
+    st.caption('Source-level evidence, filtered to the selected inclusive calendar years.')
+    render_original_sources()
 
 st.markdown('<div class="section">Data dictionary & independent validation</div>',unsafe_allow_html=True)
 rows=[]
