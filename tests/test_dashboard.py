@@ -158,6 +158,50 @@ class NarrativesTest(unittest.TestCase):
             removed["other_services"], observed["other_services"]
         )
 
+    def test_financial_bars_are_zero_based_and_negative_below_axis(self):
+        from unittest.mock import patch
+        from reader_story import financial_bridge, draw_financial_bridge
+        captured = []
+        def inspect(fig, **kwargs):
+            ax = fig.axes[0]
+            captured.append((
+                [(bar.get_y(), bar.get_height()) for bar in ax.patches],
+                ax.get_ylabel(), ax.get_ylim(),
+            ))
+        with patch("reader_story.st.pyplot", side_effect=inspect):
+            for remove in (False, True):
+                values = financial_bridge(54.829, 113.48, 70.46, remove)
+                draw_financial_bridge(values, 2025, remove)
+        self.assertEqual(len(captured), 2)
+        for bars, label, limits in captured:
+            self.assertEqual(len(bars), 4)
+            self.assertTrue(all(abs(bottom) < 1e-9 for bottom, _ in bars))
+            self.assertLess(bars[2][1], 0)  # Goods and income below zero
+            self.assertGreater(bars[1][1], 0)  # Other services above zero
+            self.assertLess(limits[0], 0)
+            self.assertGreater(limits[1], 0)
+            self.assertIn("billion", label)
+        self.assertGreater(captured[0][0][3][1], 0)
+        self.assertLess(captured[1][0][3][1], 0)
+
+    def test_tourism_gdp_has_room_at_2019(self):
+        from unittest.mock import patch
+        from analysis_sections import plot_line
+        captured = []
+        def inspect(fig, **kwargs):
+            ax = fig.axes[0]
+            captured.append((ax.get_xlim(), ax.get_legend()))
+        with patch("analysis_sections.st.pyplot", side_effect=inspect):
+            plot_line([2019, 2020, 2021, 2022, 2023, 2024],
+                      [("Tourism share", {2019: 12.6, 2020: 6.0, 2021: 7.8,
+                                          2022: 12.1, 2023: 12.4, 2024: 12.6},
+                        "#16848C")],
+                      "Tourism contribution (% of GDP)", "tourism-gdp")
+        bounds, legend = captured[0]
+        self.assertLess(bounds[0], 2018.5)
+        self.assertGreater(bounds[1], 2024.5)
+        self.assertIsNone(legend)
+
     def test_slider_changes_narrative_year_and_financial_toggle(self):
         from streamlit.testing.v1 import AppTest
         app = AppTest.from_file(str(ROOT / "app.py")).run(timeout=55)
