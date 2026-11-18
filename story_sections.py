@@ -86,7 +86,40 @@ def plot_chart(fig, key):
                     config={"displayModeBar": False}, key=key)
 
 
-def render_story(series, specs, start_year, end_year):
+def render_recent_rolling_balance(release):
+    """Source-published rolling 12-month snapshot, distinct from annual Eurostat."""
+    required = ("period_end", "value_eur_billions",
+                "prior_year_value_eur_billions", "source_url")
+    if not isinstance(release, dict) or any(k not in release for k in required):
+        return
+    current = float(release["value_eur_billions"])
+    previous = float(release["prior_year_value_eur_billions"])
+    year_on_year = current - previous
+    period = release["period_end"]
+    published = release.get("published_date", "date not recorded")
+    source = release["source_url"]
+    st.markdown("#### Latest official external-finance reading")
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.metric("Rolling 12-month tourism surplus", f"€{current:,.1f}B",
+                  delta=f"+€{year_on_year:.1f}B vs previous 12 months")
+    with col2:
+        st.metric("Comparable prior 12 months", f"€{previous:,.1f}B")
+    with col3:
+        share = release.get("gdp_share_percent")
+        st.metric("Tourism surplus / GDP",
+                  f"{float(share):.1f}%" if share is not None else "—")
+    st.caption(
+        f"**Period:** 12 months ending {period} · **Published:** {published} · "
+        f"[Banco de España original release]({source}). "
+        "**Source-published release snapshot, not automatically refreshed.** "
+        "This is NOT a 2026 calendar-year total and should not be added to "
+        "the annual Eurostat travel-services series. The GDP percentage "
+        "here describes the tourism balance, NOT tourism's contribution to GDP."
+    )
+
+
+def render_story(series, specs, start_year, end_year, rolling_balance=None):
     arrivals = annual_totals(series.get("arrivals", {}))
     spending = annual_totals(series.get("spending", {}))
     travel = annual_values(series.get("travel_balance", {}))
@@ -257,6 +290,8 @@ def render_story(series, specs, start_year, end_year):
         "external accounts. GDP growth and the current account provide "
         "context, but neither can be attributed to tourism alone."
     )
+    render_recent_rolling_balance(rolling_balance)
+
     cols = st.columns(2, gap="medium")
     series_pairs = [
         ("gdp_growth", gdp, "Real GDP growth", "% year over year", GOLD),
