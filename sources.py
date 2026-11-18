@@ -178,7 +178,11 @@ def ine_series(metric):
         except (ValueError, TypeError, OSError):
             continue
     if not items:
-        raise SourceError(f'INE {metric}: selected series has no valid observations')
+        sample = observations[:3]
+        raise SourceError(
+            f'INE {metric}: selected series has no valid observations; '
+            f'observation count={len(observations)}, sample={sample!r}'
+        )
     df = pd.DataFrame(items).drop_duplicates('period').sort_values('period')
     if metric == 'arrivals':
         df['value'] /= 1_000_000
