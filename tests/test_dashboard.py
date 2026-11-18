@@ -201,7 +201,7 @@ class NarrativesTest(unittest.TestCase):
             captured.append((years, series_items, ylabel, key, percent))
         with patch("reader_story.plot_line", side_effect=capture):
             render_yield_section(spending, arrivals, hicp, 2019, 2025)
-        self.assertEqual(len(captured), 2)
+        self.assertEqual(len(captured), 1)
         years, series_items, ylabel, key, percent = captured[0]
         self.assertEqual(key, "arrivals-versus-spending")
         self.assertFalse(percent)
@@ -209,9 +209,40 @@ class NarrativesTest(unittest.TestCase):
         self.assertAlmostEqual(series_items[1][1][2019], 100.0)
         self.assertGreater(series_items[1][1][2025], series_items[0][1][2025])
         self.assertIn("2019 = 100", ylabel)
-        self.assertEqual(captured[1][3], "visitor-yield")
-        self.assertTrue(captured[1][4])
-        self.assertEqual(captured[1][0], years)
+        from reader_story import inflation_chart_data
+        nominal = nominal_spending_per_visitor(spending, arrivals)
+        real = real_spending_per_visitor(spending, arrivals, hicp)
+        inflation = inflation_chart_data(
+            years, change_from_baseline(nominal),
+            change_from_baseline(real), hicp
+        )
+        self.assertEqual(inflation["Year"].tolist(), [str(y) for y in years])
+        self.assertAlmostEqual(inflation.loc[inflation["Year"] == "2019", "Inflation"].iloc[0], 0.0)
+        self.assertAlmostEqual(inflation.loc[inflation["Year"] == "2025", "Nominal"].iloc[0], 26.8, delta=.2)
+        self.assertAlmostEqual(inflation.loc[inflation["Year"] == "2025", "Inflation"].iloc[0], 21.5, delta=.2)
+        self.assertAlmostEqual(inflation.loc[inflation["Year"] == "2025", "Adjusted"].iloc[0], 4.4, delta=.2)
+
+    def test_part_three_b_hover_chart_and_toggle_controls(self):
+        from streamlit.testing.v1 import AppTest
+        app = AppTest.from_file(str(ROOT / "app.py")).run(timeout=55)
+        self.assertFalse(app.exception)
+        options = [x for x in app.radio if x.key == "inflation_comparison_view"]
+        self.assertEqual(len(options), 1)
+        self.assertEqual(list(options[0].options), [
+            "Compare all", "Nominal only", "Inflation-adjusted only"
+        ])
+        self.assertGreaterEqual(len(app.get("vega_lite_chart")), 1)
+        options[0].set_value("Nominal only").run(timeout=55)
+        self.assertFalse(app.exception)
+        self.assertEqual(
+            next(x for x in app.radio
+                 if x.key == "inflation_comparison_view").value, "Nominal only"
+        )
+        next(x for x in app.radio
+             if x.key == "inflation_comparison_view").set_value(
+                 "Inflation-adjusted only"
+             ).run(timeout=55)
+        self.assertFalse(app.exception)
 
     def test_part_three_math_dropdowns_and_inflation_explanation(self):
         from streamlit.testing.v1 import AppTest
