@@ -8,6 +8,7 @@ from plotly.subplots import make_subplots
 import streamlit as st
 from sources import SPECS, load_snapshot
 from story_sections import render_story
+from analysis_sections import render_analysis
 
 st.set_page_config(page_title='Spain | Tourism & External Exposure',page_icon='🇪🇸',layout='wide')
 ROOT=Path(__file__).resolve().parent
@@ -186,6 +187,15 @@ if rolling_balance_path.exists():
         rolling_balance = json.loads(rolling_balance_path.read_text(encoding='utf-8'))
     except (OSError, ValueError) as error:
         st.warning(f'Unable to read Banco de España release snapshot: {error}')
+analysis_path = ROOT / 'data' / 'analysis.json'
+analysis_data = {}
+if analysis_path.exists():
+    try:
+        analysis_data = json.loads(analysis_path.read_text(encoding='utf-8'))
+    except (OSError, ValueError) as error:
+        st.warning(f'Unable to read supplemental analytical indicators: {error}')
+
+render_analysis(series, analysis_data)
 render_story(series, SPECS, start_year, end_year, rolling_balance=rolling_balance)
 
 with st.expander('Original six source charts and headline readings', expanded=False):
