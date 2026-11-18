@@ -1,0 +1,33 @@
+name: Explore EUR exchange rates versus Spain visitor arrivals
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'analysis_experiments/exchange_rate_test.py'
+      - '.github/workflows/explore-exchange-rates.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install experiment dependencies
+        run: pip install pandas numpy scipy requests
+      - name: Run UK / US currency and tourism correlations
+        run: python analysis_experiments/exchange_rate_test.py
+      - name: Upload analysis results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: exchange-rate-test-results
+          path: analysis_experiments/*.csv
+          if-no-files-found: warn
