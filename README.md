@@ -2,6 +2,22 @@
 
 **Research question:** Is Spain's growing reliance on international tourism strengthening its economy or increasing vulnerability to external shocks?
 
+## Dashboard narrative and interaction
+
+The main page now leads with an evidence-based interpretation organized into five exhibits:
+
+1. **Growth (2019 = 100):** compare annual international tourist arrivals with *nominal* visitor spending. Only full 12-month years enter this chart. Fixed 2019 baselines remain constant as the visible date range changes.
+2. **COVID-era shock:** show the Eurostat annual balance of travel-services exports less imports. Highlight the 2019–2020 collapse and subsequent recovery.
+3. **Economic dependence:** present INE tourism share of GDP, carefully labeling the 2015, 2016–2020 and 2021+ methodological breaks.
+4. **International finance:** place real GDP growth and current-account balance in context, without claiming they are caused solely by tourism.
+5. **Sensitivity analysis:** vary a hypothetical **percentage reduction in the net travel-services surplus** for a chosen historical year. The scenario is a simple accounting illustration: `stressed surplus = observed travel surplus × (1 − shock%)`. It is **not a forecast**, a direct estimate of travel receipts, or a modeled impact on GDP/current account.
+
+The sidebar's inclusive calendar-year range filters the charts; the historic 2020 shock headline remains a fixed benchmark and is labeled as such. The six original source charts remain accessible in the **Original six source charts and headline readings** expander. The source dictionary, official publisher links, refresh timestamps and verification guidance are retained below.
+
+### Automated quality check
+
+The additional `.github/workflows/validate-dashboard.yml` workflow validates Python syntax, derived-year calculations, and a Streamlit page render on changes to dashboard code. This check is **separate** from the scheduled official-data refresh.
+
 ## Six indicators
 
 | Series | Frequency | Original source |
