@@ -257,6 +257,44 @@ class NarrativesTest(unittest.TestCase):
         self.assertIn("all-items HICP rose", markdown)
         self.assertIn("change in general purchasing power", markdown)
 
+    def test_part_four_shock_charts_have_both_event_annotations(self):
+        from unittest.mock import patch
+        from reader_story import plot_shock_history, plot_shock_accounts
+        travel = {2019: 46.354, 2020: 8.631, 2022: 48.089, 2025: 70.46}
+        goods = {2019: -25.0, 2020: -15.0, 2022: -70.0, 2025: -50.266}
+        current = {2019: 26.69, 2020: 8.906, 2022: 5.766, 2025: 54.829}
+        years = [2019, 2020, 2022, 2025]
+        captured = []
+        def capture(fig, **kwargs):
+            ax = fig.axes[0]
+            captured.append(ax)
+            if len(captured) == 1:
+                labels = " ".join(t.get_text() for t in ax.texts)
+                self.assertIn("COVID-19", labels)
+                self.assertIn("energy-price shock", labels)
+            else:
+                bars = ax.patches
+                self.assertEqual(len(bars), 12)
+                self.assertTrue(any(x.get_height() < 0 for x in bars))
+                self.assertIn("billion", ax.get_ylabel())
+        with patch("reader_story.st.pyplot", side_effect=capture):
+            plot_shock_history(travel, years)
+            plot_shock_accounts(travel, goods, current, years)
+        self.assertEqual(len(captured), 2)
+
+    def test_part_four_goods_are_from_official_data_when_available(self):
+        import json
+        from story_sections import annual_values
+        analysis = json.loads(
+            (ROOT / "data" / "analysis.json").read_text(encoding="utf-8")
+        )
+        if "goods_balance_eur" not in analysis.get("series", {}):
+            self.skipTest("Official goods balance is awaiting scheduled refresh")
+        goods = annual_values(analysis["series"]["goods_balance_eur"])
+        self.assertIn(2022, goods)
+        self.assertLess(goods[2022], 0)
+        self.assertIn(2025, goods)
+
     def test_tourism_gdp_has_room_at_2019(self):
         from unittest.mock import patch
         from analysis_sections import plot_line
