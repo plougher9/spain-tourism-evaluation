@@ -50,7 +50,7 @@
       "source": "Eurostat HICP, all-items, annual average index",
       "source_url": "https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_aind/default/table",
       "unit": "annual HICP index (rebasing does not affect 2019-ratio deflation)",
-      "refreshed_utc": "2026-11-18T17:11:42+00:00"
+      "refreshed_utc": "2026-11-18T18:21:41+00:00"
     },
     "current_account_eur": {
       "observations": [
@@ -102,7 +102,7 @@
       "source": "Eurostat BPM6 annual current-account balance",
       "source_url": "https://ec.europa.eu/eurostat/databrowser/view/bop_c6_a/default/table",
       "unit": "€ billion",
-      "refreshed_utc": "2026-11-18T17:11:42+00:00"
+      "refreshed_utc": "2026-11-18T18:21:41+00:00"
     },
     "services_balance_eur": {
       "observations": [
@@ -154,10 +154,62 @@
       "source": "Eurostat BPM6 international trade in services (total), balance",
       "source_url": "https://ec.europa.eu/eurostat/databrowser/view/bop_its6_det/default/table",
       "unit": "€ billion",
-      "refreshed_utc": "2026-11-18T17:11:42+00:00"
+      "refreshed_utc": "2026-11-18T18:21:41+00:00"
+    },
+    "goods_balance_eur": {
+      "observations": [
+        {
+          "period": "2015",
+          "value": -20.675
+        },
+        {
+          "period": "2016",
+          "value": -13.743
+        },
+        {
+          "period": "2017",
+          "value": -21.188
+        },
+        {
+          "period": "2018",
+          "value": -28.25
+        },
+        {
+          "period": "2019",
+          "value": -25.195
+        },
+        {
+          "period": "2020",
+          "value": -7.03
+        },
+        {
+          "period": "2021",
+          "value": -21.303
+        },
+        {
+          "period": "2022",
+          "value": -60.215
+        },
+        {
+          "period": "2023",
+          "value": -34.949
+        },
+        {
+          "period": "2024",
+          "value": -33.254
+        },
+        {
+          "period": "2025",
+          "value": -50.266
+        }
+      ],
+      "source": "Eurostat BPM6 annual goods trade balance (BoP basis)",
+      "source_url": "https://ec.europa.eu/eurostat/databrowser/view/bop_c6_a/default/table",
+      "unit": "€ billion",
+      "refreshed_utc": "2026-11-18T18:21:41+00:00"
     }
   },
   "errors": {},
-  "last_attempt_utc": "2026-11-18T17:11:42+00:00",
-  "last_successful_refresh_utc": "2026-11-18T17:11:42+00:00"
+  "last_attempt_utc": "2026-11-18T18:21:41+00:00",
+  "last_successful_refresh_utc": "2026-11-18T18:21:41+00:00"
 }
