@@ -32,54 +32,61 @@ def financial_bridge(current_account, services_balance, travel_balance, remove_t
 
 
 def draw_financial_bridge(values, year, remove_travel):
-    """Static waterfall: components flow into the total, avoiding browser Plotly."""
+    """Zero-based component bars and a distinct total, rendered server-side.
+
+    Every bar begins at the zero axis. Positive contributors rise above
+    zero, negative contributors fall below; no waterfall stacking.
+    """
     travel = values["travel"]
     other = values["other_services"]
     other_accounts = values["goods_and_income"]
     final = values["total"]
-    parts = [travel, other, other_accounts]
-    labels = ["Travel services" if not remove_travel else "Travel removed",
-              "Other services", "Goods + income\n& transfers",
-              "Accounting\nremainder" if remove_travel else "Total current\naccount"]
-    colors = [TEAL if not remove_travel else "#B9C7CF",
-              BLUE, GOLD, TEAL if final >= 0 else RED]
-    fig, ax = plt.subplots(figsize=(10.2, 4.2), dpi=105)
+    parts = [travel, other, other_accounts, final]
+    labels = [
+        "Travel services" if not remove_travel else "Travel removed",
+        "Other services",
+        "Goods, income\n& transfers",
+        "Accounting\nremainder" if remove_travel else "Reported current\naccount",
+    ]
+    colors = [
+        TEAL if not remove_travel else "#B9C7CF",
+        BLUE, GOLD, TEAL if final >= 0 else RED,
+    ]
+    fig, ax = plt.subplots(figsize=(10.2, 4.3), dpi=105)
     fig.patch.set_facecolor("white")
     ax.set_facecolor("white")
-    cumulative = 0.0
-    heights = [0.0]
-    for i, value in enumerate(parts):
-        lower = min(cumulative, cumulative + value)
-        ax.bar(i, abs(value), bottom=lower, width=0.64,
-               color=colors[i], edgecolor="white", linewidth=1)
-        cumulative += value
-        heights.append(cumulative)
-        if i < 2:
-            ax.plot([i + .32, i + .68], [cumulative, cumulative],
-                    color="#91A3AB", linestyle="--", linewidth=1.15)
-        middle = lower + abs(value) / 2 if abs(value) > 2 else lower
-        ax.annotate(f"{value:+.1f}", (i, middle),
-                    ha="center", va="center" if abs(value) > 9 else "bottom",
-                    xytext=(0, 0 if abs(value) > 9 else 5),
-                    textcoords="offset points",
-                    color="white" if abs(value) > 9 else INK,
-                    fontsize=11, weight="bold")
-    ax.bar(3, abs(final), bottom=min(0, final), width=0.64,
-           color=colors[3], edgecolor="white")
-    ax.annotate(f"€{final:+.1f}B", (3, final),
-                ha="center", va="bottom" if final >= 0 else "top",
-                xytext=(0, 6 if final >= 0 else -7),
-                textcoords="offset points", weight="bold", fontsize=12, color=INK)
+    bars = ax.bar(
+        range(4), parts, bottom=0, width=0.62, color=colors,
+        edgecolor="white", linewidth=1,
+    )
+    for bar, value in zip(bars, parts):
+        x = bar.get_x() + bar.get_width() / 2
+        if abs(value) >= 12:
+            ax.annotate(
+                f"€{value:+.1f}B", (x, value / 2),
+                ha="center", va="center", weight="bold", fontsize=10,
+                color="white",
+            )
+        else:
+            ax.annotate(
+                f"€{value:+.1f}B", (x, value),
+                xytext=(0, 7 if value >= 0 else -9),
+                textcoords="offset points", ha="center",
+                va="bottom" if value >= 0 else "top",
+                weight="bold", fontsize=10, color=INK,
+            )
     ax.axhline(0, color="#607C8B", linewidth=1.3)
     ax.set_xticks(range(4), labels)
-    ax.set_ylabel("Contribution to current-account balance (€ billion)", color=INK)
-    ax.set_xlabel(f"Annual balances · {year}", color=INK, labelpad=9)
+    ax.set_ylabel("Annual balance (€ billion)", color=INK)
+    ax.set_xlabel(f"Balance-of-payments components · {year}", color=INK, labelpad=9)
     ax.grid(axis="y", color=GRID, linewidth=.9)
     ax.set_axisbelow(True)
     ax.spines[["left", "top", "right"]].set_visible(False)
     ax.tick_params(axis="both", colors=INK, labelsize=9, length=0)
-    extreme = max(abs(v) for v in (travel, other, other_accounts, final))
-    ax.set_ylim(min(-75, -extreme * 1.2), max(125, extreme * 1.25))
+    low = min(0, *parts)
+    high = max(0, *parts)
+    space = max(12, (high - low) * .13)
+    ax.set_ylim(low - space, high + space)
     fig.tight_layout()
     st.pyplot(fig, use_container_width=True)
     plt.close(fig)
@@ -110,7 +117,8 @@ def render_financial_section(travel, services, current, start_year, end_year):
     removed = st.session_state.get("remove_travel_bridge", False)
     vals = financial_bridge(current[year], services[year], travel[year], removed)
     st.caption(f"Eurostat BPM6 · {year} annual values · € billions · "
-               "select a different year range in the sidebar to change the year shown.")
+               "Each component is shown independently from zero. "
+               "Select a different year range in the sidebar to change the year shown.")
     draw_financial_bridge(vals, year, removed)
     if removed:
         st.markdown(
