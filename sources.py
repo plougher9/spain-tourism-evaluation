@@ -143,22 +143,24 @@ def ine_series(metric):
     raw = http_json(API_INE + f'DATOS_TABLA/{table_ids[metric]}', {'nult': 180})
     if not isinstance(raw, list):
         raise SourceError(f'INE {metric}: table response is not a list')
-    if metric in ('arrivals', 'spending'):
-        expected_id = int(INE_SERIES_IDS[metric])
-        matches = [item for item in raw if str(item.get('Id')) == str(expected_id)]
-    else:
-        # Strict match: tourism share of Spain's total GDP, in percent.
-        matches = []
-        for item in raw:
-            label = _clean(item.get('Nombre', ''))
-            if (re.search(r'turismo|turistic', label)
-                    and re.search(r'pib|producto interior bruto', label)
-                    and re.search(r'porcentaje|por ciento|%', label)
-                    and not re.search(r'variacion|crecimiento|tasa anual', label)):
-                matches.append(item)
+    # INE DATOS_TABLA returns Nombre and Data, but may omit the Id field.
+    # Select the exact published total-series label, not any subgroup/variation.
+    expected_names = {
+        'arrivals': 'turista. total nacional. dato base.',
+        'spending': 'total. turista. gasto total. total nacional. dato base.',
+        'tourism_gdp': 'producto interior bruto turistico, precios corrientes: porcentaje sobre el pib',
+    }
+    expected = _clean(expected_names[metric]).rstrip('.')
+    matches = [
+        item for item in raw
+        if _clean(item.get('Nombre', '')).rstrip('.') == expected
+    ]
     if len(matches) != 1:
-        sample = [(x.get('Id'), str(x.get('Nombre', ''))[:140]) for x in raw[:25]]
-        raise SourceError(f'INE {metric}: expected one series; found {len(matches)}. Table candidates: {sample}')
+        sample = [str(x.get('Nombre', ''))[:140] for x in raw[:30]]
+        raise SourceError(
+            f'INE {metric}: expected exact named series once, found {len(matches)}. '
+            f'Candidates: {sample}'
+        )
     selected = matches[0]
     observations = selected.get('Data', selected.get('data', []))
     if not isinstance(observations, list):
