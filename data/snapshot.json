@@ -194,7 +194,7 @@
       ],
       "source": "Eurostat · namq_10_gdp",
       "source_url": "https://ec.europa.eu/eurostat/databrowser/view/namq_10_gdp/default/table",
-      "refreshed_utc": "2026-11-18T04:19:24+00:00",
+      "refreshed_utc": "2026-11-18T04:21:53+00:00",
       "latest_observation": "2026-Q3"
     },
     "travel_balance": {
@@ -246,7 +246,7 @@
       ],
       "source": "Eurostat · bop_its6_det",
       "source_url": "https://ec.europa.eu/eurostat/databrowser/view/bop_its6_det/default/table",
-      "refreshed_utc": "2026-11-18T04:19:24+00:00",
+      "refreshed_utc": "2026-11-18T04:21:53+00:00",
       "latest_observation": "2025"
     },
     "current_account": {
@@ -438,18 +438,1090 @@
       ],
       "source": "Eurostat · tipsbp41",
       "source_url": "https://ec.europa.eu/eurostat/databrowser/view/tipsbp41/default/table",
-      "refreshed_utc": "2026-11-18T04:19:24+00:00",
+      "refreshed_utc": "2026-11-18T04:21:53+00:00",
       "latest_observation": "2026-Q2"
+    },
+    "arrivals": {
+      "observations": [
+        {
+          "period": "2015-09",
+          "value": 6.432341
+        },
+        {
+          "period": "2015-10",
+          "value": 3.754802
+        },
+        {
+          "period": "2015-11",
+          "value": 3.512914
+        },
+        {
+          "period": "2015-12",
+          "value": 3.526537
+        },
+        {
+          "period": "2016-01",
+          "value": 3.678726
+        },
+        {
+          "period": "2016-02",
+          "value": 4.627206
+        },
+        {
+          "period": "2016-03",
+          "value": 6.086327
+        },
+        {
+          "period": "2016-04",
+          "value": 7.111154
+        },
+        {
+          "period": "2016-05",
+          "value": 7.552758
+        },
+        {
+          "period": "2016-06",
+          "value": 9.545792
+        },
+        {
+          "period": "2016-07",
+          "value": 10.027471
+        },
+        {
+          "period": "2016-08",
+          "value": 7.932607
+        },
+        {
+          "period": "2016-09",
+          "value": 7.137723
+        },
+        {
+          "period": "2016-10",
+          "value": 4.098262
+        },
+        {
+          "period": "2016-11",
+          "value": 3.990446
+        },
+        {
+          "period": "2016-12",
+          "value": 3.905736
+        },
+        {
+          "period": "2017-01",
+          "value": 4.119137
+        },
+        {
+          "period": "2017-02",
+          "value": 4.913943
+        },
+        {
+          "period": "2017-03",
+          "value": 7.081594
+        },
+        {
+          "period": "2017-04",
+          "value": 8.002648
+        },
+        {
+          "period": "2017-05",
+          "value": 8.431975
+        },
+        {
+          "period": "2017-06",
+          "value": 10.493438
+        },
+        {
+          "period": "2017-07",
+          "value": 10.397745
+        },
+        {
+          "period": "2017-08",
+          "value": 8.87727
+        },
+        {
+          "period": "2017-09",
+          "value": 7.269931
+        },
+        {
+          "period": "2017-10",
+          "value": 4.392575
+        },
+        {
+          "period": "2017-11",
+          "value": 3.98253
+        },
+        {
+          "period": "2017-12",
+          "value": 4.106601
+        },
+        {
+          "period": "2018-01",
+          "value": 4.218047
+        },
+        {
+          "period": "2018-02",
+          "value": 5.393186
+        },
+        {
+          "period": "2018-03",
+          "value": 6.780378
+        },
+        {
+          "period": "2018-04",
+          "value": 8.086048
+        },
+        {
+          "period": "2018-05",
+          "value": 8.554306
+        },
+        {
+          "period": "2018-06",
+          "value": 10.020246
+        },
+        {
+          "period": "2018-07",
+          "value": 10.175761
+        },
+        {
+          "period": "2018-08",
+          "value": 8.932308
+        },
+        {
+          "period": "2018-09",
+          "value": 7.64986
+        },
+        {
+          "period": "2018-10",
+          "value": 4.536873
+        },
+        {
+          "period": "2018-11",
+          "value": 4.354798
+        },
+        {
+          "period": "2018-12",
+          "value": 4.195641
+        },
+        {
+          "period": "2019-01",
+          "value": 4.380504
+        },
+        {
+          "period": "2019-02",
+          "value": 5.649577
+        },
+        {
+          "period": "2019-03",
+          "value": 7.146033
+        },
+        {
+          "period": "2019-04",
+          "value": 7.919204
+        },
+        {
+          "period": "2019-05",
+          "value": 8.833893
+        },
+        {
+          "period": "2019-06",
+          "value": 9.87327
+        },
+        {
+          "period": "2019-07",
+          "value": 10.118366
+        },
+        {
+          "period": "2019-08",
+          "value": 8.845152
+        },
+        {
+          "period": "2019-09",
+          "value": 7.587749
+        },
+        {
+          "period": "2019-10",
+          "value": 4.655021
+        },
+        {
+          "period": "2019-11",
+          "value": 4.304741
+        },
+        {
+          "period": "2019-12",
+          "value": 4.133024
+        },
+        {
+          "period": "2020-01",
+          "value": 4.427344
+        },
+        {
+          "period": "2020-02",
+          "value": 1.997262
+        },
+        {
+          "period": "2020-03",
+          "value": 0.0
+        },
+        {
+          "period": "2020-04",
+          "value": 0.0
+        },
+        {
+          "period": "2020-05",
+          "value": 0.204272
+        },
+        {
+          "period": "2020-06",
+          "value": 2.464779
+        },
+        {
+          "period": "2020-07",
+          "value": 2.440978
+        },
+        {
+          "period": "2020-08",
+          "value": 1.138868
+        },
+        {
+          "period": "2020-09",
+          "value": 1.020773
+        },
+        {
+          "period": "2020-10",
+          "value": 0.456814
+        },
+        {
+          "period": "2020-11",
+          "value": 0.648989
+        },
+        {
+          "period": "2020-12",
+          "value": 0.437973
+        },
+        {
+          "period": "2021-01",
+          "value": 0.284974
+        },
+        {
+          "period": "2021-02",
+          "value": 0.491427
+        },
+        {
+          "period": "2021-03",
+          "value": 0.629206
+        },
+        {
+          "period": "2021-04",
+          "value": 1.363164
+        },
+        {
+          "period": "2021-05",
+          "value": 2.216356
+        },
+        {
+          "period": "2021-06",
+          "value": 4.398992
+        },
+        {
+          "period": "2021-07",
+          "value": 5.19652
+        },
+        {
+          "period": "2021-08",
+          "value": 4.703933
+        },
+        {
+          "period": "2021-09",
+          "value": 5.14882
+        },
+        {
+          "period": "2021-10",
+          "value": 3.361913
+        },
+        {
+          "period": "2021-11",
+          "value": 2.947525
+        },
+        {
+          "period": "2021-12",
+          "value": 2.501443
+        },
+        {
+          "period": "2022-01",
+          "value": 3.179288
+        },
+        {
+          "period": "2022-02",
+          "value": 4.039532
+        },
+        {
+          "period": "2022-03",
+          "value": 6.106316
+        },
+        {
+          "period": "2022-04",
+          "value": 6.988353
+        },
+        {
+          "period": "2022-05",
+          "value": 7.498156
+        },
+        {
+          "period": "2022-06",
+          "value": 9.09139
+        },
+        {
+          "period": "2022-07",
+          "value": 8.848665
+        },
+        {
+          "period": "2022-08",
+          "value": 7.767211
+        },
+        {
+          "period": "2022-09",
+          "value": 7.176984
+        },
+        {
+          "period": "2022-10",
+          "value": 4.334651
+        },
+        {
+          "period": "2022-11",
+          "value": 4.127293
+        },
+        {
+          "period": "2022-12",
+          "value": 4.134995
+        },
+        {
+          "period": "2023-01",
+          "value": 4.320665
+        },
+        {
+          "period": "2023-02",
+          "value": 5.247341
+        },
+        {
+          "period": "2023-03",
+          "value": 7.228094
+        },
+        {
+          "period": "2023-04",
+          "value": 8.300384
+        },
+        {
+          "period": "2023-05",
+          "value": 8.30746
+        },
+        {
+          "period": "2023-06",
+          "value": 10.116916
+        },
+        {
+          "period": "2023-07",
+          "value": 10.186163
+        },
+        {
+          "period": "2023-08",
+          "value": 8.795425
+        },
+        {
+          "period": "2023-09",
+          "value": 8.187022
+        },
+        {
+          "period": "2023-10",
+          "value": 5.135498
+        },
+        {
+          "period": "2023-11",
+          "value": 5.209085
+        },
+        {
+          "period": "2023-12",
+          "value": 4.775549
+        },
+        {
+          "period": "2024-01",
+          "value": 5.013497
+        },
+        {
+          "period": "2024-02",
+          "value": 6.350471
+        },
+        {
+          "period": "2024-03",
+          "value": 7.78375
+        },
+        {
+          "period": "2024-04",
+          "value": 9.255985
+        },
+        {
+          "period": "2024-05",
+          "value": 9.299574
+        },
+        {
+          "period": "2024-06",
+          "value": 10.852347
+        },
+        {
+          "period": "2024-07",
+          "value": 10.929584
+        },
+        {
+          "period": "2024-08",
+          "value": 9.602015
+        },
+        {
+          "period": "2024-09",
+          "value": 8.961932
+        },
+        {
+          "period": "2024-10",
+          "value": 5.670219
+        },
+        {
+          "period": "2024-11",
+          "value": 5.264375
+        },
+        {
+          "period": "2024-12",
+          "value": 5.066976
+        },
+        {
+          "period": "2025-01",
+          "value": 5.416176
+        },
+        {
+          "period": "2025-02",
+          "value": 6.594912
+        },
+        {
+          "period": "2025-03",
+          "value": 8.603695
+        },
+        {
+          "period": "2025-04",
+          "value": 9.370873
+        },
+        {
+          "period": "2025-05",
+          "value": 9.473172
+        },
+        {
+          "period": "2025-06",
+          "value": 11.026681
+        },
+        {
+          "period": "2025-07",
+          "value": 11.227218
+        },
+        {
+          "period": "2025-08",
+          "value": 9.717724
+        },
+        {
+          "period": "2025-09",
+          "value": 9.254206
+        },
+        {
+          "period": "2025-10",
+          "value": 5.774895
+        },
+        {
+          "period": "2025-11",
+          "value": 5.277365
+        },
+        {
+          "period": "2025-12",
+          "value": 5.127256
+        },
+        {
+          "period": "2026-01",
+          "value": 5.569036
+        },
+        {
+          "period": "2026-02",
+          "value": 6.810629
+        },
+        {
+          "period": "2026-03",
+          "value": 9.054129
+        },
+        {
+          "period": "2026-04",
+          "value": 10.26007
+        },
+        {
+          "period": "2026-05",
+          "value": 9.74649
+        },
+        {
+          "period": "2026-06",
+          "value": 11.538796
+        },
+        {
+          "period": "2026-07",
+          "value": 12.256087
+        },
+        {
+          "period": "2026-08",
+          "value": 10.13965
+        }
+      ],
+      "source": "INE · FRONTUR",
+      "source_url": "https://www.ine.es/dyngs/INEbase/en/operacion.htm?c=Estadistica_C&cid=1254736176996&idp=1254735576863",
+      "refreshed_utc": "2026-11-18T04:21:53+00:00",
+      "latest_observation": "2026-08"
+    },
+    "spending": {
+      "observations": [
+        {
+          "period": "2015-09",
+          "value": 6.28063
+        },
+        {
+          "period": "2015-10",
+          "value": 3.87284
+        },
+        {
+          "period": "2015-11",
+          "value": 3.77327
+        },
+        {
+          "period": "2015-12",
+          "value": 3.73726
+        },
+        {
+          "period": "2016-01",
+          "value": 3.70627
+        },
+        {
+          "period": "2016-02",
+          "value": 4.62447
+        },
+        {
+          "period": "2016-03",
+          "value": 5.62799
+        },
+        {
+          "period": "2016-04",
+          "value": 6.91793
+        },
+        {
+          "period": "2016-05",
+          "value": 7.81741
+        },
+        {
+          "period": "2016-06",
+          "value": 10.23854
+        },
+        {
+          "period": "2016-07",
+          "value": 10.28198
+        },
+        {
+          "period": "2016-08",
+          "value": 8.39931
+        },
+        {
+          "period": "2016-09",
+          "value": 7.33385
+        },
+        {
+          "period": "2016-10",
+          "value": 4.20506
+        },
+        {
+          "period": "2016-11",
+          "value": 4.52545
+        },
+        {
+          "period": "2016-12",
+          "value": 4.26299
+        },
+        {
+          "period": "2017-01",
+          "value": 4.30473
+        },
+        {
+          "period": "2017-02",
+          "value": 5.10949
+        },
+        {
+          "period": "2017-03",
+          "value": 6.78208
+        },
+        {
+          "period": "2017-04",
+          "value": 7.92707
+        },
+        {
+          "period": "2017-05",
+          "value": 8.98777
+        },
+        {
+          "period": "2017-06",
+          "value": 11.85099
+        },
+        {
+          "period": "2017-07",
+          "value": 11.34029
+        },
+        {
+          "period": "2017-08",
+          "value": 9.47629
+        },
+        {
+          "period": "2017-09",
+          "value": 7.78923
+        },
+        {
+          "period": "2017-10",
+          "value": 4.64235
+        },
+        {
+          "period": "2017-11",
+          "value": 4.53066
+        },
+        {
+          "period": "2017-12",
+          "value": 4.52443
+        },
+        {
+          "period": "2018-01",
+          "value": 4.53594
+        },
+        {
+          "period": "2018-02",
+          "value": 5.72673
+        },
+        {
+          "period": "2018-03",
+          "value": 6.62153
+        },
+        {
+          "period": "2018-04",
+          "value": 8.15506
+        },
+        {
+          "period": "2018-05",
+          "value": 9.37081
+        },
+        {
+          "period": "2018-06",
+          "value": 11.7481
+        },
+        {
+          "period": "2018-07",
+          "value": 11.45969
+        },
+        {
+          "period": "2018-08",
+          "value": 9.54581
+        },
+        {
+          "period": "2018-09",
+          "value": 8.16458
+        },
+        {
+          "period": "2018-10",
+          "value": 4.88855
+        },
+        {
+          "period": "2018-11",
+          "value": 5.00952
+        },
+        {
+          "period": "2018-12",
+          "value": 4.67867
+        },
+        {
+          "period": "2019-01",
+          "value": 4.65861
+        },
+        {
+          "period": "2019-02",
+          "value": 6.03487
+        },
+        {
+          "period": "2019-03",
+          "value": 7.05636
+        },
+        {
+          "period": "2019-04",
+          "value": 8.13784
+        },
+        {
+          "period": "2019-05",
+          "value": 9.68612
+        },
+        {
+          "period": "2019-06",
+          "value": 11.94151
+        },
+        {
+          "period": "2019-07",
+          "value": 11.70476
+        },
+        {
+          "period": "2019-08",
+          "value": 9.61721
+        },
+        {
+          "period": "2019-09",
+          "value": 8.32255
+        },
+        {
+          "period": "2019-10",
+          "value": 5.06263
+        },
+        {
+          "period": "2019-11",
+          "value": 5.01084
+        },
+        {
+          "period": "2019-12",
+          "value": 4.76731
+        },
+        {
+          "period": "2020-01",
+          "value": 4.78929
+        },
+        {
+          "period": "2020-02",
+          "value": 2.17373
+        },
+        {
+          "period": "2020-03",
+          "value": 0.0
+        },
+        {
+          "period": "2020-04",
+          "value": 0.0
+        },
+        {
+          "period": "2020-05",
+          "value": 0.13389
+        },
+        {
+          "period": "2020-06",
+          "value": 2.45794
+        },
+        {
+          "period": "2020-07",
+          "value": 2.45685
+        },
+        {
+          "period": "2020-08",
+          "value": 0.96449
+        },
+        {
+          "period": "2020-09",
+          "value": 0.86449
+        },
+        {
+          "period": "2020-10",
+          "value": 0.48198
+        },
+        {
+          "period": "2020-11",
+          "value": 0.69681
+        },
+        {
+          "period": "2020-12",
+          "value": 0.45743
+        },
+        {
+          "period": "2021-01",
+          "value": 0.32382
+        },
+        {
+          "period": "2021-02",
+          "value": 0.54389
+        },
+        {
+          "period": "2021-03",
+          "value": 0.66842
+        },
+        {
+          "period": "2021-04",
+          "value": 1.39578
+        },
+        {
+          "period": "2021-05",
+          "value": 2.42169
+        },
+        {
+          "period": "2021-06",
+          "value": 5.22947
+        },
+        {
+          "period": "2021-07",
+          "value": 5.9073
+        },
+        {
+          "period": "2021-08",
+          "value": 5.0512
+        },
+        {
+          "period": "2021-09",
+          "value": 5.60629
+        },
+        {
+          "period": "2021-10",
+          "value": 3.7615
+        },
+        {
+          "period": "2021-11",
+          "value": 3.53659
+        },
+        {
+          "period": "2021-12",
+          "value": 3.03978
+        },
+        {
+          "period": "2022-01",
+          "value": 3.77469
+        },
+        {
+          "period": "2022-02",
+          "value": 5.07745
+        },
+        {
+          "period": "2022-03",
+          "value": 6.91011
+        },
+        {
+          "period": "2022-04",
+          "value": 8.04691
+        },
+        {
+          "period": "2022-05",
+          "value": 9.02567
+        },
+        {
+          "period": "2022-06",
+          "value": 11.9021
+        },
+        {
+          "period": "2022-07",
+          "value": 11.28182
+        },
+        {
+          "period": "2022-08",
+          "value": 9.14769
+        },
+        {
+          "period": "2022-09",
+          "value": 8.3112
+        },
+        {
+          "period": "2022-10",
+          "value": 5.38197
+        },
+        {
+          "period": "2022-11",
+          "value": 5.2388
+        },
+        {
+          "period": "2022-12",
+          "value": 5.21694
+        },
+        {
+          "period": "2023-01",
+          "value": 5.36413
+        },
+        {
+          "period": "2023-02",
+          "value": 6.66807
+        },
+        {
+          "period": "2023-03",
+          "value": 8.45447
+        },
+        {
+          "period": "2023-04",
+          "value": 9.76697
+        },
+        {
+          "period": "2023-05",
+          "value": 10.60799
+        },
+        {
+          "period": "2023-06",
+          "value": 13.88083
+        },
+        {
+          "period": "2023-07",
+          "value": 13.59939
+        },
+        {
+          "period": "2023-08",
+          "value": 11.19359
+        },
+        {
+          "period": "2023-09",
+          "value": 10.30207
+        },
+        {
+          "period": "2023-10",
+          "value": 6.64447
+        },
+        {
+          "period": "2023-11",
+          "value": 7.0905
+        },
+        {
+          "period": "2023-12",
+          "value": 6.5463
+        },
+        {
+          "period": "2024-01",
+          "value": 6.74632
+        },
+        {
+          "period": "2024-02",
+          "value": 8.63135
+        },
+        {
+          "period": "2024-03",
+          "value": 9.4881
+        },
+        {
+          "period": "2024-04",
+          "value": 11.68691
+        },
+        {
+          "period": "2024-05",
+          "value": 12.35678
+        },
+        {
+          "period": "2024-06",
+          "value": 15.51329
+        },
+        {
+          "period": "2024-07",
+          "value": 15.36442
+        },
+        {
+          "period": "2024-08",
+          "value": 12.61305
+        },
+        {
+          "period": "2024-09",
+          "value": 11.8987
+        },
+        {
+          "period": "2024-10",
+          "value": 7.70767
+        },
+        {
+          "period": "2024-11",
+          "value": 7.59034
+        },
+        {
+          "period": "2024-12",
+          "value": 7.14291
+        },
+        {
+          "period": "2025-01",
+          "value": 7.27263
+        },
+        {
+          "period": "2025-02",
+          "value": 9.11201
+        },
+        {
+          "period": "2025-03",
+          "value": 10.87575
+        },
+        {
+          "period": "2025-04",
+          "value": 12.22641
+        },
+        {
+          "period": "2025-05",
+          "value": 13.05058
+        },
+        {
+          "period": "2025-06",
+          "value": 16.43261
+        },
+        {
+          "period": "2025-07",
+          "value": 16.34158
+        },
+        {
+          "period": "2025-08",
+          "value": 13.40459
+        },
+        {
+          "period": "2025-09",
+          "value": 12.803
+        },
+        {
+          "period": "2025-10",
+          "value": 8.08784
+        },
+        {
+          "period": "2025-11",
+          "value": 7.99341
+        },
+        {
+          "period": "2025-12",
+          "value": 7.80461
+        },
+        {
+          "period": "2026-01",
+          "value": 7.60644
+        },
+        {
+          "period": "2026-02",
+          "value": 9.6064
+        },
+        {
+          "period": "2026-03",
+          "value": 11.68564
+        },
+        {
+          "period": "2026-04",
+          "value": 13.55347
+        },
+        {
+          "period": "2026-05",
+          "value": 13.57904
+        },
+        {
+          "period": "2026-06",
+          "value": 18.21795
+        },
+        {
+          "period": "2026-07",
+          "value": 17.83823
+        },
+        {
+          "period": "2026-08",
+          "value": 14.48806
+        }
+      ],
+      "source": "INE · EGATUR",
+      "source_url": "https://www.ine.es/dyngs/INEbase/en/operacion.htm?c=Estadistica_C&cid=1254736177002&idp=1254735576863",
+      "refreshed_utc": "2026-11-18T04:21:53+00:00",
+      "latest_observation": "2026-08"
     }
   },
   "errors": {
-    "arrivals": "INE arrivals: expected one series; found 0. Table candidates: [(None, 'Total. Total Nacional. Dato base. '), (None, 'Total. Total Nacional. Tasa de variación anual. '), (None, 'Total. Total Nacional. Acumulado en lo que va de año. '), (None, 'Total. Total Nacional. Tasa de variación acumulada. '), (None, 'Turista. Total Nacional. Dato base. '), (None, 'Turista. Total Nacional. Tasa de variación anual. '), (None, 'Turista. Total Nacional. Acumulado en lo que va de año. '), (None, 'Turista. Total Nacional. Tasa de variación acumulada. '), (None, 'Excursionista. Total Nacional. Dato base. '), (None, 'Excursionista. Total Nacional. Tasa de variación anual. '), (None, 'Excursionista. Total Nacional. Acumulado en lo que va de año. '), (None, 'Excursionista. Total Nacional. Tasa de variación acumulada. ')]",
-    "spending": "INE spending: expected one series; found 0. Table candidates: [(None, 'Total. Turista. Gasto total. Total Nacional. Dato base. '), (None, 'Total. Turista. Gasto total. Total Nacional. Tasa de variación anual. '), (None, 'Total. Turista. Gasto total. Total Nacional. Acumulado en lo que va de año. '), (None, 'Total. Turista. Gasto total. Total Nacional. Tasa de variación acumulada. '), (None, 'Total. Turista. Gasto medio por persona. Total Nacional. Dato base. '), (None, 'Total. Turista. Gasto medio por persona. Total Nacional. Tasa de variación anual. '), (None, 'Total. Turista. Gasto medio por persona. Total Nacional. Acumulado en lo que va de año. '), (None, 'Total. Turista. Gasto medio por persona. Total Nacional. Tasa de variación acumulada. '), (None, 'Total. Turista. Gasto medio diario por persona. Total Nacional. Dato base. '), (None, 'Total. Turista. Gasto medio diario por persona. Total Nacional. Tasa de variación anual. '), (None, 'Total. Turista. Gasto medio diario por persona. Total Nacional. Acumulado en lo que va de año. '), (None, 'Total. Turista. Gasto medio diario por persona. Total Nacional. Tasa de variación acumulada. '), (None, 'Total. Turista. Duración media de los viajes. Total Nacional. Dato base. '), (None, 'Total. Turista. Duración media de los viajes. Total Nacional. Tasa de variación anual. '), (None, 'Total. Turista. Duración media de los viajes. Total Nacional. Acumulado en lo que va de año. '), (None, 'Total. Turista. Duración media de los viajes. Total Nacional. Tasa de variación acumulada. '), (None, 'Sin paquete turístico. Turista. Gasto total. Total Nacional. Dato base. '), (None, 'Sin paquete turístico. Turista. Gasto total. Total Nacional. Tasa de variación anual. '), (None, 'Sin paquete turístico. Turista. Gasto total. Total Nacional. Acumulado en lo que va de año. '), (None, 'Sin paquete turístico. Turista. Gasto total. Total Nacional. Tasa de variación acumulada. '), (None, 'Sin paquete turístico. Turista. Gasto medio por persona. Total Nacional. Dato base. '), (None, 'Sin paquete turístico. Turista. Gasto medio por persona. Total Nacional. Tasa de variación anual. '), (None, 'Sin paquete turístico. Turista. Gasto medio por persona. Total Nacional. Acumulado en lo que va de año. '), (None, 'Sin paquete turístico. Turista. Gasto medio por persona. Total Nacional. Tasa de variación acumulada. '), (None, 'Sin paquete turístico. Turista. Gasto medio diario por persona. Total Nacional. Dato base. ')]",
-    "tourism_gdp": "INE tourism_gdp: expected one series; found 6. Table candidates: [(None, 'Gasto Turístico Interior, Precios corrientes: Millones de euros'), (None, 'Gasto Turístico Interior, Precios corrientes: Porcentaje sobre el PIB'), (None, 'Gasto Turístico Interior, Precios constantes: Índices de volumen encadenados'), (None, 'Consumo Turístico Interior, Precios corrientes: Millones de euros'), (None, 'Consumo Turístico Interior, Precios corrientes: Porcentaje sobre el PIB'), (None, 'Consumo Turístico Interior, Precios constantes: Índices de volumen encadenados'), (None, 'Valor Añadido Bruto de las industrias turísticas (VABIT), Precios corrientes: Millones de euros'), (None, 'Valor Añadido Bruto de las industrias turísticas (VABIT), Precios corrientes: Porcentaje sobre el PIB'), (None, 'Valor Añadido Bruto de las industrias turísticas (VABIT), Precios constantes: Índices de volumen encadenados'), (None, 'Valor Añadido Bruto  directo turístico (VABDT), Precios corrientes: Millones de euros'), (None, 'Valor Añadido Bruto  directo turístico (VABDT), Precios corrientes: Porcentaje sobre el PIB'), (None, 'Valor Añadido Bruto  directo turístico (VABDT), Precios constantes: Índices de volumen encadenados'), (None, 'Producto Interior Bruto directo turístico (PIBDT), Precios corrientes: Millones de euros'), (None, 'Producto Interior Bruto directo turístico (PIBDT), Precios corrientes: Porcentaje sobre el PIB'), (None, 'Producto Interior Bruto directo turístico (PIBDT), Precios constantes: Índices de volumen encadenados'), (None, 'Producto interior bruto turístico, Precios corrientes: Millones de euros'), (None, 'Producto interior bruto turístico, Precios corrientes: Porcentaje sobre el PIB'), (None, 'Producto interior bruto turístico, Precios constantes: Índices de volumen encadenados')]"
+    "tourism_gdp": "INE tourism_gdp: selected series has no valid observations"
   },
-  "last_attempt_utc": "2026-11-18T04:19:24+00:00",
-  "last_partial_refresh_utc": "2026-11-18T04:19:24+00:00",
+  "last_attempt_utc": "2026-11-18T04:21:53+00:00",
+  "last_partial_refresh_utc": "2026-11-18T04:21:53+00:00",
   "updated_this_run": [
+    "arrivals",
+    "spending",
     "gdp_growth",
     "travel_balance",
     "current_account"
