@@ -55,7 +55,7 @@ def plot_line(years, series_items, ylabel, key, percent=False):
     plt.close(fig)
 
 
-def render_analysis(series, analysis_data):
+def render_analysis(series, analysis_data, start_year, end_year):
     spending, arrivals, hicp, current, services, travel = analyze(
         series, analysis_data
     )
@@ -68,67 +68,73 @@ def render_analysis(series, analysis_data):
         "overall external accounts."
     )
     st.caption(
-        "These hypothesis tests use fixed, complete-year comparisons "
-        "(2019–2025 where available), independent of the sidebar date filter, "
-        "so the baseline and financial comparison stay consistent."
+        f"Showing available annual observations for {start_year}–{end_year}. "
+        "Spending-per-visitor indices retain 2019 = 100 as the fixed "
+        "reference, even when that baseline falls outside the visible range."
     )
 
     st.markdown("#### Hypothesis 1 · Is tourism earning more per visitor after inflation?")
-    if 2019 in nominal and 2025 in nominal:
-        years = sorted(y for y in nominal if 2019 <= y <= 2025)
-        nominal_index = {y: 100 * nominal[y]/nominal[2019] for y in years}
+    years = [y for y in sorted(nominal) if start_year <= y <= end_year]
+    if years and 2019 in nominal:
+        latest = years[-1]
+        nominal_index = {y: 100 * nominal[y] / nominal[2019] for y in years}
         cols = st.columns(3)
         with cols[0]:
-            st.metric("2019 nominal spending per visitor",
-                      f"€{nominal[2019]:,.0f}")
+            st.metric("2019 baseline, nominal / visitor", f"€{nominal[2019]:,.0f}")
+            st.caption("Fixed reference, independent of date selection")
         with cols[1]:
-            st.metric("2025 nominal spending per visitor",
-                      f"€{nominal[2025]:,.0f}",
-                      f"{nominal_index[2025]-100:+.1f}% vs 2019")
+            st.metric(f"{latest} nominal / visitor", f"€{nominal[latest]:,.0f}",
+                      f"{nominal_index[latest]-100:+.1f}% vs 2019")
         with cols[2]:
-            if 2025 in real and 2019 in real:
-                change = 100 * real[2025]/real[2019]-100
-                st.metric("2025 inflation-adjusted proxy",
-                          f"€{real[2025]:,.0f}",
+            if latest in real and 2019 in real:
+                change = 100 * real[latest] / real[2019] - 100
+                st.metric(f"{latest} HICP-adjusted proxy",
+                          f"€{real[latest]:,.0f}",
                           f"{change:+.1f}% vs 2019")
             else:
-                st.metric("Inflation-adjusted proxy", "Awaiting HICP data")
+                st.metric(f"{latest} HICP-adjusted proxy", "Unavailable")
         real_index = {
-            y: 100 * real[y]/real[2019]
+            y: 100 * real[y] / real[2019]
             for y in years if y in real and 2019 in real
         }
-        if len(real_index) >= 2:
-            plot_line(
-                years,
-                [("Nominal spend per visitor", nominal_index, BLUE),
-                 ("HICP-adjusted spend per visitor", real_index, TEAL)],
-                "Index (2019 = 100)", "visitor-yield"
+        plot_items = [("Nominal spend per visitor", nominal_index, BLUE)]
+        if real_index:
+            plot_items.append(
+                ("HICP-adjusted spend per visitor", real_index, TEAL)
             )
-            st.caption(
-                "Spending per visitor = annual INE EGATUR spending / annual "
-                "INE FRONTUR arrivals. Real proxy = nominal amount × "
-                "Spain all-items annual HICP(2019) / HICP(year). "
-                "**This is a consumer-price-adjusted proxy, NOT official "
-                "real tourism receipts or tourism value added.** "
-                "[Eurostat annual HICP source]"
-                "(https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_aind/default/table)"
-            )
-        else:
-            plot_line(
-                years, [("Nominal spend per visitor", nominal_index, BLUE)],
-                "Index (2019 = 100)", "visitor-yield-nominal"
-            )
-            st.info("Consumer-price-adjusted results will appear once "
-                    "the official Eurostat annual HICP dataset passes refresh.")
+        plot_line(years, plot_items, "Index (2019 = 100)", "visitor-yield")
+        st.caption(
+            f"Full-year annual visitor averages available for "
+            f"{min(nominal)}–{max(nominal)}. "
+            "The arrivals/spending sources begin in September 2015, so "
+            "**2015 is excluded from annual per-visitor calculations**; "
+            "incomplete 2026 is also excluded. "
+            "Spending per visitor = annual INE EGATUR spending / "
+            "annual INE FRONTUR arrivals. "
+            "HICP-adjusted proxy = nominal spending per visitor × "
+            "Spain all-items annual HICP(2019) / HICP(year). "
+            "**This is not an official tourism-specific real-spending "
+            "measure.** "
+            "[Eurostat annual HICP]"
+            "(https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_aind/default/table)"
+        )
+        if not real_index:
+            st.info("Official HICP observations are unavailable for the selected years.")
     else:
-        st.info("Complete annual arrivals and visitor spending are required.")
+        st.info(
+            f"No complete annual spending-and-arrivals observations "
+            f"for {start_year}–{end_year}. Available complete years: "
+            f"{min(nominal) if nominal else 'none'}–"
+            f"{max(nominal) if nominal else 'none'}."
+        )
 
     st.markdown("#### Hypothesis 2 · How much does travel contribute to the external balance?")
-    common = sorted(set(travel) & set(services) & set(current))
+    common = sorted(
+        y for y in (set(travel) & set(services) & set(current))
+        if start_year <= y <= end_year
+    )
     if common:
-        years = [y for y in common if 2019 <= y <= 2025]
-        if not years:
-            years = common
+        years = common
         if years:
             residual = {y: current[y]-travel[y] for y in years}
             plot_line(
@@ -167,10 +173,9 @@ def render_analysis(series, analysis_data):
             )
     else:
         st.info(
-            "The historical travel surplus is available, but an annual "
-            "euro-denominated current account is not yet verified. Once "
-            "the official supplemental dataset refreshes, this chart "
-            "will show net travel alongside the broader current account."
+            f"No matching annual travel-services and current-account "
+            f"observations for {start_year}–{end_year}. "
+            "Verify the supplemental Eurostat series if this persists."
         )
 
     with st.expander("Supplemental source freshness and methodological limits"):
