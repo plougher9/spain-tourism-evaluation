@@ -7,6 +7,7 @@ on:
       - 'app.py'
       - 'story_sections.py'
       - 'analysis_sections.py'
+      - 'reader_story.py'
       - 'refresh_analysis.py'
       - 'data/analysis.json'
       - 'sources.py'
@@ -29,7 +30,7 @@ jobs:
       - name: Install dashboard dependencies
         run: pip install -r requirements.txt
       - name: Check Python syntax
-        run: python -m compileall -q app.py story_sections.py analysis_sections.py sources.py refresh.py refresh_analysis.py tests
+        run: python -m compileall -q app.py story_sections.py analysis_sections.py reader_story.py sources.py refresh.py refresh_analysis.py tests
       - name: Test data calculations and Streamlit rendering
         run: python -m unittest discover -s tests -v
       - name: Smoke-test running Streamlit server
