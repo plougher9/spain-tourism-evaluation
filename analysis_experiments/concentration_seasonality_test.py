@@ -104,7 +104,7 @@ def evaluate(df):
         ],
     }
     path = OUT.parent / "data" / "visitor_concentration.json"
-    path.write_text(json.dumps(dashboard, ensure_ascii=False, indent=2) + "\\n",
+    path.write_text(json.dumps(dashboard, ensure_ascii=False, indent=2),
                     encoding="utf-8")
     print("Wrote dashboard observations:", path)
     concentration.to_csv(OUT/"country_concentration_results.csv",index=False)
