@@ -120,12 +120,12 @@ class NarrativesTest(unittest.TestCase):
         from streamlit.testing.v1 import AppTest
         app = AppTest.from_file(str(ROOT / "app.py")).run(timeout=55)
         self.assertFalse(app.exception)
-        app.slider[0].set_value((2015, 2022)).run(timeout=55)
+        app.sidebar.slider[0].set_value((2015, 2022)).run(timeout=55)
         self.assertFalse(app.exception)
         labels = [metric.label for metric in app.metric]
         self.assertIn("2022 nominal / visitor", labels)
         self.assertNotIn("2025 nominal / visitor", labels)
-        app.slider[0].set_value((2019, 2026)).run(timeout=55)
+        app.sidebar.slider[0].set_value((2019, 2026)).run(timeout=55)
         self.assertFalse(app.exception)
         labels = [metric.label for metric in app.metric]
         self.assertIn("2025 nominal / visitor", labels)
