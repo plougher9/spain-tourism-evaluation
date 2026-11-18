@@ -1,0 +1,163 @@
+{
+  "series": {
+    "hicp": {
+      "observations": [
+        {
+          "period": "2015",
+          "value": 100.0
+        },
+        {
+          "period": "2016",
+          "value": 99.66
+        },
+        {
+          "period": "2017",
+          "value": 101.69
+        },
+        {
+          "period": "2018",
+          "value": 103.46
+        },
+        {
+          "period": "2019",
+          "value": 104.26
+        },
+        {
+          "period": "2020",
+          "value": 103.91
+        },
+        {
+          "period": "2021",
+          "value": 107.04
+        },
+        {
+          "period": "2022",
+          "value": 115.95
+        },
+        {
+          "period": "2023",
+          "value": 119.89
+        },
+        {
+          "period": "2024",
+          "value": 123.33
+        },
+        {
+          "period": "2025",
+          "value": 126.65
+        }
+      ],
+      "source": "Eurostat HICP, all-items, annual average index",
+      "source_url": "https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_aind/default/table",
+      "unit": "annual HICP index (rebasing does not affect 2019-ratio deflation)",
+      "refreshed_utc": "2026-11-18T17:11:42+00:00"
+    },
+    "current_account_eur": {
+      "observations": [
+        {
+          "period": "2015",
+          "value": 22.246
+        },
+        {
+          "period": "2016",
+          "value": 35.333
+        },
+        {
+          "period": "2017",
+          "value": 32.685
+        },
+        {
+          "period": "2018",
+          "value": 22.756
+        },
+        {
+          "period": "2019",
+          "value": 26.69
+        },
+        {
+          "period": "2020",
+          "value": 8.906
+        },
+        {
+          "period": "2021",
+          "value": 9.55
+        },
+        {
+          "period": "2022",
+          "value": 5.766
+        },
+        {
+          "period": "2023",
+          "value": 41.051
+        },
+        {
+          "period": "2024",
+          "value": 53.398
+        },
+        {
+          "period": "2025",
+          "value": 54.829
+        }
+      ],
+      "source": "Eurostat BPM6 annual current-account balance",
+      "source_url": "https://ec.europa.eu/eurostat/databrowser/view/bop_c6_a/default/table",
+      "unit": "€ billion",
+      "refreshed_utc": "2026-11-18T17:11:42+00:00"
+    },
+    "services_balance_eur": {
+      "observations": [
+        {
+          "period": "2015",
+          "value": 53.454
+        },
+        {
+          "period": "2016",
+          "value": 58.273
+        },
+        {
+          "period": "2017",
+          "value": 63.699
+        },
+        {
+          "period": "2018",
+          "value": 61.47
+        },
+        {
+          "period": "2019",
+          "value": 62.616
+        },
+        {
+          "period": "2020",
+          "value": 24.148
+        },
+        {
+          "period": "2021",
+          "value": 33.529
+        },
+        {
+          "period": "2022",
+          "value": 72.29
+        },
+        {
+          "period": "2023",
+          "value": 92.499
+        },
+        {
+          "period": "2024",
+          "value": 100.205
+        },
+        {
+          "period": "2025",
+          "value": 113.48
+        }
+      ],
+      "source": "Eurostat BPM6 international trade in services (total), balance",
+      "source_url": "https://ec.europa.eu/eurostat/databrowser/view/bop_its6_det/default/table",
+      "unit": "€ billion",
+      "refreshed_utc": "2026-11-18T17:11:42+00:00"
+    }
+  },
+  "errors": {},
+  "last_attempt_utc": "2026-11-18T17:11:42+00:00",
+  "last_successful_refresh_utc": "2026-11-18T17:11:42+00:00"
+}
