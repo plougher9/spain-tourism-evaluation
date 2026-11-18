@@ -581,79 +581,90 @@ def render_shock_section(travel, current, goods, start_year, end_year):
     )
 
     st.markdown(
-        "**B · Did tourism recovery fully offset pressure elsewhere?**"
-    )
-    st.markdown(
-        "This chart compares the **travel-services surplus**, the **goods "
-        "trade balance**, and the **total current account** in four benchmark "
-        "years. It asks whether the recovery in tourism earnings was enough "
-        "to protect Spain's wider external balance. The three series are "
-        "related but should **not be added together**."
-    )
-    benchmark_years = [
-        y for y in (2019, 2020, 2022, 2025)
-        if start_year <= y <= end_year
-        and y in goods and y in travel and y in current
-    ]
-    if benchmark_years:
-        plot_shock_accounts(travel, goods, current, benchmark_years)
-        st.caption(
-            "Eurostat BPM6 annual goods, travel services and total current "
-            "account balances. These bars are **not additive**: the current "
-            "account includes goods, all services and primary/secondary income; "
-            "travel is one subset of services. Signed values share a zero axis."
-        )
-        if 2022 in benchmark_years and 2019 in benchmark_years:
-            st.markdown(
-                f"**The key contrast:** in 2022 net travel services generated "
-                f"€{travel[2022]:.1f}B, compared with €{travel[2019]:.1f}B "
-                f"in 2019. Yet Spain's current-account surplus was only "
-                f"€{current[2022]:.1f}B, down from €{current[2019]:.1f}B "
-                f"in 2019. Its BPM6 goods balance stood at "
-                f"€{goods[2022]:+.1f}B in 2022. Tourism's positive external "
-                "contribution therefore coexisted with considerable pressure "
-                "in other accounts. **Takeaway:** a tourism recovery can "
-                "help the external accounts without fully overcoming goods "
-                "trade and other balance-of-payments pressures."
-            )
-        elif 2022 in benchmark_years:
-            st.markdown(
-                f"In 2022, travel services contributed €{travel[2022]:.1f}B "
-                f"but Spain's current-account surplus was €{current[2022]:.1f}B. "
-                f"The goods balance was €{goods[2022]:+.1f}B. "
-                "**Takeaway:** tourism's recovery helped, but other parts of "
-                "the external accounts remained under pressure."
-            )
-    elif not goods:
-        st.info(
-            "The goods-balance comparison is awaiting the official Eurostat "
-            "annual data refresh. No goods figures will be estimated."
-        )
-    else:
-        st.info(
-            "The selected range does not contain a common benchmark year "
-            "for the travel, goods and current-account balances."
-        )
-    st.markdown(
-        "**What this adds to Part 1:** tourism can strengthen the observed "
-        "current account, but it cannot guarantee external stability. "
-        "A direct travel shock can sharply reduce its contribution (2020), "
-        "while other shocks can weigh on the broader balance even as "
-        "tourism recovers (2022). The comparison does **not** quantify how "
-        "much the energy shock was offset by tourism, or prove Spain's "
-        "vulnerability has increased over time."
-    )
-    st.caption(
-        "Energy-crisis context: [IMF Spain 2022 Article IV]"
-        "(https://www.imf.org/en/publications/cr/issues/2023/01/19/"
-        "spain-2022-article-iv-consultation-press-release-staff-report-and-"
-        "statement-by-the-528338). Goods balances are BPM6 goods trade, "
-        "not customs-basis merchandise trade."
+        "**Section 4 takeaway:** Tourism creates both vulnerability and "
+        "resilience. Travel restrictions sharply reduced Spain's tourism "
+        "surplus in 2020, while its recovery during the 2022 energy-price "
+        "shock provided support under a different kind of disruption. "
+        "These observations do not establish how much tourism offset "
+        "wider economic pressures."
     )
 
 
-def render_exploration(travel, rolling_balance, start_year, end_year):
+def render_exploration(travel, current, goods, rolling_balance, start_year, end_year):
     st.markdown("### Explore further")
+    with st.expander("Supporting analysis: tourism versus broader external balances"):
+        st.markdown(
+            "**Supporting comparison · Did tourism recovery fully offset pressure elsewhere?**"
+        )
+        st.markdown(
+            "This chart compares the **travel-services surplus**, the **goods "
+            "trade balance**, and the **total current account** in four benchmark "
+            "years. It asks whether the recovery in tourism earnings was enough "
+            "to protect Spain's wider external balance. The three series are "
+            "related but should **not be added together**."
+        )
+        benchmark_years = [
+            y for y in (2019, 2020, 2022, 2025)
+            if start_year <= y <= end_year
+            and y in goods and y in travel and y in current
+        ]
+        if benchmark_years:
+            plot_shock_accounts(travel, goods, current, benchmark_years)
+            st.caption(
+                "Eurostat BPM6 annual goods, travel services and total current "
+                "account balances. These bars are **not additive**: the current "
+                "account includes goods, all services and primary/secondary income; "
+                "travel is one subset of services. Signed values share a zero axis."
+            )
+            if 2022 in benchmark_years and 2019 in benchmark_years:
+                st.markdown(
+                    f"**The key contrast:** in 2022 net travel services generated "
+                    f"€{travel[2022]:.1f}B, compared with €{travel[2019]:.1f}B "
+                    f"in 2019. Yet Spain's current-account surplus was only "
+                    f"€{current[2022]:.1f}B, down from €{current[2019]:.1f}B "
+                    f"in 2019. Its BPM6 goods balance stood at "
+                    f"€{goods[2022]:+.1f}B in 2022. Tourism's positive external "
+                    "contribution therefore coexisted with considerable pressure "
+                    "in other accounts. **Takeaway:** a tourism recovery can "
+                    "help the external accounts without fully overcoming goods "
+                    "trade and other balance-of-payments pressures."
+                )
+            elif 2022 in benchmark_years:
+                st.markdown(
+                    f"In 2022, travel services contributed €{travel[2022]:.1f}B "
+                    f"but Spain's current-account surplus was €{current[2022]:.1f}B. "
+                    f"The goods balance was €{goods[2022]:+.1f}B. "
+                    "**Takeaway:** tourism's recovery helped, but other parts of "
+                    "the external accounts remained under pressure."
+                )
+        elif not goods:
+            st.info(
+                "The goods-balance comparison is awaiting the official Eurostat "
+                "annual data refresh. No goods figures will be estimated."
+            )
+        else:
+            st.info(
+                "The selected range does not contain a common benchmark year "
+                "for the travel, goods and current-account balances."
+            )
+        st.markdown(
+            "**What this adds to Part 1:** tourism can strengthen the observed "
+            "current account, but it cannot guarantee external stability. "
+            "A direct travel shock can sharply reduce its contribution (2020), "
+            "while other shocks can weigh on the broader balance even as "
+            "tourism recovers (2022). The comparison does **not** quantify how "
+            "much the energy shock was offset by tourism, or prove Spain's "
+            "vulnerability has increased over time."
+        )
+        st.caption(
+            "Energy-crisis context: [IMF Spain 2022 Article IV]"
+            "(https://www.imf.org/en/publications/cr/issues/2023/01/19/"
+            "spain-2022-article-iv-consultation-press-release-staff-report-and-"
+            "statement-by-the-528338). Goods balances are BPM6 goods trade, "
+            "not customs-basis merchandise trade."
+        )
+
+
     with st.expander("Explore a hypothetical change in the travel-services surplus"):
         years = filtered_years(travel, start_year, end_year)
         if years:
@@ -715,4 +726,4 @@ def render_reader_story(series, analysis_data, start_year, end_year, rolling_bal
         "the 2022 rebound during an energy shock illustrates resilience "
         "under a different stress. These findings are descriptive, not causal."
     )
-    render_exploration(travel, rolling_balance, start_year, end_year)
+    render_exploration(travel, current, goods, rolling_balance, start_year, end_year)
