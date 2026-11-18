@@ -48,27 +48,26 @@ def evaluate(df):
     assert len(total)==120, "expected complete monthly national data"
     national=total.groupby("year").visitors.sum()
     base=df[df.market!="Total"]
-    months=base.groupby("market")[["year","month"]].agg({"year":"count"})
-    categories=base.market.unique().tolist()
-    missing=base.groupby("market").size()
-    assert missing.eq(120).all(),f"Missing category month(s): {missing.to_dict()}"
-    annual=base.groupby(["year","market"]).visitors.sum().unstack("market")
-    # A quality gate: group categories must sum back to the national total.
-    diff=annual.sum(axis=1)-national
-    print("Category sum minus national count by year:",diff.to_dict())
-    assert (diff.abs()/national < 0.002).all(),"INE market groups do not reconcile with national totals"
+    # Official file has incomplete historical coverage for some small
+    # countries and changed the Russia grouping. Do not fill or fabricate.
+    # Use the complete individual-country categories for ranking.
+    month_counts=base.groupby("market").size()
+    individual=[market for market in sorted(COUNTRIES)
+                if market in month_counts and month_counts[market]==120]
+    assert all(market in individual for market in
+               ("Reino Unido","Francia","Alemania")),individual
+    annual=base[base.market.isin(individual)].groupby(
+        ["year","market"]).visitors.sum().unstack("market")
+    assert (annual.sum(axis=1)<=national*1.001).all()
     shares=annual.div(national,axis=0)*100
-    top3=shares[list(sorted(set(COUNTRIES)&set(shares.columns)))].apply(
-        lambda row: row.nlargest(3).sum(),axis=1)
-    rank=shares[list(sorted(set(COUNTRIES)&set(shares.columns)))].apply(
-        lambda row: " + ".join(row.nlargest(3).index.tolist()),axis=1)
+    top3=shares.apply(lambda row: row.nlargest(3).sum(),axis=1)
+    rank=shares.apply(lambda row: " + ".join(row.nlargest(3).index.tolist()),axis=1)
     concentration=pd.DataFrame({
         "year":list(YEARS),
         "total_visitors":national.reindex(YEARS).values,
         "top_three_country_share_pct":top3.reindex(YEARS).values,
         "top_three_countries":rank.reindex(YEARS).values,
-        "hhi_aggregate_market_groups":((shares/100)**2).sum(axis=1).reindex(YEARS).values,
-        "effective_market_groups":(1/((shares/100)**2).sum(axis=1)).reindex(YEARS).values,
+        "largest_country_share_pct":shares.max(axis=1).reindex(YEARS).values,
         "UK_pct":shares["Reino Unido"].reindex(YEARS).values,
         "France_pct":shares["Francia"].reindex(YEARS).values,
         "Germany_pct":shares["Alemania"].reindex(YEARS).values,
@@ -94,15 +93,15 @@ def evaluate(df):
     print(seasonality.round(3).to_string(index=False))
     print("\nCOMPARISONS 2019 vs 2025")
     for name,frame,fields in (
-        ("Country concentration",concentration,["top_three_country_share_pct","hhi_aggregate_market_groups","UK_pct","France_pct","Germany_pct"]),
+        ("Country concentration",concentration,["top_three_country_share_pct","largest_country_share_pct","UK_pct","France_pct","Germany_pct"]),
         ("Seasonality",seasonality,["june_august_pct","july_august_pct","may_september_pct","winter_nov_feb_pct"])):
         a=frame.set_index("year")
         print(name)
         for field in fields:
             old,new=float(a.loc[2019,field]),float(a.loc[2025,field])
             print(f"  {field}: 2019={old:.3f}, 2025={new:.3f}, change={new-old:+.3f} {'points' if field.endswith('_pct') else 'index units'}")
-    summary={"source":SOURCE,"years":"2016-2025 complete calendar years","country_group_count":len(categories),"caveats":[
-        "INE publishes some aggregate regions alongside individual source countries; HHI is by published market groups, not an all-country HHI.",
+    summary={"source":SOURCE,"years":"2016-2025 complete calendar years","complete_individual_country_categories":individual,"caveats":[
+        "Some countries and aggregate regions have missing or revised historical categories. Rankings include only individual-country categories with full monthly coverage; UK/France/Germany are complete. No all-country HHI is computed.",
         "Measures count visitor arrivals, not tourism spending, economic loss, or causal vulnerability.",
         "2020-2021 are pandemic-distorted; compare 2019 with 2025 and inspect full trend.",
         "Peak season is a share, not a direct measure of weather/disruption risk.",
