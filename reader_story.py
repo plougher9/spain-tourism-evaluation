@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import matplotlib.pyplot as plt
+import altair as alt
+import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 
@@ -184,6 +186,98 @@ def render_dependence_section(gdp, start_year, end_year):
     )
 
 
+def inflation_chart_data(years, nominal_change, real_change, hicp):
+    """Values for a shared-year hover, all in % relative to 2019."""
+    if 2019 not in hicp or hicp[2019] <= 0:
+        return pd.DataFrame(columns=["Year", "Nominal", "Inflation", "Adjusted"])
+    return pd.DataFrame([
+        {
+            "Year": str(y),
+            "Nominal": nominal_change.get(y),
+            "Inflation": 100 * (hicp[y] / hicp[2019] - 1) if y in hicp else None,
+            "Adjusted": real_change.get(y),
+        }
+        for y in years
+    ])
+
+
+def draw_inflation_chart(data, view):
+    """Lightweight Altair chart, with all three values visible on year hover.
+
+    Only Part 3B is client-interactive. Other story charts remain server-side.
+    """
+    series_names = {
+        "Nominal": "Nominal spending per visitor",
+        "Inflation": "Cumulative Spanish consumer inflation",
+        "Adjusted": "HICP-adjusted spending per visitor",
+    }
+    visible = {
+        "Compare all": list(series_names),
+        "Nominal only": ["Nominal"],
+        "Inflation-adjusted only": ["Adjusted"],
+    }[view]
+    chart_data = data.melt(
+        id_vars=["Year"], value_vars=visible,
+        var_name="Measure", value_name="Change",
+    ).dropna(subset=["Change"])
+    chart_data["Measure"] = chart_data["Measure"].map(series_names)
+    palette = {
+        "Nominal spending per visitor": BLUE,
+        "Cumulative Spanish consumer inflation": GOLD,
+        "HICP-adjusted spending per visitor": TEAL,
+    }
+    year_values = data["Year"].tolist()
+    base = alt.Chart(chart_data).encode(
+        x=alt.X("Year:O", sort=year_values, title="Calendar year"),
+        y=alt.Y(
+            "Change:Q",
+            title="Cumulative change from 2019 (%)",
+            axis=alt.Axis(format="+.0f"),
+            scale=alt.Scale(zero=False),
+        ),
+        color=alt.Color(
+            "Measure:N",
+            scale=alt.Scale(domain=list(palette), range=list(palette.values())),
+            legend=alt.Legend(title=None, orient="top"),
+        ),
+    )
+    lines = base.mark_line(strokeWidth=3, point=alt.OverlayMarkDef(size=55))
+    baseline = alt.Chart(pd.DataFrame({"zero": [0]})).mark_rule(
+        color="#7E929D", strokeDash=[4, 4], strokeWidth=1
+    ).encode(y="zero:Q")
+    # One vertical selection target per calendar year; tooltip shows *all*
+    # values even when the toggle shows just one line.
+    hover_data = data.copy()
+    for col in ("Nominal", "Inflation", "Adjusted"):
+        hover_data[col] = pd.to_numeric(hover_data[col], errors="coerce")
+    nearest = alt.selection_point(
+        fields=["Year"], nearest=True, on="pointerover", empty=False,
+    )
+    targets = alt.Chart(hover_data).mark_point(
+        size=90, opacity=0.0,
+    ).encode(
+        x=alt.X("Year:O", sort=year_values),
+        tooltip=[
+            alt.Tooltip("Year:O", title="Year"),
+            alt.Tooltip("Nominal:Q", title="Nominal / visitor", format="+.1f"),
+            alt.Tooltip("Inflation:Q", title="Cumulative HICP", format="+.1f"),
+            alt.Tooltip("Adjusted:Q", title="Adjusted / visitor", format="+.1f"),
+        ],
+    ).add_params(nearest)
+    highlight = alt.Chart(hover_data).mark_rule(
+        color="#8C9DA5", strokeWidth=1.2
+    ).encode(
+        x=alt.X("Year:O", sort=year_values),
+        opacity=alt.condition(nearest, alt.value(.75), alt.value(0)),
+    ).transform_filter(nearest)
+    chart = alt.layer(baseline, lines, targets, highlight).properties(
+        height=325
+    ).configure_view(strokeWidth=0).configure_axis(
+        labelColor=INK, titleColor=INK, gridColor=GRID
+    )
+    st.altair_chart(chart, use_container_width=True)
+
+
 def render_yield_section(spending, arrivals, hicp, start_year, end_year):
     st.markdown("### 03 · Is Spain earning more per visitor after inflation?")
     nominal = nominal_spending_per_visitor(spending, arrivals)
@@ -273,13 +367,24 @@ def render_yield_section(spending, arrivals, hicp, start_year, end_year):
         "consumer price index (HICP). This is an approximation of "
         "purchasing power, not a tourism-specific price measure."
     )
-    items = [("Nominal spending per visitor", nominal_change, BLUE)]
-    if real_change:
-        items.append(("Inflation-adjusted proxy", real_change, TEAL))
-    visible = [(label, {y: values[y] for y in years if y in values}, color)
-               for label, values, color in items]
-    plot_line(years, visible, "Change vs 2019 (%)", "visitor-yield",
-              percent=True)
+    view = st.radio(
+        "Choose the inflation comparison",
+        ["Compare all", "Nominal only", "Inflation-adjusted only"],
+        index=0, horizontal=True, key="inflation_comparison_view",
+        help="Nominal is in the year's euros; adjusted removes broad Spanish "
+             "consumer-price changes. Compare all includes cumulative HICP.",
+    )
+    chart_data = inflation_chart_data(years, nominal_change, real_change, hicp)
+    if chart_data["Nominal"].notna().any():
+        draw_inflation_chart(chart_data, view)
+        st.caption(
+            "Hover over any year marker to see nominal spending-per-visitor "
+            "growth, cumulative Spanish HICP inflation, and adjusted growth "
+            "together. Values are percentages relative to 2019 (0%), "
+            "not percentage-point contributions that can simply be added."
+        )
+    else:
+        st.info("Not enough annual observations to show the inflation comparison.")
     if latest in real_change:
         price_change = 100 * (hicp[latest] / hicp[2019] - 1)
         st.markdown(
@@ -294,7 +399,7 @@ def render_yield_section(spending, arrivals, hicp, start_year, end_year):
             "necessarily bought much more tourism in real terms."
         )
         st.markdown(
-            f"**How to interpret the two lines:** the nominal line measures "
+            f"**How to interpret the lines:** the nominal line measures "
             f"growth in euros actually spent per visitor; the adjusted line "
             f"measures what those euros would be worth at 2019 consumer "
             f"prices. They are related multiplicatively: "
