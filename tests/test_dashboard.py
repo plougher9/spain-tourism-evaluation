@@ -94,6 +94,28 @@ class NarrativesTest(unittest.TestCase):
         self.assertAlmostEqual(travel[2025] / services[2025] * 100,
                                62.09, delta=0.1)
 
+    def test_year_selection_changes_analytical_series(self):
+        import json
+        from analysis_sections import analyze, nominal_spending_per_visitor
+        extras = json.loads(
+            (ROOT / "data" / "analysis.json").read_text(encoding="utf-8")
+        )
+        spending, arrivals, hicp, current, services, travel = analyze(
+            self.series, extras
+        )
+        visitor = nominal_spending_per_visitor(spending, arrivals)
+        narrow = [y for y in sorted(visitor) if 2019 <= y <= 2026]
+        full = [y for y in sorted(visitor) if 2015 <= y <= 2026]
+        self.assertEqual(narrow[0], 2019)
+        self.assertEqual(full[0], 2016)
+        self.assertIn(2016, full)
+        self.assertNotIn(2016, narrow)
+        common = set(current) & set(services) & set(travel)
+        selected = sorted(y for y in common if 2015 <= y <= 2026)
+        self.assertEqual(selected[0], 2015)
+        self.assertEqual(selected[-1], 2025)
+        self.assertEqual([y for y in common if 2026 <= y <= 2026], [])
+
     def test_streamlit_page_renders(self):
         from streamlit.testing.v1 import AppTest
         app = AppTest.from_file(str(ROOT / "app.py")).run(timeout=55)
