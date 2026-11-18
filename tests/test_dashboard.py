@@ -292,8 +292,10 @@ class NarrativesTest(unittest.TestCase):
             self.skipTest("Official goods balance is awaiting scheduled refresh")
         goods = annual_values(analysis["series"]["goods_balance_eur"])
         self.assertIn(2022, goods)
-        self.assertLess(goods[2022], 0)
-        self.assertIn(2025, goods)
+        self.assertAlmostEqual(goods[2019], -25.195, places=3)
+        self.assertAlmostEqual(goods[2022], -60.215, places=3)
+        self.assertAlmostEqual(goods[2025], -50.266, places=3)
+        self.assertLess(goods[2022], goods[2019])
 
     def test_tourism_gdp_has_room_at_2019(self):
         from unittest.mock import patch
