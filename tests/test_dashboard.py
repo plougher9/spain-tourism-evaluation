@@ -339,10 +339,20 @@ class NarrativesTest(unittest.TestCase):
         from unittest.mock import patch
         from reader_story import render_visitor_concentration
         release = json.loads((ROOT / "data" / "visitor_concentration.json").read_text())
-        with patch("reader_story.st.pyplot") as plot:
+        with patch("reader_story.st.pyplot") as plot, \
+             patch("reader_story.st.caption") as caption:
             render_visitor_concentration(release, 2022, 2024)
             years = list(plot.call_args.args[0].axes[0].lines[0].get_xdata())
             self.assertEqual(years, [2022, 2023, 2024])
+            self.assertTrue(any("vs 2022" in str(c.args[0])
+                                for c in caption.call_args_list))
+        with patch("reader_story.st.pyplot"), \
+             patch("reader_story.st.caption") as caption:
+            render_visitor_concentration(release, 2015, 2025)
+            self.assertTrue(any("vs 2016" in str(c.args[0])
+                                for c in caption.call_args_list))
+            self.assertTrue(any("-7.9 percentage points" in str(c.args[0])
+                                for c in caption.call_args_list))
         with patch("reader_story.st.info") as info:
             render_visitor_concentration(None, 2015, 2026)
             self.assertTrue(info.called)
