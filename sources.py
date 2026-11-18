@@ -94,7 +94,7 @@ def discover_ine():
 
 
 def _ine_series_metadata(table_id):
-  data = http_json(API_INE + f'SERIES_TABLA/{table_id}')
+    data = http_json(API_INE + f'SERIES_TABLA/{table_id}')
     if not isinstance(data, list):
         raise SourceError(f'INE table {table_id}: invalid series list')
     return data
@@ -189,4 +189,17 @@ def validate(metric, df):
 
 
 def load_snapshot(folder='data'):
-    path=Path(folder)/'snapshot.json'
+    path = Path(folder) / 'snapshot.json'
+    if path.exists():
+        data = json.loads(path.read_text(encoding='utf-8'))
+        if not isinstance(data, dict):
+            raise SourceError('Snapshot must be a JSON object')
+        data.setdefault('series', {})
+        data.setdefault('errors', {})
+        return data
+    return {
+        'last_successful_refresh_utc': None,
+        'last_attempt_utc': None,
+        'series': {},
+        'errors': {},
+    }
