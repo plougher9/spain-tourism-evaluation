@@ -551,7 +551,90 @@ def plot_shock_accounts(travel, goods, current, years):
     plt.close(fig)
 
 
-def render_shock_section(travel, current, goods, start_year, end_year):
+def render_visitor_concentration(release, start_year, end_year):
+    """One compact structural-exposure exhibit derived from INE FRONTUR.
+
+    Top-three market concentration is distinct from market-specific FX
+    sensitivity: a euro-area visitor is not exposed to EUR/GBP movements.
+    """
+    if not isinstance(release, dict):
+        st.info("Country-of-residence concentration data are awaiting the INE refresh.")
+        return
+    try:
+        observations = release.get("observations", [])
+        annual = {
+            int(o["year"]): {
+                key: float(o[key])
+                for key in ("top_three_pct", "uk_pct", "france_pct", "germany_pct")
+            }
+            for o in observations
+        }
+    except (ValueError, TypeError, KeyError):
+        st.warning("Visitor-market concentration data could not be interpreted.")
+        return
+    visible = [y for y in sorted(annual) if start_year <= y <= end_year]
+    if not visible:
+        st.info("No complete country-concentration observations in the selected years.")
+        return
+    latest = visible[-1]
+    values = [annual[y]["top_three_pct"] for y in visible]
+    left, right = st.columns([1, 2], gap="medium")
+    with left:
+        st.metric(f"{latest} top-three visitor-market share",
+                  f"{annual[latest]['top_three_pct']:.1f}%")
+        if 2019 in annual:
+            delta = annual[latest]["top_three_pct"] - annual[2019]["top_three_pct"]
+            st.caption(f"{delta:+.1f} percentage points vs 2019 (fixed reference)")
+        st.metric(f"{latest} UK visitor share", f"{annual[latest]['uk_pct']:.1f}%")
+        st.caption("The UK market is sensitive in principle to pound/euro purchasing power.")
+    with right:
+        fig, ax = plt.subplots(figsize=(8.7, 2.9), dpi=105)
+        fig.patch.set_facecolor("white")
+        ax.set_facecolor("white")
+        ax.plot(visible, values, color=BLUE, linewidth=2.5, marker="o",
+                markersize=5)
+        for year in (visible[0], latest):
+            ax.annotate(f"{annual[year]['top_three_pct']:.1f}%",
+                        (year, annual[year]["top_three_pct"]),
+                        xytext=(0, 9), textcoords="offset points",
+                        ha="center", fontsize=9, color=INK, weight="bold")
+        ax.set_xlim(visible[0] - .55, latest + .55)
+        spread = max(1, max(values) - min(values))
+        ax.set_ylim(min(values) - max(2.2, spread*.35),
+                    max(values) + max(2.8, spread*.5))
+        ax.set_xticks(visible)
+        ax.set_ylabel("Top-three share of arrivals (%)", color=INK)
+        ax.set_xlabel("Calendar year", color=INK)
+        ax.grid(axis="y", color=GRID, linewidth=.85)
+        ax.set_axisbelow(True)
+        ax.spines[["top", "right", "left"]].set_visible(False)
+        ax.tick_params(axis="both", colors=INK, length=0, labelsize=9)
+        fig.tight_layout()
+        st.pyplot(fig, use_container_width=True)
+        plt.close(fig)
+    st.markdown(
+        "**Resilience and remaining exposure:** A falling share of visitors "
+        "from the three largest markets suggests broader geographic "
+        "diversification, which may reduce reliance on any single source "
+        "country. However, the UK still accounts for a substantial share "
+        "of arrivals. A weaker pound against the euro can make Spanish "
+        "travel more expensive for UK visitors; this is **potential "
+        "exchange-rate-driven demand risk**, not proof that exchange rates "
+        "caused changes in arrivals. France and Germany use the euro and "
+        "do not face this same bilateral currency risk."
+    )
+    st.caption(
+        "Source: [INE FRONTUR by country of residence]("
+        + release.get("source_url", "https://www.ine.es/")
+        + "). Share of **visitor arrivals**, not visitor expenditure or "
+        "tourism receipts. Full-year totals only; individual markets are "
+        "ranked against national totals. Historical changes indicate "
+        "diversification, not a causal estimate of lower financial risk. "
+        "The chart follows the selected year range."
+    )
+
+
+def render_shock_section(travel, current, goods, start_year, end_year, visitor_concentration=None):
     st.markdown(
         "### 04 · When does tourism create vulnerability—and when does it "
         "provide resilience?"
@@ -586,13 +669,19 @@ def render_shock_section(travel, current, goods, start_year, end_year):
         "year range."
     )
 
+    st.markdown("**B · Is tourism demand becoming more geographically concentrated?**")
+    render_visitor_concentration(visitor_concentration, start_year, end_year)
+
     st.markdown(
         "**Section 4 takeaway:** Tourism creates both vulnerability and "
         "resilience. Travel restrictions sharply reduced Spain's tourism "
         "surplus in 2020, while its recovery during the 2022 energy-price "
         "shock provided support under a different kind of disruption. "
-        "These observations do not establish how much tourism offset "
-        "wider economic pressures."
+        "Visitor-market diversification offers another potential source "
+        "of resilience, while the large non-euro UK market leaves Spain "
+        "exposed to external purchasing-power and exchange-rate changes. "
+        "These observations do not establish causality or how much tourism "
+        "offset wider economic pressures."
     )
 
 
@@ -697,7 +786,7 @@ def render_exploration(travel, current, goods, rolling_balance, start_year, end_
         render_recent_rolling_balance(rolling_balance)
 
 
-def render_reader_story(series, analysis_data, start_year, end_year, rolling_balance=None):
+def render_reader_story(series, analysis_data, start_year, end_year, rolling_balance=None, visitor_concentration=None):
     spending, arrivals, hicp, current, services, travel = analyze(series, analysis_data)
     gdp = annual_values(series.get("tourism_gdp", {}))
 
@@ -717,7 +806,7 @@ def render_reader_story(series, analysis_data, start_year, end_year, rolling_bal
     render_dependence_section(gdp, start_year, end_year)
     render_yield_section(spending, arrivals, hicp, start_year, end_year)
     goods = annual_values(analysis_data.get('series', {}).get('goods_balance_eur', {}))
-    render_shock_section(travel, current, goods, start_year, end_year)
+    render_shock_section(travel, current, goods, start_year, end_year, visitor_concentration)
 
     st.markdown("### Overall analysis · What can we conclude?")
     st.markdown(
@@ -730,6 +819,9 @@ def render_reader_story(series, analysis_data, start_year, end_year, rolling_bal
         "exact long-term comparisons. "
         "**Risk:** COVID demonstrates sensitivity to travel restrictions; "
         "the 2022 rebound during an energy shock illustrates resilience "
-        "under a different stress. These findings are descriptive, not causal."
+        "under a different stress. Visitor-market diversification may "
+        "reduce concentration exposure, although the UK market still "
+        "creates potential pound/euro-related tourism-demand risk. "
+        "These findings are descriptive, not causal."
     )
     render_exploration(travel, current, goods, rolling_balance, start_year, end_year)
