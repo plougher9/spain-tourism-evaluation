@@ -1,6 +1,6 @@
 metric,source,latest_period,latest_value,source_url,refresh_time_utc
-gdp_growth,Eurostat · namq_10_gdp,2026-Q3,2.9,https://ec.europa.eu/eurostat/databrowser/view/namq_10_gdp/default/table,2026-11-18T04:21:53+00:00
-travel_balance,Eurostat · bop_its6_det,2025,70.46,https://ec.europa.eu/eurostat/databrowser/view/bop_its6_det/default/table,2026-11-18T04:21:53+00:00
-current_account,Eurostat · tipsbp41,2026-Q2,2.0,https://ec.europa.eu/eurostat/databrowser/view/tipsbp41/default/table,2026-11-18T04:21:53+00:00
-arrivals,INE · FRONTUR,2026-08,10.13965,https://www.ine.es/dyngs/INEbase/en/operacion.htm?c=Estadistica_C&cid=1254736176996&idp=1254735576863,2026-11-18T04:21:53+00:00
-spending,INE · EGATUR,2026-08,14.48806,https://www.ine.es/dyngs/INEbase/en/operacion.htm?c=Estadistica_C&cid=1254736177002&idp=1254735576863,2026-11-18T04:21:53+00:00
+gdp_growth,Eurostat · namq_10_gdp,2026-Q3,2.9,https://ec.europa.eu/eurostat/databrowser/view/namq_10_gdp/default/table,2026-11-18T04:24:10+00:00
+travel_balance,Eurostat · bop_its6_det,2025,70.46,https://ec.europa.eu/eurostat/databrowser/view/bop_its6_det/default/table,2026-11-18T04:24:10+00:00
+current_account,Eurostat · tipsbp41,2026-Q2,2.0,https://ec.europa.eu/eurostat/databrowser/view/tipsbp41/default/table,2026-11-18T04:24:10+00:00
+arrivals,INE · FRONTUR,2026-08,10.13965,https://www.ine.es/dyngs/INEbase/en/operacion.htm?c=Estadistica_C&cid=1254736176996&idp=1254735576863,2026-11-18T04:24:10+00:00
+spending,INE · EGATUR,2026-08,14.48806,https://www.ine.es/dyngs/INEbase/en/operacion.htm?c=Estadistica_C&cid=1254736177002&idp=1254735576863,2026-11-18T04:24:10+00:00

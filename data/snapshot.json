@@ -194,7 +194,7 @@
       ],
       "source": "Eurostat · namq_10_gdp",
       "source_url": "https://ec.europa.eu/eurostat/databrowser/view/namq_10_gdp/default/table",
-      "refreshed_utc": "2026-11-18T04:21:53+00:00",
+      "refreshed_utc": "2026-11-18T04:24:10+00:00",
       "latest_observation": "2026-Q3"
     },
     "travel_balance": {
@@ -246,7 +246,7 @@
       ],
       "source": "Eurostat · bop_its6_det",
       "source_url": "https://ec.europa.eu/eurostat/databrowser/view/bop_its6_det/default/table",
-      "refreshed_utc": "2026-11-18T04:21:53+00:00",
+      "refreshed_utc": "2026-11-18T04:24:10+00:00",
       "latest_observation": "2025"
     },
     "current_account": {
@@ -438,7 +438,7 @@
       ],
       "source": "Eurostat · tipsbp41",
       "source_url": "https://ec.europa.eu/eurostat/databrowser/view/tipsbp41/default/table",
-      "refreshed_utc": "2026-11-18T04:21:53+00:00",
+      "refreshed_utc": "2026-11-18T04:24:10+00:00",
       "latest_observation": "2026-Q2"
     },
     "arrivals": {
@@ -974,7 +974,7 @@
       ],
       "source": "INE · FRONTUR",
       "source_url": "https://www.ine.es/dyngs/INEbase/en/operacion.htm?c=Estadistica_C&cid=1254736176996&idp=1254735576863",
-      "refreshed_utc": "2026-11-18T04:21:53+00:00",
+      "refreshed_utc": "2026-11-18T04:24:10+00:00",
       "latest_observation": "2026-08"
     },
     "spending": {
@@ -1510,15 +1510,15 @@
       ],
       "source": "INE · EGATUR",
       "source_url": "https://www.ine.es/dyngs/INEbase/en/operacion.htm?c=Estadistica_C&cid=1254736177002&idp=1254735576863",
-      "refreshed_utc": "2026-11-18T04:21:53+00:00",
+      "refreshed_utc": "2026-11-18T04:24:10+00:00",
       "latest_observation": "2026-08"
     }
   },
   "errors": {
-    "tourism_gdp": "INE tourism_gdp: selected series has no valid observations"
+    "tourism_gdp": "INE tourism_gdp: selected series has no valid observations; observation count=4, sample=[{'NombrePeriodo': '2024(A)', 'Valor': 12.6, 'Secreto': False}, {'NombrePeriodo': '2023(P)', 'Valor': 12.4, 'Secreto': False}, {'NombrePeriodo': '2022', 'Valor': 12.1, 'Secreto': False}]"
   },
-  "last_attempt_utc": "2026-11-18T04:21:53+00:00",
-  "last_partial_refresh_utc": "2026-11-18T04:21:53+00:00",
+  "last_attempt_utc": "2026-11-18T04:24:10+00:00",
+  "last_partial_refresh_utc": "2026-11-18T04:24:10+00:00",
   "updated_this_run": [
     "arrivals",
     "spending",
