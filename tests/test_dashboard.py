@@ -50,6 +50,15 @@ class NarrativesTest(unittest.TestCase):
             else:
                 self.assertAlmostEqual(observation["value"], 14.48806, places=5)
 
+    def test_quarterly_real_gdp_uses_gdp_not_gross_value_added(self):
+        source = (ROOT / "sources.py").read_text(encoding="utf-8")
+        self.assertIn("'na_item':'B1GQ'", source)
+        self.assertIn("'unit':'CLV_PCH_SM'", source)
+        self.assertIn("'s_adj':'SCA'", source)
+        latest = self.series["gdp_growth"]["observations"][-1]
+        self.assertEqual(latest["period"], "2026-Q3")
+        self.assertAlmostEqual(latest["value"], 2.7, places=1)
+
     def test_2022_energy_shock_context_uses_real_observations(self):
         spending = annual_totals(self.series["spending"])
         travel = annual_values(self.series["travel_balance"])
