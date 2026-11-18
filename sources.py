@@ -175,7 +175,7 @@ def ine_series(metric):
                 # INE annual satellite-account observations can have NombrePeriodo
                 # such as "2024(A)" rather than a Fecha timestamp.
                 label = str(item.get('NombrePeriodo', ''))
-                year = re.search(r'\\b(?:19|20)\\d{2}\\b', label)
+                year = re.search(r'\b(?:19|20)\d{2}\b', label)
                 if not year:
                     continue
                 period = year.group()
