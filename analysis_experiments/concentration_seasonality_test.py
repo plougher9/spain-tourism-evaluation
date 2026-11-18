@@ -7,7 +7,6 @@ from pathlib import Path
 import csv
 import io
 import json
-import math
 import requests
 import pandas as pd
 
@@ -18,8 +17,7 @@ COUNTRIES = {
     "Reino Unido", "Francia", "Alemania", "Italia", "Países Bajos",
     "Bélgica", "Irlanda", "Portugal", "Suiza", "Estados Unidos",
 }
-# Others are aggregate regions (e.g. Nordic Countries, rest of world),
-# not individual countries. HHI uses all non-overlapping source categories.
+# Regional aggregates (e.g. Nordic Countries) are not individual countries.
 def fetch():
     r = requests.get(SOURCE, timeout=90)
     r.raise_for_status()
@@ -84,6 +82,31 @@ def evaluate(df):
         "peak_month_pct":months.max(axis=1).div(national)*100,
         "peak_month":months.idxmax(axis=1),
     })
+    # Dashboard-ready source-derived observations: no fabricated values and
+    # no additions to the original six indicators.
+    dashboard = {
+        "source_name": "INE FRONTUR, country of residence, monthly base arrivals",
+        "source_url": SOURCE,
+        "frequency": "annual",
+        "measure": "share of international visitor arrivals, percent",
+        "source_market_definition": "United Kingdom, France and Germany; top-three individual markets for observed years",
+        "coverage_note": "Complete calendar years only. No 2026 annual observation yet.",
+        "method_note": "Top-three individual-country share divided by total arrivals. UK share provides potential pound/euro exposure, not an estimated FX effect.",
+        "observations": [
+            {
+                "year": int(row["year"]),
+                "top_three_pct": round(float(row["top_three_country_share_pct"]), 4),
+                "uk_pct": round(float(row["UK_pct"]), 4),
+                "france_pct": round(float(row["France_pct"]), 4),
+                "germany_pct": round(float(row["Germany_pct"]), 4),
+            }
+            for _, row in concentration.iterrows()
+        ],
+    }
+    path = OUT.parent / "data" / "visitor_concentration.json"
+    path.write_text(json.dumps(dashboard, ensure_ascii=False, indent=2) + "\\n",
+                    encoding="utf-8")
+    print("Wrote dashboard observations:", path)
     concentration.to_csv(OUT/"country_concentration_results.csv",index=False)
     seasonality.to_csv(OUT/"seasonality_results.csv",index=False)
     shares.to_csv(OUT/"country_market_shares.csv",index_label="year")
