@@ -67,6 +67,11 @@ def render_analysis(series, analysis_data):
         "economic value, and a large travel surplus from its role in Spain's "
         "overall external accounts."
     )
+    st.caption(
+        "These hypothesis tests use fixed, complete-year comparisons "
+        "(2019–2025 where available), independent of the sidebar date filter, "
+        "so the baseline and financial comparison stay consistent."
+    )
 
     st.markdown("#### Hypothesis 1 · Is tourism earning more per visitor after inflation?")
     if 2019 in nominal and 2025 in nominal:
