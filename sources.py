@@ -7,6 +7,7 @@ import re
 import unicodedata
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 from pathlib import Path
 from urllib.parse import urlencode
 
@@ -198,7 +199,14 @@ def ine_series(metric):
                 stamp = item.get('Fecha')
                 if stamp is None:
                     continue
-                dt = datetime.fromtimestamp(int(stamp) / 1000, tz=timezone.utc)
+                # INE Tempus monthly periods are keyed to Spanish local
+                # midnight. Their timestamps can be in the previous UTC
+                # calendar month (e.g., 2026-09-01 00:00 Madrid is
+                # 2026-08-31 22:00 UTC). Always derive the reference month
+                # in Spain's time zone, not UTC.
+                dt = datetime.fromtimestamp(
+                    int(stamp) / 1000, tz=ZoneInfo('Europe/Madrid')
+                )
                 period = dt.strftime('%Y-%m')
             items.append({'period': period, 'value': float(val)})
         except (ValueError, TypeError, OSError):
