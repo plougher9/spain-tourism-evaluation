@@ -213,6 +213,19 @@ class NarrativesTest(unittest.TestCase):
         self.assertTrue(captured[1][4])
         self.assertEqual(captured[1][0], years)
 
+    def test_part_three_math_dropdowns_and_inflation_explanation(self):
+        from streamlit.testing.v1 import AppTest
+        app = AppTest.from_file(str(ROOT / "app.py")).run(timeout=55)
+        self.assertFalse(app.exception)
+        expanders = [x.label for x in app.get("expander")]
+        self.assertTrue(any("math for visitors versus spending" in x.lower()
+                            for x in expanders))
+        self.assertTrue(any("math behind the" in x.lower()
+                            for x in expanders))
+        markdown = " ".join(m.value for m in app.markdown)
+        self.assertIn("all-items HICP rose", markdown)
+        self.assertIn("change in general purchasing power", markdown)
+
     def test_tourism_gdp_has_room_at_2019(self):
         from unittest.mock import patch
         from analysis_sections import plot_line
