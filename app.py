@@ -195,7 +195,7 @@ if analysis_path.exists():
     except (OSError, ValueError) as error:
         st.warning(f'Unable to read supplemental analytical indicators: {error}')
 
-render_analysis(series, analysis_data)
+render_analysis(series, analysis_data, start_year, end_year)
 render_story(series, SPECS, start_year, end_year, rolling_balance=rolling_balance)
 
 with st.expander('Original six source charts and headline readings', expanded=False):
