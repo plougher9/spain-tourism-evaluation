@@ -282,6 +282,42 @@ class NarrativesTest(unittest.TestCase):
             plot_shock_accounts(travel, goods, current, years)
         self.assertEqual(len(captured), 2)
 
+    def test_shock_labels_clear_bars_at_full_history(self):
+        from unittest.mock import patch
+        from reader_story import plot_shock_history
+        travel = {2015: 40.7, 2016: 43.5, 2017: 46.8,
+                  2018: 46.7, 2019: 46.354, 2020: 8.631,
+                  2021: 18.531, 2022: 48.089, 2023: 58.798,
+                  2024: 68.5, 2025: 70.46}
+        with patch("reader_story.st.pyplot") as render:
+            plot_shock_history(travel, sorted(travel))
+            fig = render.call_args.args[0]
+            ax = fig.axes[0]
+            shock_labels = [text for text in ax.texts
+                            if "COVID-19" in text.get_text()
+                            or "energy-price shock" in text.get_text()]
+            self.assertEqual(len(shock_labels), 2)
+            self.assertTrue(all(text.xyann[1] > max(travel.values())
+                                for text in shock_labels))
+
+    def test_part_three_legend_is_horizontal_and_chart_has_height(self):
+        from unittest.mock import patch
+        from reader_story import draw_inflation_chart
+        import pandas as pd
+        data = pd.DataFrame({
+            "Year": ["2019", "2020", "2021", "2022", "2023", "2024", "2025"],
+            "Nominal": [0, -10, -3, 15, 20, 24, 27],
+            "Inflation": [0, 0, 3, 12, 17, 19, 21],
+            "Adjusted": [0, -10, -5, 3, 3, 4, 5],
+        })
+        with patch("reader_story.st.altair_chart") as render:
+            draw_inflation_chart(data, "Compare all")
+            chart = render.call_args.args[0].to_dict()
+        self.assertGreaterEqual(chart["height"], 400)
+        legend = chart["layer"][1]["encoding"]["color"]["legend"]
+        self.assertEqual(legend["orient"], "bottom")
+        self.assertEqual(legend["columns"], 3)
+
     def test_part_four_goods_are_from_official_data_when_available(self):
         import json
         from story_sections import annual_values
