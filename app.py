@@ -201,7 +201,21 @@ if analysis_path.exists():
     except (OSError, ValueError) as error:
         st.warning(f'Unable to read supplemental analytical indicators: {error}')
 
-render_reader_story(series, analysis_data, start_year, end_year, rolling_balance=rolling_balance)
+visitor_concentration_path = ROOT / 'data' / 'visitor_concentration.json'
+visitor_concentration = None
+if visitor_concentration_path.exists():
+    try:
+        visitor_concentration = json.loads(
+            visitor_concentration_path.read_text(encoding='utf-8')
+        )
+    except (OSError, ValueError) as error:
+        st.warning(f'Unable to read visitor-country concentration data: {error}')
+
+render_reader_story(
+    series, analysis_data, start_year, end_year,
+    rolling_balance=rolling_balance,
+    visitor_concentration=visitor_concentration,
+)
 
 with st.expander('Data dictionary & independent validation', expanded=False):
     st.caption('Six official source series remain the foundation for all four chapters. This table is for inspecting and independently checking the published data.')
