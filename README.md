@@ -23,7 +23,7 @@ python refresh.py
 streamlit run app.py
 ```
 
-**IMPORTANT — first-run data setup:** This is an *honest source-connected starter*, not a pre-populated validated dashboard. Source requests cannot be executed in the authoring environment. The app initially has no fabricated data. Review the first refresh logs. Three INE series may need explicit IDs: run `python refresh.py --discover`, inspect the official national-total series, and add its ID to `INE_SERIES_IDS` in `sources.py`. Refresh again until all six series succeed. Check all outputs and units against the publishers before submitting. Eurostat filters may require adjustment if the publisher changes dimension codes. A failed refresh exits nonzero and lists the cause.
+**Live data:** The dashboard retrieves six official datasets. Spain's tourism share of GDP combines the current INE Tourism Satellite Account table (2021 onward) with published historical observations for 2015–2020 from INE official SDG series [DCE89](https://www.ine.es/consul/serie.do?L=0&d=true&s=DCE89). Historical observations are documented official figures (not synthetic); scheduled refreshes retain them. Check current workflow logs and independently verify one published observation per dataset before submission. A failed refresh exits nonzero, records the failure and retains older valid series rather than fabricating data.
 
 ## GitHub Actions automation
 
@@ -40,6 +40,7 @@ streamlit run app.py
 ## Methodological notes
 
 - Series are different frequencies. Do not interpret a 2024 tourism-to-GDP share as a 2026 share.
+- **Tourism GDP methodological break:** INE DCE89 documents Base 2010 for 2015, Statistical Revision 2019 for 2016–2020, and Statistical Revision 2024 for 2021 onward. Long-run comparisons across these years are descriptive and may reflect both genuine economic change and statistical revisions. The source's historical observations are explicitly documented and preserved by refreshes.
 - EGATUR nominal visitor spending is not value added, not real spending, and not identical to Eurostat BPM6 travel credits.
 - Tourism's GDP contribution is a broad satellite-account measure and should not be confused with the narrower services-account travel balance.
 - GDP growth and the current account are influenced by many non-tourism factors.
