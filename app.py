@@ -7,8 +7,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import streamlit as st
 from sources import SPECS, load_snapshot
-from story_sections import render_story
-from analysis_sections import render_analysis
+from reader_story import render_reader_story
 
 st.set_page_config(page_title='Spain | Tourism Value, Resilience & Risk',page_icon='🇪🇸',layout='wide')
 ROOT=Path(__file__).resolve().parent
@@ -195,8 +194,7 @@ if analysis_path.exists():
     except (OSError, ValueError) as error:
         st.warning(f'Unable to read supplemental analytical indicators: {error}')
 
-render_analysis(series, analysis_data, start_year, end_year)
-render_story(series, SPECS, start_year, end_year, rolling_balance=rolling_balance)
+render_reader_story(series, analysis_data, start_year, end_year, rolling_balance=rolling_balance)
 
 with st.expander('Original six source charts and headline readings', expanded=False):
     st.caption('Source-level evidence, filtered to the selected inclusive calendar years.')
