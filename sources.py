@@ -168,12 +168,23 @@ def ine_series(metric):
     items = []
     for item in observations:
         val = item.get('Valor')
-        stamp = item.get('Fecha')
-        if val is None or not stamp:
+        if val is None:
             continue
         try:
-            dt = datetime.fromtimestamp(int(stamp) / 1000, tz=timezone.utc)
-            period = dt.strftime('%Y') if metric == 'tourism_gdp' else dt.strftime('%Y-%m')
+            if metric == 'tourism_gdp':
+                # INE annual satellite-account observations can have NombrePeriodo
+                # such as "2024(A)" rather than a Fecha timestamp.
+                label = str(item.get('NombrePeriodo', ''))
+                year = re.search(r'\\b(?:19|20)\\d{2}\\b', label)
+                if not year:
+                    continue
+                period = year.group()
+            else:
+                stamp = item.get('Fecha')
+                if stamp is None:
+                    continue
+                dt = datetime.fromtimestamp(int(stamp) / 1000, tz=timezone.utc)
+                period = dt.strftime('%Y-%m')
             items.append({'period': period, 'value': float(val)})
         except (ValueError, TypeError, OSError):
             continue
