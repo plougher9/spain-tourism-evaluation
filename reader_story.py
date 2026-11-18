@@ -221,10 +221,12 @@ def draw_inflation_chart(data, view):
         var_name="Measure", value_name="Change",
     ).dropna(subset=["Change"])
     chart_data["Measure"] = chart_data["Measure"].map(series_names)
+    # Restrained Spanish palette: navy for nominal, warm gold for prices,
+    # and Spanish red for inflation-adjusted visitor value.
     palette = {
         "Nominal spending per visitor": BLUE,
-        "Cumulative Spanish consumer inflation": GOLD,
-        "HICP-adjusted spending per visitor": TEAL,
+        "Cumulative Spanish consumer inflation": "#C99826",
+        "HICP-adjusted spending per visitor": "#AA151B",
     }
     year_values = data["Year"].tolist()
     base = alt.Chart(chart_data).encode(
@@ -238,7 +240,11 @@ def draw_inflation_chart(data, view):
         color=alt.Color(
             "Measure:N",
             scale=alt.Scale(domain=list(palette), range=list(palette.values())),
-            legend=alt.Legend(title=None, orient="top"),
+            legend=alt.Legend(
+                title=None, orient="bottom", direction="horizontal",
+                columns=1, labelFontSize=12, labelLimit=460,
+                symbolSize=130, offset=16,
+            ),
         ),
     )
     lines = base.mark_line(strokeWidth=3, point=alt.OverlayMarkDef(size=55))
