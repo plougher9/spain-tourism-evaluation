@@ -318,6 +318,35 @@ class NarrativesTest(unittest.TestCase):
         self.assertEqual(legend["orient"], "bottom")
         self.assertEqual(legend["columns"], 3)
 
+    def test_visitor_concentration_source_and_dashboard_render(self):
+        import json
+        from unittest.mock import patch
+        from reader_story import render_visitor_concentration
+        release = json.loads((ROOT / "data" / "visitor_concentration.json").read_text())
+        years = {x["year"]: x for x in release["observations"]}
+        self.assertAlmostEqual(years[2019]["top_three_pct"], 48.28, delta=0.04)
+        self.assertAlmostEqual(years[2025]["top_three_pct"], 45.3523, places=3)
+        self.assertAlmostEqual(years[2025]["uk_pct"], 19.7145, places=3)
+        self.assertLess(years[2025]["top_three_pct"], years[2019]["top_three_pct"])
+        with patch("reader_story.st.pyplot") as plot:
+            render_visitor_concentration(release, 2015, 2026)
+            self.assertEqual(plot.call_count, 1)
+            axes = plot.call_args.args[0].axes[0]
+            self.assertEqual(len(axes.lines[0].get_xdata()), 10)
+
+    def test_visitor_concentration_year_range_and_missing_data(self):
+        import json
+        from unittest.mock import patch
+        from reader_story import render_visitor_concentration
+        release = json.loads((ROOT / "data" / "visitor_concentration.json").read_text())
+        with patch("reader_story.st.pyplot") as plot:
+            render_visitor_concentration(release, 2022, 2024)
+            years = list(plot.call_args.args[0].axes[0].lines[0].get_xdata())
+            self.assertEqual(years, [2022, 2023, 2024])
+        with patch("reader_story.st.info") as info:
+            render_visitor_concentration(None, 2015, 2026)
+            self.assertTrue(info.called)
+
     def test_part_four_goods_are_from_official_data_when_available(self):
         import json
         from story_sections import annual_values
