@@ -2,11 +2,17 @@
 
 **Research question:** Is Spain's tourism expansion creating greater economic value and financial resilience, or increasing its vulnerability to external shocks?
 
-## Reader's guide: what each chart establishes
+## Reader's guide: four-chapter argument
 
-The dashboard first presents an evidence-led summary using complete-year 2019–2025 benchmarks, then tests two claims: (1) the nominal increase in tourist spending per person is much smaller after adjusting for broad Spanish consumer inflation; and (2) the positive travel-services balance is materially larger than the overall current-account balance in 2025. These comparisons suggest tourism's external financial importance but do not prove causality or a continuously rising GDP share.
+The reader-facing dashboard is organized in this order:
 
-Every displayed chart now labels the horizontal axis with calendar years or observation dates and the vertical axis with the measured unit. The inflation-adjusted comparison uses **percentage change versus 2019 (2019 = 0%)**, matching the exact percentage language in the interpretation and providing the underlying calculations; the external-account chart uses **annual € billions** for all three balances. The original monthly/quarterly/annual source charts show their respective observation frequency and unit. Historical shock annotations serve as context, not stand-alone causal evidence.
+1. **01 · How important is tourism to Spain's finances?** An annual euro-denominated balance-of-payments waterfall explains net travel, other services, and the remainder (goods plus income and transfers) summing to the reported current-account balance. A **Remove travel contribution / Restore travel contribution** button removes the net travel balance *arithmetically* and changes the displayed total and explanation. In 2025 the accounting result changes from +€54.829B to −€15.631B. This is **not** a no-tourism economic forecast. The exact component math stays visible under the chart; multi-year lines are optional.
+2. **02 · Is Spain becoming more dependent on tourism?** INE tourism share of GDP is shown with statistical-revision caveats, rather than presuming record tourism earnings imply increasing GDP dependence.
+3. **03 · Is Spain earning more per visitor after inflation?** The chart shows percent changes relative to 2019, with expandable EGATUR/FRONTUR and Eurostat HICP arithmetic. The proxy uses general Spanish consumer prices, not a tourism-specific deflator.
+4. **04 · What happens when conditions deteriorate?** The 2020 travel-demand collapse and 2022 energy-price shock / tourism recovery are contrasted in one annual net-travel-surplus chart.
+5. **Overall analysis and optional exploration** summarize what is supported, with the shock scenario, latest Banco de España release, and original six source charts available below without dominating the main narrative.
+
+All charts label their axis units and periods, and the year slider limits visible history. Only the upfront clearly labeled executive benchmark uses fixed 2019–2025 reference years. Original official-source data, refresh processes, and verification controls remain unchanged. The chart renderer uses server-side images rather than browser-side Plotly for the four main exhibits, retaining the earlier performance fix.
 
 ## Analytical findings: quality of growth and external financial role
 
