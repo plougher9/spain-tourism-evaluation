@@ -5,7 +5,7 @@
       "observations": [
         {
           "period": "2015-Q1",
-          "value": 3.0
+          "value": 3
         },
         {
           "period": "2015-Q2",
@@ -97,7 +97,7 @@
         },
         {
           "period": "2020-Q4",
-          "value": -9.0
+          "value": -9
         },
         {
           "period": "2021-Q1",
@@ -121,7 +121,7 @@
         },
         {
           "period": "2022-Q2",
-          "value": 8.0
+          "value": 8
         },
         {
           "period": "2022-Q3",
@@ -289,7 +289,7 @@
         },
         {
           "period": "2017-Q2",
-          "value": 4.0
+          "value": 4
         },
         {
           "period": "2017-Q3",
@@ -305,7 +305,7 @@
         },
         {
           "period": "2018-Q2",
-          "value": 3.0
+          "value": 3
         },
         {
           "period": "2018-Q3",
@@ -361,7 +361,7 @@
         },
         {
           "period": "2021-Q4",
-          "value": 1.0
+          "value": 1
         },
         {
           "period": "2022-Q1",
@@ -381,7 +381,7 @@
         },
         {
           "period": "2023-Q1",
-          "value": 3.0
+          "value": 3
         },
         {
           "period": "2023-Q2",
@@ -421,7 +421,7 @@
         },
         {
           "period": "2025-Q3",
-          "value": 4.0
+          "value": 4
         },
         {
           "period": "2025-Q4",
@@ -433,7 +433,7 @@
         },
         {
           "period": "2026-Q2",
-          "value": 2.0
+          "value": 2
         }
       ],
       "source": "Eurostat · tipsbp41",
@@ -661,11 +661,11 @@
         },
         {
           "period": "2020-03",
-          "value": 0.0
+          "value": 0
         },
         {
           "period": "2020-04",
-          "value": 0.0
+          "value": 0
         },
         {
           "period": "2020-05",
@@ -1197,11 +1197,11 @@
         },
         {
           "period": "2020-03",
-          "value": 0.0
+          "value": 0
         },
         {
           "period": "2020-04",
-          "value": 0.0
+          "value": 0
         },
         {
           "period": "2020-05",
@@ -1516,6 +1516,30 @@
     "tourism_gdp": {
       "observations": [
         {
+          "period": "2015",
+          "value": 11.1
+        },
+        {
+          "period": "2016",
+          "value": 11.3
+        },
+        {
+          "period": "2017",
+          "value": 12.1
+        },
+        {
+          "period": "2018",
+          "value": 12.2
+        },
+        {
+          "period": "2019",
+          "value": 12.6
+        },
+        {
+          "period": "2020",
+          "value": 6
+        },
+        {
           "period": "2021",
           "value": 7.8
         },
@@ -1533,9 +1557,11 @@
         }
       ],
       "source": "INE · Tourism Satellite Account",
-      "source_url": "https://www.ine.es/dynt3/inebase/es/index.htm?capsel=12165&padre=12162",
+      "source_url": "https://www.ine.es/consul/serie.do?L=0&d=true&s=DCE89",
       "refreshed_utc": "2026-11-18T04:25:59+00:00",
-      "latest_observation": "2024"
+      "latest_observation": "2024",
+      "historical_source_url": "https://www.ine.es/consul/serie.do?L=0&d=true&s=DCE89",
+      "historical_revision_note": "INE DCE89: 2015 uses Base 2010, 2016–2020 Statistical Revision 2019, 2021+ Statistical Revision 2024. Interpret across revisions cautiously."
     }
   },
   "errors": {},
