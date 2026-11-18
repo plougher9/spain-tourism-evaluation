@@ -94,6 +94,35 @@ class NarrativesTest(unittest.TestCase):
         self.assertAlmostEqual(travel[2025] / services[2025] * 100,
                                62.09, delta=0.1)
 
+    def test_hypothesis_one_percentages_match_displayed_math(self):
+        import json
+        from analysis_sections import (
+            change_from_baseline, nominal_spending_per_visitor,
+            real_spending_per_visitor,
+        )
+        analysis = json.loads(
+            (ROOT / "data" / "analysis.json").read_text(encoding="utf-8")
+        )
+        spending = annual_totals(self.series["spending"])
+        arrivals = annual_totals(self.series["arrivals"])
+        hicp = annual_values(analysis["series"]["hicp"])
+        nominal = nominal_spending_per_visitor(spending, arrivals)
+        real = real_spending_per_visitor(spending, arrivals, hicp)
+        nominal_changes = change_from_baseline(nominal)
+        real_changes = change_from_baseline(real)
+        self.assertAlmostEqual(nominal_changes[2019], 0.0, places=6)
+        self.assertAlmostEqual(real_changes[2019], 0.0, places=6)
+        self.assertAlmostEqual(nominal_changes[2025], 26.8, delta=.2)
+        self.assertAlmostEqual(real_changes[2025], 4.4, delta=.2)
+        self.assertAlmostEqual(
+            100 * (real[2025] / real[2019] - 1),
+            real_changes[2025], places=8
+        )
+        self.assertEqual(
+            sorted(y for y in nominal_changes if 2015 <= y <= 2026)[0],
+            2016,
+        )
+
     def test_year_selection_changes_analytical_series(self):
         import json
         from analysis_sections import analyze, nominal_spending_per_visitor
@@ -143,8 +172,8 @@ class NarrativesTest(unittest.TestCase):
 
         with patch("analysis_sections.st.pyplot", side_effect=capture):
             plot_line([2019, 2020],
-                      [("Indexed receipts", {2019: 100, 2020: 80}, "#416F94")],
-                      "Index (2019 = 100)", "visitor-yield")
+                      [("Growth", {2019: 0, 2020: -20}, "#416F94")],
+                      "Change vs 2019 (%)", "visitor-yield", percent=True)
             plot_line([2019, 2020],
                       [("Travel surplus", {2019: 46, 2020: 9}, "#16848C")],
                       "Annual balance (€ billion)", "external-finance")
