@@ -451,38 +451,193 @@ def render_yield_section(spending, arrivals, hicp, start_year, end_year):
     )
 
 
-def render_shock_section(travel, spending, arrivals, start_year, end_year):
-    st.markdown("### 04 · What happens when conditions deteriorate?")
+def plot_shock_history(travel, years):
+    """A single, labeled history with direct COVID and 2022 shock markers."""
+    fig, ax = plt.subplots(figsize=(10.2, 4.15), dpi=105)
+    fig.patch.set_facecolor("white")
+    ax.set_facecolor("white")
+    values = [travel[y] for y in years]
+    colors = [RED if y == 2020 else GOLD if y == 2022 else TEAL
+              for y in years]
+    ax.bar(years, values, color=colors, width=.68)
+    ax.axhline(0, color="#728894", linewidth=1)
+    if 2020 in years:
+        ax.annotate(
+            "COVID-19\\ntravel restrictions",
+            xy=(2020, travel[2020]),
+            xytext=(2020 + .55, max(values)*.60),
+            textcoords="data", fontsize=9, color=RED, weight="bold",
+            arrowprops=dict(arrowstyle="->", color=RED, lw=1.4),
+            ha="left",
+        )
+    if 2022 in years:
+        ax.annotate(
+            "2022 energy-price shock\\nTourism recovery",
+            xy=(2022, travel[2022]),
+            xytext=(2022 + .5, max(values)*1.20),
+            fontsize=9, color="#98671D", weight="bold",
+            arrowprops=dict(arrowstyle="->", color=GOLD, lw=1.4),
+            ha="left",
+        )
+    for y in (2019, 2020, 2022, years[-1]):
+        if y in travel and y in years:
+            ax.annotate(
+                f"€{travel[y]:.1f}B", (y, travel[y]),
+                xytext=(0, 5), textcoords="offset points",
+                ha="center", va="bottom", color=INK, fontsize=9,
+            )
+    ax.set_ylabel("Net travel-services balance (€ billion)", color=INK)
+    ax.set_xlabel("Calendar year (annual observations)", color=INK, labelpad=9)
+    ax.set_xticks(years)
+    ax.set_xlim(years[0] - .65, years[-1] + 1.2)
+    ax.set_ylim(0, max(values)*1.50)
+    ax.grid(axis="y", color=GRID, linewidth=.8)
+    ax.set_axisbelow(True)
+    ax.spines[["top", "right", "left"]].set_visible(False)
+    ax.tick_params(axis="both", length=0, colors=INK, labelsize=9)
+    fig.tight_layout()
+    st.pyplot(fig, use_container_width=True)
+    plt.close(fig)
+
+
+def plot_shock_accounts(travel, goods, current, years):
+    """Three non-additive signed BPM6 balance series, all sharing zero."""
+    fig, ax = plt.subplots(figsize=(10.2, 4.1), dpi=105)
+    fig.patch.set_facecolor("white")
+    ax.set_facecolor("white")
+    offsets = [-.25, 0, .25]
+    entries = [
+        ("Net travel services", travel, TEAL),
+        ("Goods trade balance", goods, GOLD),
+        ("Current account (total)", current, BLUE),
+    ]
+    for offset, (label, values, color) in zip(offsets, entries):
+        bars = ax.bar(
+            [i + offset for i in range(len(years))],
+            [values[y] for y in years], width=.23,
+            color=color, label=label,
+        )
+        for i, bar in enumerate(bars):
+            v = values[years[i]]
+            ax.annotate(
+                f"{v:+.1f}", (bar.get_x() + bar.get_width()/2, v),
+                xytext=(0, 4 if v >= 0 else -5),
+                textcoords="offset points", ha="center",
+                va="bottom" if v >= 0 else "top", fontsize=8, color=INK,
+            )
+    ax.axhline(0, color="#6C8390", linewidth=1.2)
+    ax.set_xticks(range(len(years)), [str(y) for y in years])
+    ax.set_ylabel("Annual balance (€ billion)", color=INK)
+    ax.set_xlabel("Selected benchmark years (annual observations)", color=INK,
+                  labelpad=9)
+    ax.grid(axis="y", color=GRID)
+    ax.set_axisbelow(True)
+    ax.spines[["top", "right", "left"]].set_visible(False)
+    ax.tick_params(axis="both", length=0, colors=INK, labelsize=9)
+    ax.legend(frameon=False, fontsize=9, loc="upper left", ncol=3,
+              bbox_to_anchor=(0, 1.17))
+    all_values = [series[y] for _, series, _ in entries for y in years]
+    span = max(12, max(all_values) - min(all_values))
+    ax.set_ylim(min(0, min(all_values)) - span*.16,
+                max(0, max(all_values)) + span*.20)
+    fig.tight_layout()
+    st.pyplot(fig, use_container_width=True)
+    plt.close(fig)
+
+
+def render_shock_section(travel, current, goods, start_year, end_year):
+    st.markdown(
+        "### 04 · When does tourism create vulnerability—and when does it "
+        "provide resilience?"
+    )
     years = filtered_years(travel, start_year, end_year)
     if not years:
-        st.info("No annual travel-surplus figures in the selected range.")
+        st.info("No annual travel-services balance figures in the selected years.")
         return
-    fig = go.Figure(go.Bar(
-        x=years, y=[travel[y] for y in years],
-        marker_color=[RED if y == 2020 else TEAL for y in years],
-    ))
-    chart_style(fig, ytitle="Travel balance (€ billion)")
-    fig.update_layout(showlegend=False)
-    plot_chart(fig, "travel-surplus-shock")
+
+    st.markdown("**A · How stable are Spain's tourism earnings?**")
+    plot_shock_history(travel, years)
     if 2019 in travel and 2020 in travel:
-        loss = travel[2019] - travel[2020]
+        fall_pct = 100 * (travel[2020] / travel[2019] - 1)
         st.markdown(
-            f"**2020 — external demand shock:** Spain's annual travel surplus "
-            f"fell from €{travel[2019]:.1f}B to €{travel[2020]:.1f}B "
-            f"(a €{loss:.1f}B decline). This demonstrates exposure to "
-            "international travel disruption."
+            f"**COVID-19 exposed tourism's vulnerability.** Spain's net "
+            f"travel-services surplus fell from €{travel[2019]:.1f}B in "
+            f"2019 to €{travel[2020]:.1f}B in 2020 "
+            f"(**{fall_pct:.1f}%**), as international travel was disrupted."
         )
     if 2021 in travel and 2022 in travel:
         st.markdown(
-            f"**2022 — a contrasting shock:** As energy-import costs rose, "
-            f"the travel surplus recovered from €{travel[2021]:.1f}B "
-            f"in 2021 to €{travel[2022]:.1f}B in 2022. "
-            "Tourism provided support alongside an adverse energy-price shock; "
-            "the chart alone does not quantify an offset or establish causation."
+            f"**The 2022 energy-price shock showed a different response.** "
+            f"The travel surplus recovered from €{travel[2021]:.1f}B in "
+            f"2021 to €{travel[2022]:.1f}B in 2022. "
+            "Tourism recovered during an energy-cost shock, but that "
+            "does not establish that tourism neutralized the shock."
         )
     st.caption(
-        "Source: Eurostat BPM6 annual travel-services balance; energy-crisis "
-        "context: [IMF Spain Article IV](https://www.imf.org/en/publications/cr/issues/2023/01/19/spain-2022-article-iv-consultation-press-release-staff-report-and-statement-by-the-528338)."
+        "Eurostat BPM6 net travel-services balance (travel credits minus "
+        "debits). Highlighted shocks are historical context, not causal "
+        "attribution. Values and annotation markers follow the selected "
+        "year range."
+    )
+
+    st.markdown(
+        "**B · Did strong tourism earnings protect Spain's overall external balance?**"
+    )
+    benchmark_years = [
+        y for y in (2019, 2020, 2022, 2025)
+        if start_year <= y <= end_year
+        and y in goods and y in travel and y in current
+    ]
+    if benchmark_years:
+        plot_shock_accounts(travel, goods, current, benchmark_years)
+        st.caption(
+            "Eurostat BPM6 annual goods, travel services and total current "
+            "account balances. These bars are **not additive**: the current "
+            "account includes goods, all services and primary/secondary income; "
+            "travel is one subset of services. Signed values share a zero axis."
+        )
+        if 2022 in benchmark_years and 2019 in benchmark_years:
+            st.markdown(
+                f"**The key contrast:** in 2022 net travel services generated "
+                f"€{travel[2022]:.1f}B, compared with €{travel[2019]:.1f}B "
+                f"in 2019. Yet Spain's current-account surplus was only "
+                f"€{current[2022]:.1f}B, down from €{current[2019]:.1f}B "
+                f"in 2019. Its BPM6 goods balance stood at "
+                f"€{goods[2022]:+.1f}B in 2022. Tourism's positive external "
+                "contribution therefore coexisted with considerable pressure "
+                "in other accounts."
+            )
+        elif 2022 in benchmark_years:
+            st.markdown(
+                f"In 2022, travel services contributed €{travel[2022]:.1f}B "
+                f"but Spain's current-account surplus was €{current[2022]:.1f}B. "
+                f"The goods balance was €{goods[2022]:+.1f}B."
+            )
+    elif not goods:
+        st.info(
+            "The goods-balance comparison is awaiting the official Eurostat "
+            "annual data refresh. No goods figures will be estimated."
+        )
+    else:
+        st.info(
+            "The selected range does not contain a common benchmark year "
+            "for the travel, goods and current-account balances."
+        )
+    st.markdown(
+        "**What this adds to Part 1:** tourism can strengthen the observed "
+        "current account, but it cannot guarantee external stability. "
+        "A direct travel shock can sharply reduce its contribution (2020), "
+        "while other shocks can weigh on the broader balance even as "
+        "tourism recovers (2022). The comparison does **not** quantify how "
+        "much the energy shock was offset by tourism, or prove Spain's "
+        "vulnerability has increased over time."
+    )
+    st.caption(
+        "Energy-crisis context: [IMF Spain 2022 Article IV]"
+        "(https://www.imf.org/en/publications/cr/issues/2023/01/19/"
+        "spain-2022-article-iv-consultation-press-release-staff-report-and-"
+        "statement-by-the-528338). Goods balances are BPM6 goods trade, "
+        "not customs-basis merchandise trade."
     )
 
 
@@ -533,7 +688,8 @@ def render_reader_story(series, analysis_data, start_year, end_year, rolling_bal
     render_financial_section(travel, services, current, start_year, end_year)
     render_dependence_section(gdp, start_year, end_year)
     render_yield_section(spending, arrivals, hicp, start_year, end_year)
-    render_shock_section(travel, spending, arrivals, start_year, end_year)
+    goods = annual_values(analysis_data.get('series', {}).get('goods_balance_eur', {}))
+    render_shock_section(travel, current, goods, start_year, end_year)
 
     st.markdown("### Overall analysis · What can we conclude?")
     st.markdown(
