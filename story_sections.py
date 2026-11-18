@@ -284,7 +284,7 @@ def render_story(series, specs, start_year, end_year):
                     name=heading, mode="lines+markers",
                     line=dict(color=color, width=2.5),
                     marker=dict(size=5),
-                    hovertemplate="%{x|%Y-Q%q}: %{y:.2f}<extra></extra>",
+                    hovertemplate="%{x|%Y-%m}: %{y:.2f}<extra></extra>",
                 ))
                 fig.add_hline(y=0, line_color="#A5B0B8", line_width=1)
                 chart_style(fig, height=280, ytitle=unit)
@@ -310,7 +310,6 @@ def render_story(series, specs, start_year, end_year):
     )
     years = filtered_years(travel, start_year, end_year)
     if years:
-        default_year = years[-1]
         left, right = st.columns([1, 2], gap="large")
         with left:
             base_year = st.selectbox(
@@ -335,7 +334,7 @@ def render_story(series, specs, start_year, end_year):
                 st.metric("Hypothetical stressed surplus",
                           f"€{stressed:,.1f}B",
                           f"€{-loss:,.1f}B versus baseline",
-                          delta_color="inverse")
+                          delta_color="normal")
             st.progress((100 - shock) / 100.0)
             st.caption(
                 f"Scenario arithmetic: €{base:.2f}B × (1 − {shock}%) "
