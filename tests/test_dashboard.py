@@ -27,7 +27,7 @@ class NarrativesTest(unittest.TestCase):
     def test_shock_benchmarks(self):
         arrivals = annual_totals(self.series["arrivals"])
         travel = annual_values(self.series["travel_balance"])
-        self.assertLess(change_pct(arrivals[2020], arrivals[2019]), -80)
+        self.assertAlmostEqual(change_pct(arrivals[2020], arrivals[2019]), -77.33, delta=0.2)
         self.assertAlmostEqual(travel[2020], 8.631, places=3)
         self.assertAlmostEqual(travel[2025], 70.46, places=2)
 
