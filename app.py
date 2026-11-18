@@ -28,6 +28,26 @@ last=snapshot.get('last_successful_refresh_utc')
 updated=snapshot.get('updated_this_run',[])
 complete=len(series)==len(SPECS) and last is not None
 
+# All frequencies store a calendar year at the start of their period:
+# 2024 (annual), 2024-Q2 (quarterly), 2024-09 (monthly).
+available_years = [
+    int(str(obs['period'])[:4])
+    for entry in series.values()
+    for obs in entry.get('observations', [])
+    if str(obs.get('period', ''))[:4].isdigit()
+]
+earliest_year = min(available_years) if available_years else 2015
+latest_year = max(available_years) if available_years else datetime.now(timezone.utc).year
+default_start_year = max(earliest_year, latest_year - 7)
+
+def observations_in_years(observations, start_year, end_year):
+    """Keep all observations belonging to selected inclusive calendar years."""
+    return [
+        obs for obs in observations
+        if str(obs.get('period', ''))[:4].isdigit()
+        and start_year <= int(str(obs['period'])[:4]) <= end_year
+    ]
+
 with st.sidebar:
     st.markdown('## Data & controls')
     st.write('**Latest full-source refresh**')
@@ -36,7 +56,17 @@ with st.sidebar:
     st.write('**Source completeness**')
     st.progress(len(series)/len(SPECS),text=f'{len(series)} of {len(SPECS)} source series available')
     show_raw=st.checkbox('Show full source observations',value=False)
-    years=st.slider('Historical window (years)',3,15,8)
+    selected_years = st.slider(
+        'Calendar years shown',
+        min_value=earliest_year,
+        max_value=latest_year,
+        value=(default_start_year, latest_year),
+        step=1,
+        help='Applied to all six charts and the three summary metrics. Years are inclusive.'
+    )
+    start_year, end_year = selected_years
+    st.caption(f'Showing observations from {start_year} through {end_year}. '
+               'Series with no observations in this range will be clearly marked.')
     st.info('Scheduled refresh: GitHub Actions every Monday. A page reload reads the latest committed snapshot; it does not contact sources directly.')
     if st.button('Reload saved snapshot'):
         st.rerun()
@@ -54,11 +84,15 @@ if not series:
 present_cols=st.columns(3)
 for i,key in enumerate(('arrivals','spending','tourism_gdp')):
     spec=SPECS[key]; row=series.get(key,{}); data=row.get('observations',[])
-    latest=data[-1] if data else None
+    visible=observations_in_years(data,start_year,end_year)
+    latest=visible[-1] if visible else None
     with present_cols[i]:
         if latest:
             st.metric(spec['title'],f'{latest["value"]:,.2f}',help=spec['unit'])
-            st.caption(f'{spec["unit"]} · {latest["period"]} · {spec["source"]}')
+            st.caption(f'{spec["unit"]} · {latest["period"]} · {spec["source"]} · selected range')
+        elif data:
+            st.metric(spec['title'],'No data in range')
+            st.caption(f'Available through {data[-1]["period"]} · {spec["source"]}')
         else:
             st.metric(spec['title'],'No verified data')
             st.caption(f'{spec["unit"]} · {spec["source"]}')
@@ -84,20 +118,33 @@ def graph(key):
             df=pd.DataFrame(obs)
             df['date']=df.period.map(parse_date)
             df=df.dropna(subset=['date']).sort_values('date')
-            limit=pd.Timestamp.now()-pd.DateOffset(years=years)
-            window=df[df.date>=limit]
-            if window.empty:window=df.tail(20)
+            window=df[df.date.dt.year.between(start_year, end_year)]
+            if window.empty:
+                first_period=obs[0]['period']
+                last_period=obs[-1]['period']
+                st.info(f'No observations for {start_year}–{end_year}. '
+                        f'This series currently covers {first_period} through {last_period}.')
+                st.caption(f'{spec["unit"]} | {spec["freq"]} | '
+                           f'[{spec["source"]}]({spec["url"]}) | '
+                           f'Latest published observation: {last_period}')
+                with st.expander('Why this indicator?'):
+                    st.write(spec['why'])
+                    st.caption(f'Last source retrieval: {entry.get("refreshed_utc","none")}')
+                return
             fig=go.Figure()
             fig.add_trace(go.Scatter(x=window.date,y=window.value,mode='lines+markers',
                                      line=dict(color='#147a86',width=2.5),marker=dict(size=4),name=spec['title'],
                                      hovertemplate='%{x|%Y-%m}: %{y:,.2f}<extra></extra>'))
             fig.update_layout(height=240,margin=dict(l=2,r=8,t=5,b=8),
                               paper_bgcolor='rgba(0,0,0,0)',plot_bgcolor='rgba(0,0,0,0)',
-                              xaxis=dict(showgrid=False),yaxis=dict(gridcolor='#e9eef2',title=spec['unit']),showlegend=False)
+                              xaxis=dict(showgrid=False,range=[f'{start_year}-01-01',f'{end_year}-12-31']),
+                              yaxis=dict(gridcolor='#e9eef2',title=spec['unit']),showlegend=False)
             st.plotly_chart(fig,use_container_width=True,config={'displayModeBar':False})
-            latest=obs[-1]
-            st.caption(f'**{latest["value"]:,.2f}** · {latest["period"]} | {spec["unit"]} | {spec["freq"]} | '
-                       f'[{spec["source"]}]({spec["url"]})')
+            latest=window.iloc[-1]
+            source_latest=obs[-1]['period']
+            st.caption(f'**{latest["value"]:,.2f}** · {latest["period"]} (latest in selected range) | '
+                       f'{spec["unit"]} | {spec["freq"]} | [{spec["source"]}]({spec["url"]})'
+                       f' | Source latest: {source_latest}')
             if key not in updated and failures.get(key):
                 st.caption('⚠️ Last update failed; this series is retained from an earlier snapshot.')
         else:
