@@ -243,7 +243,7 @@ def retrieve(metric):
     if metric in ('arrivals','spending','tourism_gdp'):
         return ine_series(metric)
     if metric=='gdp_growth':
-        return eurostat_series('namq_10_gdp', {'geo':'ES','freq':'Q','unit':'CLV_PCH_SM','s_adj':'SCA','na_item':'B1G'})
+        return eurostat_series('namq_10_gdp', {'geo':'ES','freq':'Q','unit':'CLV_PCH_SM','s_adj':'SCA','na_item':'B1GQ'})
     if metric=='travel_balance':
         return eurostat_series('bop_its6_det', {'geo':'ES','freq':'A','currency':'MIO_EUR',
             'bop_item':'SD','stk_flow':'BAL','partner':'WRL_REST'}, scale=.001)
