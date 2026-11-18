@@ -33,6 +33,18 @@ CONFIG = {
         "url": URL + "bop_c6_a/default/table",
         "unit": "€ billion",
     },
+    "goods_balance_eur": {
+        "dataset": "bop_c6_a",
+        "filters": {
+            "geo": "ES", "freq": "A", "currency": "MIO_EUR",
+            "bop_item": "G", "stk_flow": "BAL",
+            "partner": "WRL_REST", "sector10": "S1", "sectpart": "S1",
+        },
+        "scale": 0.001,
+        "source": "Eurostat BPM6 annual goods trade balance (BoP basis)",
+        "url": URL + "bop_c6_a/default/table",
+        "unit": "€ billion",
+    },
     "services_balance_eur": {
         "dataset": "bop_its6_det",
         "filters": {
