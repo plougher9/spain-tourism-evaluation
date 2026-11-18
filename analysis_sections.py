@@ -63,11 +63,38 @@ def render_analysis(series, analysis_data, start_year, end_year):
     )
     nominal = nominal_spending_per_visitor(spending, arrivals)
     real = real_spending_per_visitor(spending, arrivals, hicp)
-    st.markdown("### Beyond the shock: is tourism delivering better returns?")
+    st.markdown("### What does the evidence actually say?")
+    if all(yr in nominal and yr in real for yr in (2019, 2025)) and (
+        2025 in travel and 2025 in current
+    ):
+        nominal_change = 100 * (nominal[2025] / nominal[2019] - 1)
+        real_change = 100 * (real[2025] / real[2019] - 1)
+        other_balance = current[2025] - travel[2025]
+        st.markdown(
+            '<div class="narrative-lead"><strong>'
+            'Spain earns substantially more from international tourism, '
+            'but stronger nominal receipts are not the same as stronger '
+            'inflation-adjusted returns.</strong><br>'
+            f'From 2019 to 2025, nominal spending per visitor rose '
+            f'{nominal_change:.1f}%, versus {real_change:.1f}% under a '
+            'general consumer-price adjustment. In 2025, net travel '
+            f'contributed €{travel[2025]:.1f}B to a total current-account '
+            f'balance of €{current[2025]:.1f}B; the other current-account '
+            f'components summed to €{other_balance:.1f}B. '
+            'These are historical observations, not proof that dependence '
+            'has increased or that tourism alone creates resilience.'
+            '</div>',
+            unsafe_allow_html=True
+        )
+        st.caption(
+            "Executive benchmark: 2019–2025 complete-year observations; "
+            "fixed for comparability even if the sidebar displays fewer years. "
+            "Inflation adjustment uses Spain-wide HICP, not a tourism deflator."
+        )
     st.markdown(
-        "Two hypotheses distinguish a rising visitor count from genuine "
-        "economic value, and a large travel surplus from its role in Spain's "
-        "overall external accounts."
+        "The charts test two linked questions: is the growth in tourism "
+        "receipts still meaningful after inflation, and how important is "
+        "net travel to Spain's observed external financial balance?"
     )
     st.caption(
         f"Showing available annual observations for {start_year}–{end_year}. "
