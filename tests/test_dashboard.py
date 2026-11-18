@@ -37,6 +37,20 @@ class NarrativesTest(unittest.TestCase):
         self.assertEqual(max(tourism), 2024)
         self.assertAlmostEqual(tourism[2020], 6.0, places=1)
 
+    def test_rolling_balance_is_separate_release_snapshot(self):
+        import json
+        from datetime import date
+        path = ROOT / "data" / "bde_travel_rolling12.json"
+        release = json.loads(path.read_text(encoding="utf-8"))
+        self.assertEqual(release["period_end"], "2026-08")
+        self.assertAlmostEqual(release["value_eur_billions"], 74.9, places=1)
+        self.assertAlmostEqual(release["prior_year_value_eur_billions"], 71.1, places=1)
+        self.assertEqual(release["published_date"], "2026-10-30")
+        self.assertLessEqual(date.fromisoformat(release["published_date"]), date.today())
+        self.assertEqual(
+            self.series["travel_balance"]["observations"][-1]["period"], "2025"
+        )
+
     def test_streamlit_page_renders(self):
         from streamlit.testing.v1 import AppTest
         app = AppTest.from_file(str(ROOT / "app.py")).run(timeout=55)
