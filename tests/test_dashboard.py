@@ -457,6 +457,23 @@ class NarrativesTest(unittest.TestCase):
         self.assertIn("How does international tourism strengthen Spain", source)
         self.assertNotIn("growing reliance on international tourism", source)
 
+    def test_overall_conclusion_reconciles_finance_growth_and_selected_risk(self):
+        from unittest.mock import patch
+        import json
+        from reader_story import render_reader_story
+        source = (ROOT / "reader_story.py").read_text(encoding="utf-8")
+        self.assertIn("**Financial strength:**", source)
+        self.assertIn("**Quality of growth:**", source)
+        self.assertIn("**Dependence and shocks:**", source)
+        self.assertIn("**Structural exposure:**", source)
+        self.assertIn("first, latest = window[0], window[-1]", source)
+        concentration = json.loads(
+            (ROOT / "data" / "visitor_concentration.json").read_text(encoding="utf-8")
+        )
+        values = {x["year"]: x["top_three_pct"] for x in concentration["observations"]}
+        self.assertAlmostEqual(values[2016] - values[2025], 7.9473, delta=0.002)
+        self.assertAlmostEqual(values[2019] - values[2025], 2.9273, delta=0.002)
+
     def test_streamlit_page_renders(self):
         from streamlit.testing.v1 import AppTest
         app = AppTest.from_file(str(ROOT / "app.py")).run(timeout=55)
