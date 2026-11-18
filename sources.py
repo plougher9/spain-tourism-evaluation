@@ -14,7 +14,7 @@ import pandas as pd
 import requests
 
 API_EU = 'https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/'
-API_INE = 'https://servicios.ine.es/wstempus/js/ES/'
+API_INE = 'https://servicios.ine.es/wstempus/jsCache/ES/'
 HEADERS = {'User-Agent': 'SpainTourismDashboard/1.0 (education; official-public-statistics)'}
 TIMEOUT = 35
 
@@ -29,7 +29,7 @@ SPECS = {
 
 # Specify verified INE series IDs here after running `python refresh.py --discover`.
 # When unspecified, the refresh process attempts strict, unambiguous auto discovery.
-INE_SERIES_IDS = {'arrivals': None, 'spending': None, 'tourism_gdp': None}
+INE_SERIES_IDS = {'arrivals': '286', 'spending': '585', 'tourism_gdp': 'DCE89'}
 
 class SourceError(RuntimeError):
     pass
@@ -171,10 +171,10 @@ def retrieve(metric):
         return eurostat_series('namq_10_gdp', {'geo':'ES','freq':'Q','unit':'CLV_PCH_SM','s_adj':'SCA','na_item':'B1G'})
     if metric=='travel_balance':
         return eurostat_series('bop_its6_det', {'geo':'ES','freq':'A','currency':'MIO_EUR',
-            'bop_item':'SD','stk_flow':'BAL','partner':'W1'}, scale=.001)
+            'bop_item':'SD','stk_flow':'BAL','partner':'WRL_REST'}, scale=.001)
     if metric=='current_account':
         return eurostat_series('tipsbp41', {'geo':'ES','freq':'Q','unit':'PC_GDP',
-            's_adj':'NSA','stk_flow':'BAL','bop_item':'CA','partner':'W1'})
+            's_adj':'NSA','stk_flow':'BAL','bop_item':'CA','partner':'WRL_REST'})
     raise KeyError(metric)
 
 
