@@ -1,6 +1,12 @@
 # Spain | Tourism & External Exposure
 
-**Research question:** Is Spain's growing reliance on international tourism strengthening its economy or increasing vulnerability to external shocks?
+**Research question:** Is Spain's tourism expansion creating greater economic value and financial resilience, or increasing its vulnerability to external shocks?
+
+## Reader's guide: what each chart establishes
+
+The dashboard first presents an evidence-led summary using complete-year 2019–2025 benchmarks, then tests two claims: (1) the nominal increase in tourist spending per person is much smaller after adjusting for broad Spanish consumer inflation; and (2) the positive travel-services balance is materially larger than the overall current-account balance in 2025. These comparisons suggest tourism's external financial importance but do not prove causality or a continuously rising GDP share.
+
+Every displayed chart now labels the horizontal axis with calendar years or observation dates and the vertical axis with the measured unit. The inflation-adjusted comparison uses an **index with 2019 = 100** rather than confusing euro levels with price-index points; the external-account chart uses **annual € billions** for all three balances. The original monthly/quarterly/annual source charts show their respective observation frequency and unit. Historical shock annotations serve as context, not stand-alone causal evidence.
 
 ## Analytical findings: quality of growth and external financial role
 
