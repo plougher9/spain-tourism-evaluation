@@ -138,16 +138,21 @@ def plot_chart(fig, key):
         ax.axhline(0, color="#A5B0B8", linewidth=1)
 
     if key == "tourism-index":
-        ax.set_ylabel("2019 = 100", color=INK)
+        ax.set_ylabel("Visitor arrivals / spending index (2019 = 100)", color=INK)
     elif key == "travel-surplus-shock":
-        ax.set_ylabel("€ billion", color=INK)
+        ax.set_ylabel("Net travel-services surplus (€ billion)", color=INK)
     elif key == "tourism-gdp-share":
-        ax.set_ylabel("% of GDP", color=INK)
+        ax.set_ylabel("Tourism contribution (% of GDP)", color=INK)
     elif key == "gdp_growth-context":
-        ax.set_ylabel("% year over year", color=INK)
+        ax.set_ylabel("Real GDP growth (% YoY)", color=INK)
     elif key == "current_account-context":
-        ax.set_ylabel("% of GDP", color=INK)
+        ax.set_ylabel("Current account (% of GDP)", color=INK)
 
+    ax.set_xlabel(
+        "Calendar year (quarterly observations)" if is_date
+        else "Calendar year (annual observations)",
+        color=INK, labelpad=9
+    )
     if is_date:
         ax.xaxis.set_major_locator(mdates.YearLocator())
         ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
@@ -205,16 +210,14 @@ def render_story(series, specs, start_year, end_year, rolling_balance=None):
     gdp = series.get("gdp_growth", {}).get("observations", [])
     current = series.get("current_account", {}).get("observations", [])
 
-    st.markdown("### The finding")
+    st.markdown("### Risk and resilience: how durable are the gains?")
     st.markdown(
-        '<div class="narrative-lead"><strong>Tourism generates substantial '
-        'external earnings for Spain, but that economic support can contract '
-        'abruptly during a global shock.</strong><br>'
-        'The evidence shows a severe 2020 collapse and an unusually strong '
-        'recovery in nominal spending and the travel-services surplus. '
-        'The data demonstrate exposure, not a causal estimate of '
-        'tourism’s effect on GDP or the current account.</div>',
-        unsafe_allow_html=True,
+        "The value and external-finance charts above show *what tourism "
+        "contributes*. The historical shocks below show *why that contribution "
+        "cannot be assumed to continue uninterrupted*: COVID severely "
+        "reduced demand, whereas the recovery during the 2022 energy-price "
+        "crisis illustrates a different form of resilience. Neither event "
+        "identifies a causal effect of tourism on the whole economy."
     )
 
     # Historical shock is deliberately a fixed 2019–2020 benchmark; the
