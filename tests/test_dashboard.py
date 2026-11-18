@@ -31,6 +31,16 @@ class NarrativesTest(unittest.TestCase):
         self.assertAlmostEqual(travel[2020], 8.631, places=3)
         self.assertAlmostEqual(travel[2025], 70.46, places=2)
 
+    def test_2022_energy_shock_context_uses_real_observations(self):
+        spending = annual_totals(self.series["spending"])
+        travel = annual_values(self.series["travel_balance"])
+        self.assertIn(2021, spending)
+        self.assertIn(2022, spending)
+        self.assertGreater(spending[2022], spending[2021])
+        self.assertAlmostEqual(spending[2022], 89.31535, places=3)
+        self.assertAlmostEqual(travel[2022], 48.089, places=3)
+        self.assertGreater(travel[2022], travel[2021])
+
     def test_tourism_gdp_history(self):
         tourism = annual_values(self.series["tourism_gdp"])
         self.assertEqual(min(tourism), 2015)
