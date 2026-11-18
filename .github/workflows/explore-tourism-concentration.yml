@@ -1,0 +1,36 @@
+name: Explore Spain tourism source-market concentration and seasonality
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'analysis_experiments/concentration_seasonality_test.py'
+      - '.github/workflows/explore-tourism-concentration.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install pandas requests
+      - name: Analyze official INE tourism market shares and peak-season concentration
+        run: python analysis_experiments/concentration_seasonality_test.py
+      - name: Upload independent analysis
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tourism-concentration-seasonality
+          path: |
+            analysis_experiments/*concentration*.csv
+            analysis_experiments/*seasonality*.csv
+            analysis_experiments/concentration_seasonality_metadata.json
+          if-no-files-found: warn
