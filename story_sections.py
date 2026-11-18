@@ -82,8 +82,86 @@ def chart_style(fig, height=330, ytitle=None):
 
 
 def plot_chart(fig, key):
-    st.plotly_chart(fig, use_container_width=True,
-                    config={"displayModeBar": False}, key=key)
+    """Render story graphics as static server-side PNGs.
+
+    Browser-side Plotly caused Chrome to become unresponsive for some viewers.
+    Matplotlib keeps the chart data and annotations but avoids loading the
+    interactive Plotly JavaScript runtime. Controls remain interactive.
+    """
+    from matplotlib import pyplot as plt
+    from matplotlib.ticker import MaxNLocator
+    import matplotlib.dates as mdates
+
+    canvas, ax = plt.subplots(figsize=(10.2, 3.6), dpi=110)
+    canvas.patch.set_facecolor("white")
+    ax.set_facecolor("white")
+    is_date = key.endswith("-context")
+    for trace in fig.data:
+        xs = list(trace.x)
+        ys = [float(value) for value in trace.y]
+        if trace.type == "bar":
+            colors = list(trace.marker.color) if isinstance(
+                trace.marker.color, (list, tuple)
+            ) else trace.marker.color or TEAL
+            ax.bar(xs, ys, color=colors, width=0.68)
+            for x, y in zip(xs, ys):
+                if int(x) in (2019, 2020, max(int(v) for v in xs)):
+                    ax.annotate(f"€{y:.1f}B", (x, y),
+                                xytext=(0, 4), textcoords="offset points",
+                                ha="center", fontsize=9, color=INK)
+        else:
+            color = trace.line.color or TEAL
+            ax.plot(xs, ys, color=color, linewidth=2.6, marker="o",
+                    markersize=4.5, label=trace.name)
+
+    if key == "tourism-index":
+        ax.axhline(100, color="#9EACB5", linewidth=1, linestyle="--")
+        ax.axvspan(2019.7, 2020.3, color=RED, alpha=0.08)
+        if any(2022 in list(t.x) for t in fig.data):
+            ax.axvline(2022, color=GOLD, linewidth=1.5, linestyle=":")
+            ax.text(2022.1, 0.95, "2022 energy-price shock",
+                    transform=ax.get_xaxis_transform(), color=GOLD,
+                    fontsize=9, va="top")
+    elif key == "tourism-gdp-share":
+        ax.axvspan(2019.7, 2020.3, color=RED, alpha=0.08)
+    elif key == "travel-surplus-shock":
+        xs = [int(v) for v in fig.data[0].x]
+        ys = [float(v) for v in fig.data[0].y]
+        if 2022 in xs:
+            idx = xs.index(2022)
+            ax.annotate("2022: energy shock / tourism recovery",
+                        (2022, ys[idx]), xytext=(-110, 38),
+                        textcoords="offset points", fontsize=9,
+                        color=GOLD, arrowprops=dict(arrowstyle="->", color=GOLD))
+        ax.set_ylim(bottom=0, top=max(ys)*1.25)
+    elif is_date:
+        ax.axhline(0, color="#A5B0B8", linewidth=1)
+
+    if key == "tourism-index":
+        ax.set_ylabel("2019 = 100", color=INK)
+    elif key == "travel-surplus-shock":
+        ax.set_ylabel("€ billion", color=INK)
+    elif key == "tourism-gdp-share":
+        ax.set_ylabel("% of GDP", color=INK)
+    elif key == "gdp_growth-context":
+        ax.set_ylabel("% year over year", color=INK)
+    elif key == "current_account-context":
+        ax.set_ylabel("% of GDP", color=INK)
+
+    if is_date:
+        ax.xaxis.set_major_locator(mdates.YearLocator())
+        ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
+    else:
+        ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+    ax.grid(axis="y", color=GRID, linewidth=0.8)
+    ax.set_axisbelow(True)
+    ax.spines[["top", "right", "left"]].set_visible(False)
+    ax.tick_params(colors=INK, labelsize=9, length=0)
+    if key == "tourism-index":
+        ax.legend(loc="upper left", fontsize=9, frameon=False, ncol=2)
+    canvas.tight_layout(pad=1.2)
+    st.pyplot(canvas, clear_figure=True, use_container_width=True)
+    plt.close(canvas)
 
 
 def render_recent_rolling_balance(release):
