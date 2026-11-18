@@ -2,6 +2,12 @@
 name: Refresh Spain tourism dashboard data
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'sources.py'
+      - 'refresh.py'
+      - '.github/workflows/refresh.yml'
   schedule:
     - cron: '18 8 * * 1'
   workflow_dispatch:
