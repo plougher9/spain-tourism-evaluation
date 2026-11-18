@@ -114,6 +114,9 @@ def graph(key):
     obs=entry.get('observations',[])
     with st.container(border=True):
         st.markdown(f'**{spec["title"]}**')
+        if key == 'tourism_gdp':
+            st.caption('INE historical series DCE89: statistical bases differ in 2015, 2016–2020, '
+                       'and 2021 onward. Use caution when comparing levels across these breaks.')
         if obs:
             df=pd.DataFrame(obs)
             df['date']=df.period.map(parse_date)
