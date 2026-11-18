@@ -196,6 +196,40 @@ def render_yield_section(spending, arrivals, hicp, start_year, end_year):
     latest = years[-1]
     nominal_change = change_from_baseline(nominal)
     real_change = change_from_baseline(real)
+
+    # Exhibit A: volume versus nominal receipts, indexed to a consistent
+    # 2019 reference. These are overlapping lines, not additive/stacked amounts.
+    volume_index = {y: 100.0 * arrivals[y] / arrivals[2019]
+                    for y in years if y in arrivals}
+    spending_index = {y: 100.0 * spending[y] / spending[2019]
+                      for y in years if y in spending}
+    st.markdown("**A · Have tourism receipts grown faster than visitor numbers?**")
+    plot_line(
+        years,
+        [("International visitor arrivals", volume_index, BLUE),
+         ("Nominal tourist spending", spending_index, TEAL)],
+        "Annual index (2019 = 100)", "arrivals-versus-spending",
+    )
+    visitor_growth = volume_index[latest] - 100
+    receipts_growth = spending_index[latest] - 100
+    st.markdown(
+        f"**Reading A ({latest} versus 2019):** visitor arrivals "
+        f"**{visitor_growth:+.1f}%**, while nominal visitor spending "
+        f"**{receipts_growth:+.1f}%**. Spending has grown faster than "
+        "visitor numbers; that gap alone does not tell us whether "
+        "visitors are spending more in real terms."
+    )
+    st.caption(
+        "INE FRONTUR arrivals and INE EGATUR nominal spending; "
+        "full-year totals only. Both series use 2019 = 100, allowing "
+        "their growth paths to be compared—not summed."
+    )
+    st.markdown("**B · Does higher spending per visitor hold up after inflation?**")
+    st.markdown(
+        "Dividing spending by visitor arrivals isolates nominal spending "
+        "per visitor. Applying Spain-wide HICP provides an approximate "
+        "inflation-adjusted comparison."
+    )
     items = [("Nominal spending per visitor", nominal_change, BLUE)]
     if real_change:
         items.append(("Inflation-adjusted proxy", real_change, TEAL))
