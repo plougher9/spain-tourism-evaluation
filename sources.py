@@ -138,29 +138,52 @@ def _ine_series_id(metric):
 
 
 def ine_series(metric):
-    series_id = _ine_series_id(metric)
-    raw = http_json(API_INE + f'DATOS_SERIE/{series_id}', {'nult': 180})
+    """Fetch specific INE table data; integer metadata IDs are not series codes."""
+    table_ids = {'arrivals': 10821, 'spending': 10841, 'tourism_gdp': 33613}
+    raw = http_json(API_INE + f'DATOS_TABLA/{table_ids[metric]}', {'nult': 180})
     if not isinstance(raw, list):
-        raise SourceError(f'INE {metric}: unexpected historical data format')
-    items=[]
-    for item in raw:
+        raise SourceError(f'INE {metric}: table response is not a list')
+    if metric in ('arrivals', 'spending'):
+        expected_id = int(INE_SERIES_IDS[metric])
+        matches = [item for item in raw if str(item.get('Id')) == str(expected_id)]
+    else:
+        # Strict match: tourism share of Spain's total GDP, in percent.
+        matches = []
+        for item in raw:
+            label = _clean(item.get('Nombre', ''))
+            if (re.search(r'turismo|turistic', label)
+                    and re.search(r'pib|producto interior bruto', label)
+                    and re.search(r'porcentaje|por ciento|%', label)
+                    and not re.search(r'variacion|crecimiento|tasa anual', label)):
+                matches.append(item)
+    if len(matches) != 1:
+        sample = [(x.get('Id'), str(x.get('Nombre', ''))[:140]) for x in raw[:25]]
+        raise SourceError(f'INE {metric}: expected one series; found {len(matches)}. Table candidates: {sample}')
+    selected = matches[0]
+    observations = selected.get('Data', selected.get('data', []))
+    if not isinstance(observations, list):
+        raise SourceError(f'INE {metric}: missing Data list')
+    items = []
+    for item in observations:
         val = item.get('Valor')
-        date = item.get('Fecha')
-        if val is None or not date: continue
+        stamp = item.get('Fecha')
+        if val is None or not stamp:
+            continue
         try:
-            dt = datetime.fromtimestamp(int(date)/1000, tz=timezone.utc)
-            period = dt.strftime('%Y-%m') if metric != 'tourism_gdp' else dt.strftime('%Y')
-            items.append({'period':period, 'value':float(val)})
+            dt = datetime.fromtimestamp(int(stamp) / 1000, tz=timezone.utc)
+            period = dt.strftime('%Y') if metric == 'tourism_gdp' else dt.strftime('%Y-%m')
+            items.append({'period': period, 'value': float(val)})
         except (ValueError, TypeError, OSError):
             continue
     if not items:
-        raise SourceError(f'INE {metric}: no valid observations')
-    df=pd.DataFrame(items).drop_duplicates('period').sort_values('period')
-    if metric == 'arrivals': df['value'] /= 1_000_000 # persons -> millions
-    elif metric == 'spending': df['value'] /= 1000  # million EUR -> billion EUR
-    # GDP share is already a percentage; sanity checks detect erroneous scaling.
-    if metric=='tourism_gdp' and not df['value'].between(1,40).all():
-        raise SourceError('INE tourism GDP values outside plausible percentage range; review series ID')
+        raise SourceError(f'INE {metric}: selected series has no valid observations')
+    df = pd.DataFrame(items).drop_duplicates('period').sort_values('period')
+    if metric == 'arrivals':
+        df['value'] /= 1_000_000
+    elif metric == 'spending':
+        df['value'] /= 1000
+    if metric == 'tourism_gdp' and not df['value'].between(1, 40).all():
+        raise SourceError('INE tourism GDP: implausible percentage; check series dimensions')
     return df
 
 
