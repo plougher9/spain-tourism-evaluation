@@ -24,7 +24,7 @@ st.markdown('''<style>
 div[data-testid="stMetric"]{background:white;border:1px solid #e3e9ed;padding:16px;border-radius:12px}
 </style>''',unsafe_allow_html=True)
 st.markdown('''<div class="hero"><small>COUNTRY INTELLIGENCE / INTERNATIONAL FINANCE</small>
-<h1>Spain · Tourism Value, Resilience & Risk</h1><p>Is Spain's tourism expansion creating greater economic value and financial resilience, or increasing its vulnerability to external shocks?</p></div>''',unsafe_allow_html=True)
+<h1>Spain · Tourism Value, Resilience & Risk</h1><p>How does international tourism strengthen Spain's economy, and where does it leave the country vulnerable to external shocks?</p></div>''',unsafe_allow_html=True)
 
 snapshot=load_snapshot(ROOT/'data')
 series=snapshot.get('series',{})
