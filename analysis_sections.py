@@ -75,9 +75,15 @@ def plot_line(years, series_items, ylabel, key, percent=False):
     ax.set_ylabel(ylabel, color=INK)
     ax.set_xlabel("Calendar year (annual observations)", color=INK, labelpad=9)
     ax.tick_params(colors=INK, labelsize=9, length=0)
-    ax.legend(frameon=False, loc="upper left", fontsize=9)
+    if key == "tourism-gdp":
+        # Single series already identified by its title and vertical axis.
+        # The old legend covered the first visible point (often 2019).
+        # Add nearly a full year of horizontal room on both sides.
+        ax.set_xlim(years[0] - 0.8, years[-1] + 0.8)
+    else:
+        ax.legend(frameon=False, loc="upper left", fontsize=9)
+        ax.margins(x=0.075)
     ax.set_xticks(years)
-    ax.margins(x=0.035)
     fig.tight_layout()
     st.pyplot(fig, use_container_width=True)
     plt.close(fig)
