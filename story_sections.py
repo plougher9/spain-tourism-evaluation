@@ -212,6 +212,13 @@ def render_story(series, specs, start_year, end_year, rolling_balance=None):
                           opacity=.09, line_width=0)
             fig.add_annotation(x=2020, y=20, text="COVID-19",
                                showarrow=False, font=dict(color=RED, size=11))
+        if 2022 in valid:
+            fig.add_vline(x=2022, line_dash="dot", line_color=GOLD, line_width=2)
+            fig.add_annotation(
+                x=2022, y=1.09, yref="paper", text="2022 energy-price shock",
+                showarrow=False, font=dict(color=GOLD, size=11),
+                xanchor="left",
+            )
         plot_chart(chart_style(fig, ytitle="2019 = 100"), "tourism-index")
         st.caption(
             "Source: INE FRONTUR and EGATUR. Full calendar-year totals only; "
@@ -240,6 +247,13 @@ def render_story(series, specs, start_year, end_year, rolling_balance=None):
         ))
         chart_style(fig, ytitle="€ billion")
         fig.update_layout(showlegend=False)
+        if 2022 in years:
+            fig.add_annotation(
+                x=2022, y=travel[2022], yshift=22,
+                text="2022: energy shock / tourism recovery",
+                showarrow=True, arrowhead=2, ax=70, ay=-44,
+                font=dict(color=GOLD, size=11), arrowcolor=GOLD,
+            )
         plot_chart(fig, "travel-surplus-shock")
         if 2019 in travel and 2020 in travel:
             drop = change_pct(travel[2020], travel[2019])
@@ -251,6 +265,45 @@ def render_story(series, specs, start_year, end_year, rolling_balance=None):
             )
     else:
         st.info("No annual travel-services balance observations in this year range.")
+
+    # Compare two shocks without suggesting the 2022 energy crisis caused
+    # tourism's recovery or that the services rebound fully offset energy costs.
+    if all(y in spending and y in travel for y in (2021, 2022)):
+        spend_growth = change_pct(spending[2022], spending[2021])
+        balance_growth = travel[2022] - travel[2021]
+        st.markdown("#### 2022: Energy-price shock / Tourism resilience")
+        left, right = st.columns(2)
+        with left:
+            st.metric(
+                "2022 nominal visitor spending",
+                f"€{spending[2022]:,.1f}B",
+                f"{spend_growth:+.1f}% versus 2021",
+            )
+            st.caption("INE EGATUR · full-year tourism spending")
+        with right:
+            st.metric(
+                "2022 travel-services surplus",
+                f"€{travel[2022]:,.1f}B",
+                f"+€{balance_growth:,.1f}B versus 2021",
+            )
+            st.caption("Eurostat bop_its6_det · annual balance")
+        st.markdown(
+            "**Contrasting shocks:** In 2020, restrictions on travel "
+            "caused tourism revenues to collapse. In 2022, higher imported "
+            "energy prices damaged Spain's terms of trade, while tourism "
+            "and other services recovered. Strong services exports helped "
+            "cushion the shock, but did **not** fully offset the higher "
+            "energy-import bill. This is an observed association, not a "
+            "causal estimate of tourism's contribution to the current account. "
+            "[IMF 2023 External Sector Report]"
+            "(https://www.imf.org/-/media/files/publications/esr/2023/english/ch3.pdf)"
+        )
+        st.caption(
+            "The energy shock is contextual: this dashboard's six core "
+            "series do not directly measure energy-import prices or the "
+            "energy trade deficit. Nominal spending growth includes "
+            "price effects."
+        )
 
     st.markdown('<div class="story-chapter">03 / Dependence: tourism’s share of GDP</div>',
                 unsafe_allow_html=True)
