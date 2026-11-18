@@ -1,0 +1,14 @@
+{
+  "indicator": "Banco de España tourism and travel balance, rolling 12 months",
+  "period_end": "2026-08",
+  "window": "12 months ending August 2026",
+  "published_date": "2026-10-30",
+  "value_eur_billions": 74.9,
+  "prior_year_period_end": "2025-08",
+  "prior_year_value_eur_billions": 71.1,
+  "gdp_share_percent": 4.3,
+  "source": "Banco de España, Preliminary estimate of the Balance of Payments (August 2026)",
+  "source_url": "https://www.bde.es/wbe/es/noticias-eventos/actualidad-banco-espana/balanza-de-pagos-mensual-agosto-2026.html",
+  "scope": "Source-published release snapshot, not a live API series. Not the 2026 annual balance; do not add to the six time series or replace the 2025 Eurostat annual value.",
+  "refresh_policy": "Update manually after verification of a newer Banco de España monthly release. GitHub Actions six-series refresh does not update this file."
+}
