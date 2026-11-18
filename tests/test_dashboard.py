@@ -35,7 +35,6 @@ class NarrativesTest(unittest.TestCase):
         from datetime import datetime, timezone
         from zoneinfo import ZoneInfo
         import json
-        from sources import ine_series
         # Source dates at midnight CEST can fall in the previous UTC month.
         midnight_spain = datetime(2026, 9, 1, tzinfo=ZoneInfo("Europe/Madrid"))
         utc_stamp = midnight_spain.astimezone(timezone.utc)
@@ -44,9 +43,12 @@ class NarrativesTest(unittest.TestCase):
             utc_stamp.timestamp(), tz=ZoneInfo("Europe/Madrid")
         ).strftime("%Y-%m"), "2026-09")
         for metric in ("arrivals", "spending"):
-            self.assertEqual(
-                self.series[metric]["observations"][-1]["period"], "2026-09"
-            )
+            observation = self.series[metric]["observations"][-1]
+            self.assertEqual(observation["period"], "2026-09")
+            if metric == "arrivals":
+                self.assertAlmostEqual(observation["value"], 10.13965, places=5)
+            else:
+                self.assertAlmostEqual(observation["value"], 14.48806, places=5)
 
     def test_2022_energy_shock_context_uses_real_observations(self):
         spending = annual_totals(self.series["spending"])
