@@ -224,11 +224,54 @@ def render_yield_section(spending, arrivals, hicp, start_year, end_year):
         "full-year totals only. Both series use 2019 = 100, allowing "
         "their growth paths to be compared—not summed."
     )
+    with st.expander(f"Show the math for visitors versus spending ({latest})"):
+        st.markdown(
+            "**Both lines are indexed to 2019 = 100.** "
+            "An index measures each series' growth against its own 2019 total; "
+            "the lines share a baseline but have different original units."
+        )
+        st.markdown(
+            f"**Visitor arrivals (INE FRONTUR):** "
+            f"{latest} {arrivals[latest]:.3f} million ÷ "
+            f"2019 {arrivals[2019]:.3f} million × 100 "
+            f"= **{volume_index[latest]:.1f} index points** "
+            f"({visitor_growth:+.1f}% versus 2019)."
+        )
+        st.markdown(
+            f"**Total nominal visitor spending (INE EGATUR):** "
+            f"{latest} €{spending[latest]:.3f} billion ÷ "
+            f"2019 €{spending[2019]:.3f} billion × 100 "
+            f"= **{spending_index[latest]:.1f} index points** "
+            f"({receipts_growth:+.1f}% versus 2019)."
+        )
+        st.markdown(
+            f"**Why the lines diverge:** annual nominal spending is "
+            f"**visitor arrivals × nominal spending per visitor**. "
+            f"Therefore the growth factor in spending per visitor is "
+            f"({spending_index[latest]:.2f} ÷ "
+            f"{volume_index[latest]:.2f} − 1) × 100 "
+            f"= **{nominal_change[latest]:+.1f}%**. "
+            "The index-point gap between the two lines is not itself "
+            "the percentage change in spending per visitor."
+        )
+        st.caption(
+            "Calculated from unrounded annual source totals; intermediate "
+            "numbers are rounded for display. All annual totals require "
+            "12 months. This first comparison is nominal: it does not "
+            "adjust for price changes."
+        )
+
     st.markdown("**B · Does higher spending per visitor hold up after inflation?**")
     st.markdown(
-        "Dividing spending by visitor arrivals isolates nominal spending "
-        "per visitor. Applying Spain-wide HICP provides an approximate "
-        "inflation-adjusted comparison."
+        "**Nominal spending per visitor** tells us how many euros the "
+        "average international visitor spent in the prices of that year. "
+        "A rise can reflect a more valuable visitor mix, longer stays, "
+        "more purchases, **or simply higher prices**. It therefore "
+        "cannot, on its own, establish more real tourism value. "
+        "**Inflation-adjusted spending per visitor** translates those "
+        "euros into 2019 purchasing-power terms using Spain's overall "
+        "consumer price index (HICP). This is an approximation of "
+        "purchasing power, not a tourism-specific price measure."
     )
     items = [("Nominal spending per visitor", nominal_change, BLUE)]
     if real_change:
@@ -238,11 +281,34 @@ def render_yield_section(spending, arrivals, hicp, start_year, end_year):
     plot_line(years, visible, "Change vs 2019 (%)", "visitor-yield",
               percent=True)
     if latest in real_change:
+        price_change = 100 * (hicp[latest] / hicp[2019] - 1)
         st.markdown(
-            f"**Nominal spending per visitor is {nominal_change[latest]:+.1f}% "
-            f"above 2019 in {latest}; the inflation-adjusted proxy is only "
-            f"{real_change[latest]:+.1f}%.** General price inflation "
-            "explains much of the nominal gain under this broad proxy."
+            f"**Reading B ({latest} versus 2019):** nominal spending per "
+            f"visitor increased **{nominal_change[latest]:+.1f}%**, "
+            f"but after adjusting for general Spanish consumer inflation, "
+            f"the increase is **{real_change[latest]:+.1f}%**. "
+            f"Over the same period, Spain's all-items HICP rose "
+            f"**{price_change:+.1f}%**. The difference tells us that "
+            "much of the growth in euros per visitor is absorbed by the "
+            "change in general purchasing power—not that visitors "
+            "necessarily bought much more tourism in real terms."
+        )
+        st.markdown(
+            f"**How to interpret the two lines:** the nominal line measures "
+            f"growth in euros actually spent per visitor; the adjusted line "
+            f"measures what those euros would be worth at 2019 consumer "
+            f"prices. They are related multiplicatively: "
+            f"**(1 + {nominal_change[latest]/100:.3f}) = "
+            f"(1 + {real_change[latest]/100:.3f}) × "
+            f"(1 + {price_change/100:.3f})**, up to rounding. "
+            "It would be misleading to subtract the two percentages "
+            "and call that an exact share caused by inflation."
+        )
+        st.caption(
+            "**Limit:** HICP tracks prices paid by consumers in Spain, "
+            "not the specific basket bought by international visitors. "
+            "This comparison does not establish the cause of higher "
+            "tourist spending, changes in trip length, or tourism value added."
         )
     else:
         st.markdown(
