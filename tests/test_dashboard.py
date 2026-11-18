@@ -379,7 +379,7 @@ class NarrativesTest(unittest.TestCase):
 
     def test_dashboard_research_question_reframed(self):
         source = (ROOT / "app.py").read_text(encoding="utf-8")
-        self.assertIn("creating greater economic value and financial resilience", source)
+        self.assertIn("How does international tourism strengthen Spain", source)
         self.assertNotIn("growing reliance on international tourism", source)
 
     def test_streamlit_page_renders(self):
