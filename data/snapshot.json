@@ -1,5 +1,5 @@
 {
-  "last_successful_refresh_utc": "2026-11-18T21:18:54+00:00",
+  "last_successful_refresh_utc": "2026-11-23T09:42:43+00:00",
   "series": {
     "gdp_growth": {
       "observations": [
@@ -194,7 +194,7 @@
       ],
       "source": "Eurostat · namq_10_gdp",
       "source_url": "https://ec.europa.eu/eurostat/databrowser/view/namq_10_gdp/default/table",
-      "refreshed_utc": "2026-11-18T21:18:54+00:00",
+      "refreshed_utc": "2026-11-23T09:42:43+00:00",
       "latest_observation": "2026-Q3"
     },
     "travel_balance": {
@@ -246,7 +246,7 @@
       ],
       "source": "Eurostat · bop_its6_det",
       "source_url": "https://ec.europa.eu/eurostat/databrowser/view/bop_its6_det/default/table",
-      "refreshed_utc": "2026-11-18T21:18:54+00:00",
+      "refreshed_utc": "2026-11-23T09:42:43+00:00",
       "latest_observation": "2025"
     },
     "current_account": {
@@ -438,7 +438,7 @@
       ],
       "source": "Eurostat · tipsbp41",
       "source_url": "https://ec.europa.eu/eurostat/databrowser/view/tipsbp41/default/table",
-      "refreshed_utc": "2026-11-18T21:18:54+00:00",
+      "refreshed_utc": "2026-11-23T09:42:43+00:00",
       "latest_observation": "2026-Q2"
     },
     "arrivals": {
@@ -974,7 +974,7 @@
       ],
       "source": "INE · FRONTUR",
       "source_url": "https://www.ine.es/dyngs/INEbase/en/operacion.htm?c=Estadistica_C&cid=1254736176996&idp=1254735576863",
-      "refreshed_utc": "2026-11-18T21:18:54+00:00",
+      "refreshed_utc": "2026-11-23T09:42:43+00:00",
       "latest_observation": "2026-09"
     },
     "spending": {
@@ -1510,7 +1510,7 @@
       ],
       "source": "INE · EGATUR",
       "source_url": "https://www.ine.es/dyngs/INEbase/en/operacion.htm?c=Estadistica_C&cid=1254736177002&idp=1254735576863",
-      "refreshed_utc": "2026-11-18T21:18:54+00:00",
+      "refreshed_utc": "2026-11-23T09:42:43+00:00",
       "latest_observation": "2026-09"
     },
     "tourism_gdp": {
@@ -1558,13 +1558,13 @@
       ],
       "source": "INE · Tourism Satellite Account",
       "source_url": "https://www.ine.es/consul/serie.do?L=1&d=true&s=DCE89",
-      "refreshed_utc": "2026-11-18T21:18:54+00:00",
+      "refreshed_utc": "2026-11-23T09:42:43+00:00",
       "latest_observation": "2024"
     }
   },
   "errors": {},
-  "last_attempt_utc": "2026-11-18T21:18:54+00:00",
-  "last_partial_refresh_utc": "2026-11-18T21:18:54+00:00",
+  "last_attempt_utc": "2026-11-23T09:42:43+00:00",
+  "last_partial_refresh_utc": "2026-11-23T09:42:43+00:00",
   "updated_this_run": [
     "arrivals",
     "spending",
