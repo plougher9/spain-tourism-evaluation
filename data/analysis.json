@@ -50,7 +50,7 @@
       "source": "Eurostat HICP, all-items, annual average index",
       "source_url": "https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_aind/default/table",
       "unit": "annual HICP index (rebasing does not affect 2019-ratio deflation)",
-      "refreshed_utc": "2026-11-18T18:21:41+00:00"
+      "refreshed_utc": "2026-11-23T10:43:31+00:00"
     },
     "current_account_eur": {
       "observations": [
@@ -102,7 +102,7 @@
       "source": "Eurostat BPM6 annual current-account balance",
       "source_url": "https://ec.europa.eu/eurostat/databrowser/view/bop_c6_a/default/table",
       "unit": "€ billion",
-      "refreshed_utc": "2026-11-18T18:21:41+00:00"
+      "refreshed_utc": "2026-11-23T10:43:31+00:00"
     },
     "services_balance_eur": {
       "observations": [
@@ -154,7 +154,7 @@
       "source": "Eurostat BPM6 international trade in services (total), balance",
       "source_url": "https://ec.europa.eu/eurostat/databrowser/view/bop_its6_det/default/table",
       "unit": "€ billion",
-      "refreshed_utc": "2026-11-18T18:21:41+00:00"
+      "refreshed_utc": "2026-11-23T10:43:31+00:00"
     },
     "goods_balance_eur": {
       "observations": [
@@ -206,10 +206,10 @@
       "source": "Eurostat BPM6 annual goods trade balance (BoP basis)",
       "source_url": "https://ec.europa.eu/eurostat/databrowser/view/bop_c6_a/default/table",
       "unit": "€ billion",
-      "refreshed_utc": "2026-11-18T18:21:41+00:00"
+      "refreshed_utc": "2026-11-23T10:43:31+00:00"
     }
   },
   "errors": {},
-  "last_attempt_utc": "2026-11-18T18:21:41+00:00",
-  "last_successful_refresh_utc": "2026-11-18T18:21:41+00:00"
+  "last_attempt_utc": "2026-11-23T10:43:31+00:00",
+  "last_successful_refresh_utc": "2026-11-23T10:43:31+00:00"
 }
